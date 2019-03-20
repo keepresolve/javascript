@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style>
+    body,
+    html {
+      height: 100%;
+    }
+    #test{
+        position: absolute;
+        top:0px;
+        left: 5px;
+    }
+  </style>
+  <body>
+    <div
+      id="test"
+      draggable="true"
+      style="width: 100px; height: 100px; background: #ddd;"
+    ></div>
+    <script>
+      let test = document.getElementById("test");
+      function getObjXy(obj) {
+        var xy = obj.getBoundingClientRect();
+        var top =
+            xy.top -
+            document.documentElement.clientTop +
+            document.documentElement.scrollTop, //document.documentElement.clientTop 在IE67中始终为2，其他高级点的浏览器为0
+          bottom = xy.bottom,
+          left =
+            xy.left -
+            document.documentElement.clientLeft +
+            document.documentElement.scrollLeft, //document.documentElement.clientLeft 在IE67中始终为2，其他高级点的浏览器为0
+          right = xy.right,
+          width = xy.width || right - left, //IE67不存在width 使用right - left获得
+          height = xy.height || bottom - top;
+
+        return {
+          top: top,
+          right: right,
+          bottom: bottom,
+          left: left,
+          width: width,
+          height: height
+        };
+      }
+      document.body.addEventListener("dragover", function(ev) {
+        ev.preventDefault();
+      });
+      document.body.addEventListener("drop", function(ev) {
+        let obj = JSON.parse(ev.dataTransfer.getData("Text"))
+        let test = document.querySelector(`#${obj.el}`);
+        let X = ev.clientX-obj.x;
+        let Y = ev.clientY-obj.y
+        test.style.left=X+"px"
+        test.style.top=Y+"px"
+        let rect = getObjXy(test);
+        console.log({rect,ev})
+      });
+      test.addEventListener("dragstart", function(ev) {
+        console.log({ ev });
+        ev.dataTransfer.dropEffect = "move";
+        ev.dataTransfer.setData(
+          "Text",
+          JSON.stringify({
+            el: ev.target.id,
+            x: ev.offsetX,
+            y: ev.offsetY
+          })
+        );
+      });
+      //   var test = getObjXy(test);
+
+      //   alert(
+      //     "top:" +
+      //       test.top +
+      //       ", right:" +
+      //       test.right +
+      //       ", bottom:" +
+      //       test.bottom +
+      //       ", left:" +
+      //       test.left
+      //   );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" onclick="pop(this,event)" class="input-text" />
+    <!--跟随弹窗的内容-->
+    <script type="text/template" id="tipwin">
+      <div class='popwin'>
+          <ul>
+              <li>小巧流水人家</li>
+              <li>天边云卷云舒</li>
+              <li>这下厉害了</li>
+              <li>夕阳无限好，只是近黄昏</li>
+              <li>百里平川</li>
+              <li>我们的春天</li>
+              <li>老吾老以及人之老，幼吾幼以及人之幼-孟子，天地不仁，以万物为刍狗</li>
+              <li>三人行，必有我师焉<li>
+          </ul>
+      </div>
+    </script>
+    <div id="pover">
+        dsadasdasdasdsa
+    </div>
+    <style>
+      input {
+        margin-top: 500px;
+        margin-left: 200px;
+        position: absolute;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background: #f7f7f7;
+      }
+      .cont {
+        padding: 25px;
+        font-size: 15px;
+        line-height: 32px;
+      }
+      .input-text {
+        height: 32px;
+        font-size: 13px;
+        border: 1px solid #aaa;
+        width: 230px;
+      }
+      .popwin ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        padding: 12px 0;
+      }
+      .popwin ul li {
+        line-height: 30px;
+        color: #c69e13;
+        font-size: 13px;
+        cursor: pointer;
+        box-sizing: border-box;
+        padding: 0 8px;
+        white-space: nowrap;
+      }
+      .popwin ul li:hover {
+        background: #0d6ba6;
+      }
+    </style>
+  </body>
+  <script>
+      function pop(th, event) {
+      //阻止事件冒泡
+
+      var evt = event || window.event;
+      let target=evt.srcElement || evt.target;
+      let  pover=document.querySelector("#pover")
+      if (evt.stopPropagation) {
+        evt.stopPropagation();
+      } else {
+        evt.cancelBubble = true;
+      }
+      //得到dom元素的矩形，这个方法很好用
+      var rect = target.getBoundingClientRect();
+      //得到dom元素的宽高，ie8-不支持rect.width,rect.height
+      var basew = rect.right - rect.left;
+      var baseh = rect.bottom - rect.top;
+
+      //得到浏览器的客户区宽高
+      var docw = document.documentElement.clientWidth;
+      var doch = document.documentElement.clientHeight;
+
+      //判断dom元素的左边空间大还是右边空间大
+      var isleft = docw - rect.left < rect.right ? true : false;
+
+      //判断dom元素的上边空间大还是下面空间大
+      var istop = doch - rect.bottom < rect.top ? true : false;
+
+      //得到页面的滚动高度。
+      var scrollw = Math.max(
+        document.documentElement.scrollWidth,
+        document.body.scrollWidth
+      );
+
+      //将弹窗显示在左上角位置
+    //   var div = document.createElement("div");
+      //这里的\是为了\空格，让字符串能够换行
+      pover.style.cssText =
+        "position:absolute;z-Index:20;background:#fff;\
+    border:1px solid #ddd;left:0;\
+    top:0;box-sizing:border-box;";
+    //   div.innerHTML = document.getElementById("tipwin").innerHTML;
+    //   document.body.appendChild(div);
+
+      //得到div的宽高
+      var drect = pover.getBoundingClientRect();
+      var dw = drect.right - drect.left;
+      var dh = drect.bottom - drect.top;
+
+      //先判断div跟input是左对齐还是右对齐
+      //div宽度大于右边的宽度，并且左边空间比右边大时是右对齐
+      //判断是用right还是left定位
+      var loc_isright = dw > docw - rect.left && isleft ? true : false;
+
+      //定位的数值大小
+      var left = dw > docw - rect.left && isleft ? rect.right : rect.left;
+
+      //判断div是否超出客户区空间大小，需要加宽度
+      var ismax = dw > docw - rect.left && dw > rect.right ? true : false;
+      var max_w;
+
+      //如果需要计算最大宽度
+      if (ismax) {
+        max_w = docw - rect.left > rect.right ? docw - rect.left : rect.right;
+      }
+
+      //如果div小于input的宽度采用input的宽度
+      var ismin = dw < basew;
+      if (ismin) {
+        max_w = basew;
+      }
+
+      //判断上下的位置
+      //采用top，因为相对于body定位bottom的位置跟body是否有relative相关
+      var top =
+        dh > doch - rect.bottom && istop
+          ? rect.top > dh
+            ? rect.top - dh
+            : 0
+          : rect.bottom;
+
+      //是否需要最大高度
+      var ismax_h = dh > doch - rect.bottom && dh > rect.top ? true : false;
+      var max_h;
+
+      //计算最大高度
+      if (ismax_h) {
+        max_h = doch - rect.bottom > rect.top ? doch - rect.bottom : rect.top;
+      }
+      //得到滚动条的位置。
+      var scrollTop =
+        document.documentElement.scrollTop ||
+        window.pageYOffset ||
+        document.body.scrollTop;
+      var scrollLeft =
+        document.documentElement.scrollLeft ||
+        window.pageXOffset ||
+        document.body.scrollLeft;
+
+      //设置左右的位置
+      if (loc_isright) {
+        //先清空left定位再设置right
+        pover.style.left = "";
+
+        pover.style.right = scrollw - (left + scrollLeft) + "px";
+      } else {
+        pover.style.left = left + scrollLeft + "px";
+      }
+      //设置top的定位
+      pover.style.top = top + scrollTop + "px";
+
+      //设置宽度
+      if (ismax || ismin) {
+        pover.style.width = max_w + "px";
+        if (ismax) {
+            pover.style.overflowX = "auto";
+        }
+      }
+      //设置高度
+      if (ismax_h) {
+        div.style.height = max_h + "px";
+        div.style.overflowY = "auto";
+      }
+    }
+    // function pop(th, event) {
+    //   //阻止事件冒泡
+
+    //   var evt = event || window.event;
+    //   let target=evt.srcElement || evt.target;
+    //   if (evt.stopPropagation) {
+    //     evt.stopPropagation();
+    //   } else {
+    //     evt.cancelBubble = true;
+    //   }
+    //   //得到dom元素的矩形，这个方法很好用
+    //   var rect = target.getBoundingClientRect();
+    //   //得到dom元素的宽高，ie8-不支持rect.width,rect.height
+    //   var basew = rect.right - rect.left;
+    //   var baseh = rect.bottom - rect.top;
+
+    //   //得到浏览器的客户区宽高
+    //   var docw = document.documentElement.clientWidth;
+    //   var doch = document.documentElement.clientHeight;
+
+    //   //判断dom元素的左边空间大还是右边空间大
+    //   var isleft = docw - rect.left < rect.right ? true : false;
+
+    //   //判断dom元素的上边空间大还是下面空间大
+    //   var istop = doch - rect.bottom < rect.top ? true : false;
+
+    //   //得到页面的滚动高度。
+    //   var scrollw = Math.max(
+    //     document.documentElement.scrollWidth,
+    //     document.body.scrollWidth
+    //   );
+
+    //   //将弹窗显示在左上角位置
+    //   var div = document.createElement("div");
+    //   //这里的\是为了\空格，让字符串能够换行
+    //   div.style.cssText =
+    //     "position:absolute;z-Index:20;background:#fff;\
+    // border:1px solid #ddd;left:0;\
+    // top:0;box-sizing:border-box;";
+    //   div.innerHTML = document.getElementById("tipwin").innerHTML;
+    //   document.body.appendChild(div);
+
+    //   //得到div的宽高
+    //   var drect = div.getBoundingClientRect();
+    //   var dw = drect.right - drect.left;
+    //   var dh = drect.bottom - drect.top;
+
+    //   //先判断div跟input是左对齐还是右对齐
+    //   //div宽度大于右边的宽度，并且左边空间比右边大时是右对齐
+    //   //判断是用right还是left定位
+    //   var loc_isright = dw > docw - rect.left && isleft ? true : false;
+
+    //   //定位的数值大小
+    //   var left = dw > docw - rect.left && isleft ? rect.right : rect.left;
+
+    //   //判断div是否超出客户区空间大小，需要加宽度
+    //   var ismax = dw > docw - rect.left && dw > rect.right ? true : false;
+    //   var max_w;
+
+    //   //如果需要计算最大宽度
+    //   if (ismax) {
+    //     max_w = docw - rect.left > rect.right ? docw - rect.left : rect.right;
+    //   }
+
+    //   //如果div小于input的宽度采用input的宽度
+    //   var ismin = dw < basew;
+    //   if (ismin) {
+    //     max_w = basew;
+    //   }
+
+    //   //判断上下的位置
+    //   //采用top，因为相对于body定位bottom的位置跟body是否有relative相关
+    //   var top =
+    //     dh > doch - rect.bottom && istop
+    //       ? rect.top > dh
+    //         ? rect.top - dh
+    //         : 0
+    //       : rect.bottom;
+
+    //   //是否需要最大高度
+    //   var ismax_h = dh > doch - rect.bottom && dh > rect.top ? true : false;
+    //   var max_h;
+
+    //   //计算最大高度
+    //   if (ismax_h) {
+    //     max_h = doch - rect.bottom > rect.top ? doch - rect.bottom : rect.top;
+    //   }
+    //   //得到滚动条的位置。
+    //   var scrollTop =
+    //     document.documentElement.scrollTop ||
+    //     window.pageYOffset ||
+    //     document.body.scrollTop;
+    //   var scrollLeft =
+    //     document.documentElement.scrollLeft ||
+    //     window.pageXOffset ||
+    //     document.body.scrollLeft;
+
+    //   //设置左右的位置
+    //   if (loc_isright) {
+    //     //先清空left定位再设置right
+    //     div.style.left = "";
+
+    //     div.style.right = scrollw - (left + scrollLeft) + "px";
+    //   } else {
+    //     div.style.left = left + scrollLeft + "px";
+    //   }
+    //   //设置top的定位
+    //   div.style.top = top + scrollTop + "px";
+
+    //   //设置宽度
+    //   if (ismax || ismin) {
+    //     div.style.width = max_w + "px";
+    //     if (ismax) {
+    //       div.style.overflowX = "auto";
+    //     }
+    //   }
+    //   //设置高度
+    //   if (ismax_h) {
+    //     div.style.height = max_h + "px";
+    //     div.style.overflowY = "auto";
+    //   }
+    // }
+  </script>
+</html>
