@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <h1>select选中文本</h1>
+      <textarea name="" id="text" cols="30" rows="10">1234567890</textarea>
+      <button id="selectAll">select(全选)</button>
+      <button id="selectRange">select(2,4)</button>
+    </div>
+    <div>
+      <h1>剪切</h1>
+      <!-- <textarea name="" id="text" cols="30" rows="10">1234567890</textarea>
+      <button id="selectAll">select(全选)</button>
+      <button id="selectRange">select(2,4)</button> -->
+    </div>
+  </body>
+  <script>
+    // select选中文本
+    let area = document.querySelector("#text");
+    let selectAll = document.querySelector("#selectAll");
+    let selectRange = document.querySelector("#selectRange");
+    //选中所有文本 selct()
+    selectAll.addEventListener("click", function() {
+      area.select();
+    });
+    selectRange.addEventListener("click", function() {
+      area.focus();
+      area.setSelectionRange(1, 4);
+    });
+    ///select event 获取偏移量
+    area.addEventListener("select", function(ev) {
+      console.log(ev);
+      let content = area.value.substring(
+        area.selectionStart,
+        area.selectionEnd
+      );
+      //字符偏移量 ie8+(以下需百度selection.createRange)
+      alert(
+        "你选中的字符偏移量范围:" +
+          area.selectionStart +
+          "~" +
+          area.selectionEnd +
+          "内容是：" +
+          content
+      );
+    });
+
+
+    //剪切 粘贴————————————————————
+    /**
+     * event 兼容行不太好 ie8+ 实现不一
+     * beforecopy
+     * copy
+     * beforecut
+     * cut
+     * beforepaste
+     * paste
+     * **/
+    /**
+     * 获取剪切板 clipboardData对象
+     * method
+     * getData
+     * setData
+     * clearData
+     * **/
+     function clipboardData(event){
+        let= clipboardData=event.clipboardData||window.clipboardData
+     }
+  </script>
+</html>
