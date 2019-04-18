@@ -7,13 +7,19 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "列表",
+      "program": "${workspaceFolder}\\designPattern\\stack.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "common",
       "program": "${workspaceFolder}\\common.js"
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "stack heap",
+      "name": "函数执行栈",
       "program": "${workspaceFolder}\\stack heap\\functionStack.js"
     }
   ]

@@ -1,6 +1,6 @@
 function list() {
   this.listSize = 0;
-  this.pos = 0;
+  this.pos = 0; //当前的游标
   this.dataStore = [];
 
   this.toString = toString;
@@ -10,20 +10,22 @@ function list() {
   this.insert = insert;
   this.remove = remove;
   this.clear = clear;
+  //遍历
+  this.currPos = currPos; //获取当前的游标
+  this.front = front;
+  this.end = end;
+  this.prev = prev;
+  this.next = next;
+  this.hasNext = hasNext;
+  this.hasPrev = hasPrev;
 
-  //   this.front = front;
-  //   this.end = end;
-  //   this.prev = prev;
-  //   this.next = next;
+  this.moveto = moveto;
 
-  this.hasNext;
-  this.hasPrev;
-  //   this.length = length;
-  //   this.currPos = currPos;
-  //   this.moveto = moveto;
-  //   this.getElement = getElement;
-  //   this.contains = contains;
+  this.getElement = getElement;
+  this.contains = contains;
+  this.length = length;
 }
+
 function append(element) {
   this.dataStore[this.listSize++] = element;
   return { element, index: this.listSize };
@@ -68,19 +70,51 @@ function contains(element) {
   }
   return false;
 }
-function length() {
-  return this.listSize;
+
+function moveto(position) {
+  this.pos = position;
+}
+function getElement(element) {
+  return this.dataStore[this.pos];
+}
+function currPos() {
+  return this.pos;
 }
 function toString() {
   return this.dataStore;
+}
+function length() {
+  return this.listSize;
+}
+function hasNext() {
+  return this.pos < this.listSize;
+}
+function hasPrev() {
+  return this.pos >= 0;
+}
+function front() {
+  this.pos = 0;
+}
+function end() {
+  this.pos = this.listSize - 1;
+}
+function prev() {
+  --this.pos;
+}
+function next() {
+  if (this.pos < this.listSize) {
+    ++this.pos;
+  }
 }
 
 let names = new list();
 names.append("first");
 names.append("second");
 names.append("third");
-console.log(names);
-names.remove("first");
-console.log(names.toString);
-names.clear();
-console.log(names);
+
+console.log(names.toString());
+
+// 迭代器
+for (names.front(); names.hasNext(); names.next()) {
+  console.log({ element: names.getElement(), index: names.currPos() });
+}

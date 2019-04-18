@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="stack.js"></script>
+  </head>
+  <body>
+    <script>
+      function read(cb) {
+        let request = new XMLHttpRequest();
+        console.log(request);
+        request.onreadystatechange = function(status) {
+          if (request.readyState == 4 && request.status == 200) {
+            cb(request.responseText);
+          }
+        };
+        request.onload = function(readStatus) {
+          console.log(2, arguments);
+        };
+        request.open("GET", "./static/list.txt", false);
+        request.send(111);
+      }
+      read(list => {
+        console.log(list.split("\n"));
+      });
+    </script>
+  </body>
+</html>
