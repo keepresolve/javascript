@@ -8,6 +8,7 @@
     <script src="stack.js"></script>
   </head>
   <body>
+    <button id="btn">asdasd</button>
     <script>
       function read(cb) {
         let request = new XMLHttpRequest();
@@ -26,6 +27,35 @@
       read(list => {
         console.log(list.split("\n"));
       });
+
+      //模拟时间
+      var btn = document.querySelector("#btn");
+      btn.onclick = function(event) {
+        console.log(event);
+      };
+      var event = document.createEvent("MouseEvents");
+      console.log({ event });
+      event.initMouseEvent(
+        "click",
+        true,
+        true,
+        document.defaultView,
+        0,
+        0,
+        0,
+        0,
+        0,
+        false,
+        false,
+        false,
+        false,
+        0,
+        null
+      );
+      console.log(event);
+      btn.dispatchEvent(event);
+      //   NodeIterator
+      // NodeFilter
     </script>
   </body>
 </html>
