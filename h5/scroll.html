@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style>
+    #myDiv {
+      height: 100px;
+      background-color: gray;
+      padding-top:400px;
+      overflow: auto;
+    }
+
+    #roll_top {
+      height: 900px;
+      background-color: green;
+      color: #fff;
+      font-size: 50px;
+      position: relative;
+    }
+
+    #bottom {
+      position: absolute;
+      display: block;
+      left: 0;
+      bottom: 0;
+    }
+  </style>
+  <body>
+    <div>
+      <h2>scrollIntoView</h2>
+      <button id="roll1">scrollIntoView(false)</button>
+      <button id="roll2">scrollIntoView(true)</button>
+
+      <div>
+        <div id="myDiv">
+          <div id="roll_top">
+            scrollIntoView(ture)元素上边框与视窗顶部齐平
+            <span id="bottom"
+              >scrollIntoView(false)元素下边框与视窗底部齐平</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.onload = function() {
+        //   var
+        document.querySelector("#roll1").onclick = function() {
+            alert(11)
+            console.log( document.querySelector("#myDiv").scrollTop)
+            document.querySelector("#myDiv").scrollTop = document.querySelector("#myDiv").scrollHeight
+        };
+        // document.querySelector("#roll1").onclick = function() {
+        //   document.querySelector("#roll_top").scrollIntoView(false);
+        // };
+        // document.querySelector("#roll2").onclick = function() {
+        //   document.querySelector("#roll_top").scrollIntoView(true);
+        // };
+      };
+    </script>
+  </body>
+</html>

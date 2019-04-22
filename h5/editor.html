@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+.gray{
+    color: #91A1A9;
+    padding:0px;
+    margin:0px;
+  
+}
+#eidtor{
+    width:300px;
+    height: 300px;
+    border:1px solid;
+    padding:10px;
+    
+}
+.editoritem:first-child{
+    min-width:10px;
+    display: inline-block;
+    float: left;
+    
+}
+.editoritem:last-child{
+    min-width:50px;
+    float: left;
+    display: inline-block;
+    
+}
+</style>
+<body>
+    <div contenteditable="true" id="eidtor">
+       <span style="display:inline-block" class="gray" contenteditable="false">123123</span>
+    </div>
+    <div id="eidtor">
+      <span contenteditable="true" class="editoritem"></span> 
+      <span class="gray" id="nochange">asdasdasdasd</span>  
+      <span contenteditable="true"  class="editoritem"></span>
+    </div>
+</body>
+</html>
+<script>
+let nochange=document.querySelector("#nochange");
+let eidtor=document.querySelector("#eidtor");
+// dd.onmouseover=function(){
+//     alert(1)
+//     eidtor.contenteditable=false
+// }
+// dd.onmouseout=function(){
+
+//     eidtor.contenteditable=true
+
+// }
+nochange.onlick=function(){
+    document.querySelectorAll(".editoritem")[1].focus();
+}
+function placeCaret(el, atStart) {
+  el.focus();
+
+  if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') { 
+
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(atStart);
+
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else if (typeof document.body.createTextRange != 'undefined') {
+
+    var textRange = document.body.createTextRange();
+    textRange.moveToElementText(el);
+    textRange.collapse(atStart);
+    textRange.select();
+  }     
+}
+
+// true 为开始位置，false 为末尾
+// placeCaret( document.getElementById('eidtor'), false );
+</script>
