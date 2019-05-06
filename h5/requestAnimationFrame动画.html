@@ -1,44 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-  </head>
-  <style>
-  </style>
-  <body>
-    <a
-      href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame"
-      >参考1</a
-    >
-    <a href="http://www.cnblogs.com/xiaohuochai/p/5777186.html">参考2</a>
 
-    <div
-      id="myDiv"
-      style="background-color: lightblue;width: 0;height: 20px;line-height: 20px;"
-    >
-      0%
-    </div>
-    <button id="btn">run</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+</head>
+<style>
+  .video {
+    height: 62px;
+    width: 82px;
 
-    <script>
-      var timer;
-      btn.onclick = function() {
-        myDiv.style.width = "0";
-        cancelAnimationFrame(timer);
-        timer = requestAnimationFrame(function fn() {
-          console.log({arguments,date:Date.now()})
-          if (parseInt(myDiv.style.width) < 500) {
-            myDiv.style.width = parseInt(myDiv.style.width) + 5 + "px";
-            myDiv.innerHTML = parseInt(myDiv.style.width) / 5 + "%";
-            timer = requestAnimationFrame(fn);
-          } else {
-            cancelAnimationFrame(timer);
-          }
-        });
-      };
-    </script>
-  </body>
+    background: url('./img/1.jpg') -20px -33px no-repeat;
+  }
+</style>
+
+<body>
+  <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame">参考1</a>
+  <a href="http://www.cnblogs.com/xiaohuochai/p/5777186.html">参考2</a>
+
+  <div id="myDiv" style="background-color: lightblue;width: 0;height: 20px;line-height: 20px;">
+    0%
+  </div>
+  <button id="btn">run</button>
+  <div class="video">
+
+  </div>
+  <script>
+    var timer;
+    let video = document.querySelector(".video")
+    let index = 0
+    btn.onclick = function () {
+      myDiv.style.width = "0";
+      video.style.backgroundPosition = "-20px -33px"
+      index++
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        console.log({ arguments, date: Date.now() })
+        // if (parseInt(myDiv.style.width) < 500) {
+        //   myDiv.style.width = parseInt(myDiv.style.width) + 5 + "px";
+        //   myDiv.innerHTML = parseInt(myDiv.style.width) / 5 + "%";
+        //   timer = requestAnimationFrame(fn);
+        // } else {
+        //   cancelAnimationFrame(timer);
+        // }
+        // console.log(index)
+       
+        if (index > 8) {
+          index = 0
+        }
+        console.log(index%4)
+        if (index > 3) {
+          video.style.backgroundPosition = `-116px ${-33 + -82 * (index-3)}px`
+        } else {
+          video.style.backgroundPosition = `-20px ${-33 + -82 * index}px`
+        }
+        console.log(index)
+        index++
+        setTimeout(() => {
+          timer = requestAnimationFrame(fn);
+        }, 1000);
+        
+
+
+      });
+    };
+  </script>
+</body>
+
 </html>

@@ -152,6 +152,32 @@ const gdRequest = (method, url, param, headerObj) => {
     requestArr.set(key, timer);
   });
 };
+
+// ES6 code
+function throttled(delay, fn) {
+  let lastCall = 0;
+  return function (...args) {
+    const now = (new Date).getTime();
+    if (now - lastCall < delay) {
+      return;
+    }
+    lastCall = now;
+    return fn(...args);
+  }
+}
+// ES6
+function debounced(delay, fn) {
+  let timerId;
+  return function (...args) {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    timerId = setTimeout(() => {
+      fn(...args);
+      timerId = null;
+    }, delay);
+  }
+}
 //aduio 加载成功播放
 var audio = document.createElement("audio");
 /**

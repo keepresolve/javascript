@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://cdn.static.runoob.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+</head>
+
+<body>
+    <!-- 自定义样式的插件 -->
+    <!-- https://osvaldas.info/audio-player-responsive-and-touch-friendly -->
+    <!-- <audio controls>
+        <source src="https://emic-cmb.emicloud.com/download?ticket=2c3bc3371195802b6f8383a66533a0e7" type="audio/mpeg">
+    </audio>
+    <embed src="https://emic-cmb.emicloud.com/download?ticket=2c3bc3371195802b6f8383a66533a0e7">
+
+    </embed> -->
+
+    <bgsound id='snd_ie' src="" loop="loop">
+        <object id='snd_chrome' width="0px" height="0px" type="audio/x-wav" data=""></object>
+        <input type="button" value="开始" onclick="playSound()">
+        <input type="button" value="暂停" onclick="stopSound()">
+        <embed id="embedPlay" src="http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4"
+            autostart="true" loop="false"></embed>
+        <audio id='audio' src="http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4"
+            controls></audio>
+</body>
+<script>
+    // window.onload = function () {
+    var embedPlay = document.getElementById("embedPlay")
+    var snd_chrome = document.getElementById('snd_chrome');
+    var snd_ie = document.getElementById('snd_ie');
+    function playSound() {             //IE放 背景音乐          
+        snd_ie.src = "http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4";
+        //chrome            var snd_chrome = document.getElementById('snd_chrome');           
+        snd_chrome.data = "http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4";
+    }
+
+    function stopSound() {
+
+        snd_ie.src = ""
+
+        snd_chrome.data = ""
+
+    }
+    audio.onpropertychange = function () {
+        console.log("onpropertychange", arguments)
+    }
+    audio.onended = function () {
+        console.log("ended", arguments)
+    }
+    audio.ontimeupdate = function () {
+        console.log("timeupdate", arguments)
+    }
+    audio.onvolumechange = function () {
+        console.log("volumechange", arguments)
+    }
+    audio.onplay = function () {
+        console.log("play", arguments)
+    }
+    audio.onerror = function () {
+        console.log("error", arguments)
+    }
+    audio.onplaying = function () {
+        console.log("playing", arguments)
+    }
+    // }
+
+
+
+    
+</script>
+
+</html>
