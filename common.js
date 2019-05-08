@@ -623,3 +623,16 @@ async function async2() {
 }
 
 async2();
+
+
+
+function getEyeJsStyle(ele, styleName) {
+  if (ele.currentStyle) {//ie 
+      return ele.currentStyle[styleName];
+  } else if (ele.ownerDocument.defaultView) { //ff 
+      var arr = ele.ownerDocument.defaultView.getComputedStyle(ele, null);
+      return arr[styleName];
+  } else {
+      return window.getComputedStyle(ele, null)[styleName]
+  }
+}

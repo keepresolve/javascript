@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+ <iframe src="" frameborder="0" name="iframe"></iframe>
+    <script>
+        console.log(document.getElementsByName("iframe")[0].nodeName)
+        function CleanPastedHTML(input) {
+            // 1. remove line breaks / Mso classes  
+            var stringStripper = /(\n|\r| class=(")?Mso[a-zA-Z]+(")?)/g;
+            var output = input.replace(stringStripper, ' ');
+            // 2. strip Word generated HTML comments  
+            var commentSripper = new RegExp('<!--(.*?)-->', 'g');
+            var output = output.replace(commentSripper, '');
+            var tagStripper = new RegExp('<(/)*(meta|link|span|\\?xml:|st1:|o:|font)(.*?)>', 'gi');
+            // 3. remove tags leave content if any  
+            output = output.replace(tagStripper, '');
+            // 4. Remove everything in between and including tags '<style(.)style(.)>'  
+            var badTags = ['style', 'script', 'applet', 'embed', 'noframes', 'noscript'];
+
+            for (var i = 0; i < badTags.length; i++) {
+                tagStripper = new RegExp('<' + badTags[i] + '.*?' + badTags[i] + '(.*?)>', 'gi');
+                output = output.replace(tagStripper, '');
+            }
+            // 5. remove attributes ' style="..."'  
+            var badAttributes = ['style', 'start'];
+            for (var i = 0; i < badAttributes.length; i++) {
+                var attributeStripper = new RegExp(' ' + badAttributes[i] + '="(.*?)"', 'gi');
+                output = output.replace(attributeStripper, '');
+            }
+            return output;
+        }       
+
+          /*picBase是base64图片带头部的完整编码*/
+    function putb64(picBase){
+
+            /*picUrl用来存储返回来的url*/
+            var picUrl;
+
+            /*把头部的data:image/png;base64,去掉。（注意：base64后面的逗号也去掉）*/
+            picBase=picBase.substring(22);
+
+            /*通过base64编码字符流计算文件流大小函数*/
+            function fileSize(str)
+            {
+                var fileSize;
+                if(str.indexOf('=')>0)
+                {
+                    var indexOf=str.indexOf('=');
+                    str=str.substring(0,indexOf);//把末尾的’=‘号去掉
+                }
+
+                fileSize=parseInt(str.length-(str.length/8)*2);
+                return fileSize;
+            }
+
+            /*把字符串转换成json*/
+            function strToJson(str)
+            { 
+                var json = eval('(' + str + ')'); 
+                return json; 
+            } 
+
+
+            var url = "http://up.qiniu.com/putb64/"+fileSize(picBase); 
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange=function()
+            {
+                if (xhr.readyState==4){
+                    var keyText=xhr.responseText;
+
+                    /*返回的key是字符串，需要装换成json*/
+                    keyText=strToJson(keyText);
+
+                    /* http://ojvh6i96g.bkt.clouddn.com/是我的七牛云空间网址，keyText.key 是返回的图片文件名*/
+                    picUrl="http://ojvh6i96g.bkt.clouddn.com/"+keyText.key;
+                    alert(picUrl);
+
+                }
+            }
+            xhr.open("POST", url, true); 
+            xhr.setRequestHeader("Content-Type", "application/octet-stream"); 
+            xhr.setRequestHeader("Authorization", "UpToken 这里填写你的token（注意前面的UpToken后面有空格）"); 
+            xhr.send(picBase);
+
+         }
+    </script>
+</body>
+
+</html>

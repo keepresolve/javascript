@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- <script src='http://emickf.sinicnet.cn/script.js'></script> -->
+</head>
+<style>
+        .bg-color1{
+        background-color: red;
+    }
+    .bg-color2{
+        background-color: grey;
+    }
+    .bg-color3{
+        background-color: blue;
+    }
+    .bg-selection{
+        background-color: #fff;
+    }
+
+</style>
+<body>
+    <div style="width:500px;height:600px;border:1px solid blue">
+        <div contenteditable="true" style="width:300px;height:300px;border:1px solid red;">
+             <span>asdasdasdasd</span>  
+        </div>
+  </div>
+    <!-- <p>asdsadadasdasdsadasdsad</p>
+    <span>asdsad<span>asdasdas</span></span>
+    <div id="div">asdasdsa</div>
+    <input type="text" name="input">
+    <div id="wai" style="padding:20px; border:1px solid red;" onmouseup="foo()">
+        asdsadasd   <div id="nei">asd <span id='deep'>as77<span>123123</span></span>7dasdasd </div>
+    </div> -->
+    <!-- <div id="content"><span class="bg-color1" data-position="0">123</span><span class="bg-color2" data-position="3">456</span><span class="bg-color3" data-position="6">789</span></div>  -->
+    <script type="text/javascript">
+    // if('Notification' in window){
+	// 				console.log("支持桌面提醒")
+	// 				console.log(Notification.permission)
+	// 				if(Notification.permission=="default"){//default 用户没有接收或拒绝授权 不能显示通知
+				
+	// 						// NotificationHandler.requestPermission();
+						
+	// 				}else if(Notification.permission=="granted"){//granted 用户接受授权 允许显示通知 
+	// 					NotificationHandler.showNotification("桌面提醒")
+	// 				}else if(Notification.permission=="denied"){//denied  用户拒绝授权 不允许显示通知
+	// 					document.title ="您有一条新消息，请注意查看"
+    //                 }else{
+
+    //                 }
+	// 			}else{
+	// 				console.log("不支持桌面提醒")
+
+    // 			}  
+    
+    //  console.log(new Notification("123"),{
+    //      body:"12312312312"
+    //  })
+    //  Notification.requestPermission(function(status) {  
+    //      console.log(document.all.input)
+	//         	//default 用户没有接收或拒绝授权 不能显示通知  
+	//             //granted 用户接受授权 允许显示通知  
+	//             //denied  用户拒绝授权 不允许显示通知  
+	//             console.log('status: ' + status);   
+	//             // isDeskProPermission =1; 
+	//             console.log("已经向用户询问桌面提示授权");  
+	//         });  
+    // setInterval(()=>{
+    //     //  alert(1)
+    //     new Notification("123",{
+    //      body:"12312312312"
+    //   })
+    //  },1000)
+
+
+    // https://developer.mozilla.org/zh-CN/docs/Web/API/Range
+    // let selObj = window.getSelection(); 
+    // Range可以用 Document 对象的 createRange方法创建，也可以用Selection对象的getRangeAt方法取得。另外，可以通过构造函数 Range() 来获得一个 Range 。
+    // let Range = document.createRange();
+    // 只读属性// 返回一个用于判断 Range 起始位置和终止位置是否相同的布尔值。 Range.endOffset Range.startOffset 从左到右开始数不管怎么选择
+    // console.log({selObj}); 
+       // 方法
+    // 设置 Range 的起点/重点。
+    // Range.setStart(document.getElementsByTagName("p")[0],1)
+    // Range.setEnd()
+    // Range.setEnd(document.getElementsByTagName("p")[0],2)
+    // 返回包含  commonAncestorContainer startContainer 和 endContainer 的最深的节点。最低要求必须包含选中的所有的元素都包含在这个节点上
+    //  Range.commonAncestorContainer.style="color:red"
+    // console.log({Range}) 
+    // referenceNode = document.getElementsByTagName("div")[0];
+    //   Range.selectNodeContents(referenceNode);
+
+    // function foo() {
+    // let selObj = window.getSelection(); 
+    // Range可以用 Document 对象的 createRange方法创建，也可以用Selection对象的getRangeAt方法取得。另外，可以通过构造函数 Range() 来获得一个 Range 。
+    // let Range = selObj.getRangeAt(0);
+    // 只读属性// 返回一个用于判断 Range 起始位置和终止位置是否相同的布尔值。 Range.endOffset Range.startOffset 从左到右开始数不管怎么选择
+    // console.log({selObj}); 
+   
+    // 返回包含  commonAncestorContainer startContainer 和 endContainer 的最深的节点。最低要求必须包含选中的所有的元素都包含在这个节点上
+    //  Range.commonAncestorContainer.style="color:red"
+    // console.log({Range})  
+    // 方法
+    // 设置 Range 的起点/重点。
+    // Range.setStart(document.getElementsByTagName("span")[0],1)
+    // Range.setEnd()
+    // Range.setEnd(document.getElementsByTagName("span")[0],2)
+// }
+
+    // document.onmouseup = function() {
+    //         var selection = window.getSelection();
+    //         var selectionStr = selection.toString();
+    //         console.log({selectionStr})
+    //         if(selectionStr.length>0) {
+    //             var selectAnchorNode = selection.anchorNode;
+    //             var selectFocusNode = selection.focusNode;
+    //                console.log({selectAnchorNode, selectFocusNode})
+    //             var contentObj = document.getElementById("content");
+    //             var contentChiles = contentObj.getElementsByTagName("span");
+    //             var starNode = 0;
+    //             var endNode = 0;
+    //             var star = selection.anchorOffset;
+    //             var end = selection.focusOffset;
+
+    //             for(var i=0;i<contentChiles.length;i++){
+    //                 if(selectAnchorNode.parentElement==contentChiles[i]){
+    //                     starNode = i;
+    //                 }
+    //                 if(selectFocusNode.parentElement==contentChiles[i]){
+    //                     endNode = i;
+    //                 }
+    //             }
+
+    //             if(starNode>endNode){
+    //                 starNode += endNode;
+    //                 endNode = starNode-endNode;
+    //                 starNode -= endNode;
+    //                 star += end;
+    //                 end = star-end;
+    //                 star -=end;
+    //             }else if(starNode==endNode){
+    //                 if(star>end){
+    //                     star += end;
+    //                     end = star-end;
+    //                     star -=end;
+    //                 }
+    //             }
+    //             var tempStr1 = contentChiles[starNode].innerHTML.substring(0,star);
+    //             var tempStr2 = contentChiles[endNode].innerHTML.substring(end);
+    //             var spanPosition1 = parseInt(contentChiles[starNode].getAttribute("data-position"));
+    //             var spanPosition2 = parseInt(contentChiles[endNode].getAttribute("data-position"));
+
+    //             var newSpan1=document.createElement("span");
+    //             var newSpan2=document.createElement("span");
+    //             var newSpan3=document.createElement("span");
+
+    //             newSpan1.innerHTML = tempStr1;
+    //             newSpan2.innerHTML = selectionStr;
+    //             newSpan3.innerHTML = tempStr2;
+    //             newSpan1.className = contentChiles[starNode].className;
+    //             newSpan1.setAttribute("data-position",spanPosition1);
+    //             newSpan2.className = "bg-selection";
+    //             newSpan2.setAttribute("data-position",spanPosition1 + star);
+    //             newSpan3.className = contentChiles[endNode].className;
+    //             newSpan3.setAttribute("data-position",spanPosition2 + end);
+
+    //             contentObj.insertBefore(newSpan3,contentChiles[starNode]);
+    //             contentObj.insertBefore(newSpan2,newSpan3);
+    //             contentObj.insertBefore(newSpan1,newSpan2);
+
+    //             for(i=endNode+3;i>=starNode+3;i--){
+    //                 contentObj.removeChild(contentChiles[i]);
+    //             }
+    //             selection.removeAllRanges();
+    //             console.log(spanPosition1 + star);
+    //             console.log(spanPosition2 + end - 1);
+    //         }
+    //     }
+  let div=document.getElementsByTagName("div").item(0)
+  div.onmouseup=change()
+  function change (event) {
+    //   event.preventDefault();
+    //   event.stopPropagation()
+    var Range=document.createRange()
+    console.log(Range)
+   }
+ </script>
+</body>
+</html> 

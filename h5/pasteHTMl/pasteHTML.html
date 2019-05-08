@@ -1,0 +1,75 @@
+-<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+<style>
+    .div{
+        width: 300px;
+        height: 300px;
+        border: 1px solid red;
+    }
+</style>
+<body>
+    <div class="div" contenteditable="true">
+            网易  新浪  搜狐<br><br>
+            <input type="button" value="添加链接" onclick="addLink();">
+    </div>
+    <script>
+      document.addEventListener("click",(e)=>{
+        console.log({e})
+ 
+      })
+document.addEventListener('paste', function(e){
+    console.log({e})
+    console.log( e.clipboardData.getData("text/plain"))
+    // pasteHTML(e.clipboardData.getData("text/html"))
+    // e.clipboardData.setData('text/html', '<b>Hello, world!</b>');
+    e.preventDefault(); // We want our data, not data from any selection, to be written to the clipboard
+});
+var inputRange=null
+function pasteHTML(str){
+    console.log({str:str.replace(/style\s*?=\s*?([‘"])[\s\S]*?\1/g,"")})
+    $(".div").focus()
+    var selection = window.getSelection ? window.getSelection() : document.selection
+      var range
+      if (inputRange) {
+        range = inputRange
+      } else {
+        range = selection.createRange ? selection.createRange() : selection.getRangeAt(0)
+      }
+      if (!window.getSelection) {
+        range.pasteHTML(str)
+        range.collapse(false)
+        range.select()
+      } else {
+        range.collapse(false)
+        var hasR = range.createContextualFragment(str)
+        var hasRLlastChild = hasR.lastChild
+        while (hasRLlastChild && hasRLlastChild.nodeName.toLowerCase() === 'br' && hasRLlastChild.previousSibling && hasRLlastChild.previousSibling.nodeName.toLowerCase() === 'br') {
+          var e = hasRLlastChild
+          hasRLlastChild = hasRLlastChild.previousSibling
+          hasR.removeChild(e)
+        }
+        range.insertNode(hasR)
+        if (hasRLlastChild) {
+          range.setEndAfter(hasRLlastChild)
+          range.setStartAfter(hasRLlastChild)
+        }
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
+}
+
+    //  $(".div").keydown(function(e){
+    //      if(e.keyCode==13) {
+    //         var cli= new ClipboardEvent("copy", {dataType: "text/plain", data : "123213"});    
+    //      }
+    //  })
+    </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // instanceof 
+        // 私有
+        function bar1(arg) { //另一种方法就是索性将私有方法移出模块，外部是是获取不带改方法是如何调用的
+            return this.arg = arg;
+        }
+        const bar2 = Symbol('bar2'); //Symbol
+        console.log({ bar2 })
+        // 类和模块的内部，默认就是严格模式
+        // 不存在变量提升
+        class parent {
+            constructor(x, y) {
+                this.parent = "parent"
+                this.x = x
+                this.y = y
+                this.a = 1
+                console.log("name", new.target.name); // parent 如果被继承就是继承的name这里children继承是children
+            }
+            parentMethod() {
+                console.log("我是挂在咋实例上面的", this.a)
+            }
+
+        }
+        //   继承extends
+        /**extends后直接接继承对象
+         *  **/
+        class children extends parent {
+            constructor(z, x, y, f) { //new 自动调用
+                super(x, y) //extends 必须显示调用super== es5 parent.prototype.constructor.call(this)
+                // super== parent.prototype
+                // this.a = 1231321
+                // console.log("super1",super) //error
+                console.log("super", super.valueOf)//valueOf返回对象本身的引用
+                console.log("super", super.parent)//undefined  
+                console.log("super", super.parentMethod())//  
+                this.children = "children"
+                // this.a = 1231321
+                this.z = z
+            }
+            addProtype(arg) {
+                console.log("我是挂载在prototype上的")
+            }
+            //私有
+            _bar() {
+                // this.__bar(123123)
+                console.log("变量名字区分私有方法单外面还是可以调用")
+            }
+            __bar(arg) {
+                bar1.call(this, arg)
+                console.log("另一种方法就是索性将私有方法移出模块，外部是是获取不带改方法是如何调用的")
+            }
+            bar2() {
+                this[bar2]()
+            }
+            [bar2]() { //如果外部想调用需要知道symbol但这个有唯一性只要不暴露出去就ok
+                console.log("symbol ")
+            }
+            //printName this找不到问题  或者直接使用箭头函数
+            printName() {
+                console.log(this)
+            }
+            //静态方法
+            static classMethod() {
+                return 'hello';
+            }
+            static bar() {
+                this.baz();
+            }
+            static baz() {
+                console.log('_baz');
+            }
+            baz() {
+                console.log('baz');
+            }
+
+        }
+        // assign 可以直接以此向添加多个
+        Object.assign(children.prototype, {
+            toTest1() {
+                console.log("toTest1")
+            }
+        });
+
+        //   实例化this指针 指向实例child 
+        var child = new children(3, 1, 2)
+        console.log(typeof child)  //object
+        console.log(typeof parent) //parent
+        console.log(child.constructor)
+
+        // 实例后指针 和 未实例指针
+        /** 实例child 
+         * __proto__生成属性指向 children.prototype  child没有prototype  children.prototype实例化后会指向new的实例。
+         * this  指向实例child本身
+         *  **/
+        console.log(children.prototype.constructor === children) //和es5一个球样
+        console.log(child.__proto__) // prototype 
+        console.log(children.prototype) // prototype  toString() toTest（） toTest1() 存在
+        console.log(child.__proto__ === children.prototype) //指向一个对象prototype
+        console.log(child.__proto__.constructor) // prototype
+        console.log(children.prototype.constructor) // prototype
+        console.log(child.__proto__.constructor === children.prototype.constructor) //constructor
+        child.addProtype()// 我是挂载在prototype上的
+        // child.toTest() // error  child.toTest is not a function
+        child.toString() //  success toString方法是Point类内部定义的方法，它是不可枚举的 这一点与 ES5 的行为不一致。
+        child.toTest1() //toTest1   上面先添加的
+
+        console.log(Object.keys(children.prototype)) //没有tostring 也没有下面追加的几种方法
+        console.log("hasOwnProperty", child.__proto__.hasOwnProperty('toString')) //false
+        console.log("hasOwnProperty", child.hasOwnProperty('toString'))  // false
+        //修改实例你会发现上面的也存在了但是不能调用必须在下面调用
+        console.log("Object.getPrototypeOf children.prototype child.__proto__,", children.prototype == Object.getPrototypeOf(child), Object.getPrototypeOf(child) == child.__proto__)
+        // Object.assign(children.prototype, {
+        //     toString() {
+        //         console.log("toString")
+        //     },
+        //     toTest() {
+        //         console.log("toTest")
+        //     },
+        //     addProtype() {
+        //         console.log("你会发现打印的是我")
+        //     }
+        // });
+        Object.assign(Object.getPrototypeOf(child), {
+            toString() {
+                console.log("toString")
+            },
+            toTest() {
+                console.log("toTest")
+            },
+            addProtype() {
+                console.log("你会发现打印的是我")
+            }
+        });
+        // 同上
+        // Object.assign(child.__proto__, {
+        //     toString() {
+        //         console.log("toString")
+        //     },
+        //     toTest() {
+        //         console.log("toTest")
+        //     },
+        //     addProtype() {
+        //         console.log("你会发现打印的是我")
+        //     }
+        // });
+        /** __proto__ 并不是语言本身的特性，
+           * 这是各大厂商具体实现时添加的私有属性，
+           * 虽然目前很多现代浏览器的 JS 引擎中都提供了这个私有属性，
+           * 但依旧不建议在生产中使用该属性，避免对环境产生依赖。生产环境中，
+           * 我们可以使用 Object.getPrototypeOf 方法来获取实例对象的原型，
+           * 然后再来为原型添加方法/属性
+        **/
+        child.addProtype()
+        child.toString()
+        child.toTest()
+
+        console.log(Object.keys(children.prototype)) //手动追加的tostring
+        // hasOwnProperty this上的
+        console.log("hasOwnProperty toString", child.hasOwnProperty('toString'))  // false toString是原型对象的属性
+        console.log("hasOwnProperty toTest", child.hasOwnProperty('toTest'))
+        console.log("hasOwnProperty toString", child.__proto__.hasOwnProperty('toString')) //true 
+        console.log("hasOwnProperty toTest", child.__proto__.hasOwnProperty('toTest')) //true
+        console.log("hasOwnProperty x", child.hasOwnProperty('x'))// true 
+        console.log("hasOwnProperty x", child.hasOwnProperty('f'))// false  实例没有赋值
+
+        //私有
+        child._bar(13123)
+        child.bar2()
+        console.log(child.__bar(123))
+
+
+        //this 找不到this问题
+        // 1：
+        //    var printName = child.printName
+        //     //  var {printName}=child
+        //     console.log(printName)//error 
+        //     var testThis = {
+        //         printName
+        //     }
+        //     testThis.printName()
+
+
+        // 2：get set
+
+        console.log(children.name)
+
+
+        //Class 的 Generator 方法
+
+        //Class 的静态方法 static
+        console.log(children.classMethod())
+        //console.log(child.classMethod()) //error child.classMethod is not a function
+        // childr.bar()
+        children.bar()
+
+        //super
+
+
+
+
+
+
+        class A {
+            aa() {
+                console.log(11111111111111)
+            }
+        }
+
+        class B {
+
+            bb() { console.log(222222222) }
+
+        }
+
+        // B 的实例继承 A 的实例
+        Object.setPrototypeOf(B.prototype, A.prototype);
+
+        // B 继承 A 的静态属性
+        Object.setPrototypeOf(B, A);
+
+        const b = new B();
+        console.log({
+            a1: {
+                A,
+                prototype: A.prototype 
+            }, b1: {
+                B,//B.__proto__= Class A 
+                prototype: B.prototype //B.prototype.__proto__= A.prototype
+            }, Nb: {
+                b,
+                prototype: b.__proto__
+            }
+        })
+        b.aa()
+    </script>
+</body>
+
+</html>

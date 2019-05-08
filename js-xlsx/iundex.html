@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- https://blog.csdn.net/oscar999/article/details/16342699/ -->
+        <script>  
+          function clickDownload(aLink)  
+          {  
+               var str = "col1,col2,col3\nvalue1,value2,value3";  
+               str =  encodeURIComponent(str);  
+               aLink.href = "data:text/csv;charset=utf-8,"+str;  
+               aLink.click();  
+          }  
+          function clickDownload1(aLink)  
+          {  
+               var str = "栏位1,栏位2,栏位3\n值1,值2,值3";  
+               str =  encodeURIComponent(str);            //\ufeff不加有时候打开乱码
+               aLink.href = "data:text/csv;charset=utf-8,\ufeff"+str;  
+               aLink.click();  
+          }  
+          var blob = new Blob([data], { type: 'text/csv' }); //new way  
+        var csvUrl = URL.createObjectURL(blob);  
+        document.getElementById("mylink").href = csvUrl;   
+        </script>   
+          <a id="test" onclick="clickDownload(this)" download="downlaod.csv" href="#">download</a>  
+          <a id="test1" onclick="clickDownload1(this)" download="downlaod.csv" href="#">下载</a>      
+        
+</body>
+</html>

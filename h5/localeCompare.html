@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // https://www.cnblogs.com/weblff/p/9051608.html
+        function lineupStudents(students) {
+            var stu = students.split(",");
+            stu.sort(function (a, b) {
+                if (a.length == b.length) {
+                    return a.localeCompare(b);
+                } else {
+                    return b.length - a.length;
+                }
+            });
+            console.log(stu);
+        }
+        var s1 = '的,从,不,啊';
+        var s1 = 'a,c,d,b';
+        lineupStudents(s1);//输出['Takehiko','Takayuki','Takahiro','Takeshi','Takeshi','Takashi','Tadashi','Takeo','Takao']
+    </script>
+</body>
+
+</html>

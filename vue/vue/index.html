@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    thead tr{
+        position: absolute;
+        bottom:30px;
+    }
+</style>
+<body>
+    <table border="1" cellspacing="0" name="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th> </th>
+                <th>/th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>111</td>
+                <td>2wqeeeeeeeeee</td>
+                <td>2eqwqwqwqwqwqwqwqwqw</td>
+                <td>2weqqqqqqqqqqq</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
+<script>
+    
+function getEyeJsStyle(ele, styleName) {
+    if (ele.currentStyle) {//ie 
+        return ele.currentStyle[styleName];
+    } else if (ele.ownerDocument.defaultView) { //ff 
+        var arr = ele.ownerDocument.defaultView.getComputedStyle(ele, null);
+        return arr[styleName];
+    } else {
+        return window.getComputedStyle(ele, null)[styleName]
+    }
+}
+
+function watchClient(doc, flag) {
+    var el = doc.querySelectorAll("table")[0]
+    var tds = el.tBodies[0].rows[0].cells
+    var ths = el.querySelector("thead").rows[0].cells
+    for (var i = 0; i < tds.length; i++) {
+        // ths[i].style.width = getEyeJsStyle(tds[i], "width")
+        console.log({w:tds[i].currentStyle.width})
+    }
+    if (doc.querySelectorAll("table")[1]) {
+        var el = doc.querySelectorAll("table")[1]
+        var tds = el.tBodies[0].rows[0].cells
+        var ths = el.querySelector("thead").rows[0].cells
+        for (var i = 0; i < tds.length; i++) {
+            console.log({www:tds[i].offsetWidth})
+            ths[i].style.width = window.doc.getComputedStyle(tds[i], null).width || tds[i].currentStyle.width
+        }
+    }
+    // if(window.innerWidth&&window.innerWidth<1300){
+    //          var trH=el.querySelector("thead").rows[0]
+    //          var trB=tds=el.tBodies[0].rows[0]
+    //          trH.style.width=window.getComputedStyle(trB, null).width|| trB.currentStyle.width
+    // }
+    console.log({ wath: "执行了" })
+}
+function cusThead (doc, flag) {
+    if (flag === false) {
+        window.onresize = ''
+        console.log({ remove: 'remove resize event' })
+        console.log({ ww: window.onresize })
+        return
+    }
+    if (flag === true) {
+        window.onresize = function () {
+            watchClient(doc)
+        }
+        console.log({ add: 'add resize event' })
+        console.log(window.onresize)
+    }
+    if (flag === 1 && (doc.querySelector("table"))) {
+        if (window.onresize == null) {
+            window.onresize = function () {
+                watchClient(doc)
+            }
+        }
+        console.log("onrezie 事件mounted没有挂载上 update重新挂载")
+    }
+    watchClient(doc)
+    console.log({ win: window.onresize })
+}
+ setInterval(function(){
+     var cells=document.querySelector("tbody").querySelectorAll("tr")[0].cells
+     for(var i =0; i<cells.length;i++){
+         cells[i].innerText=Math.random()*10000000000
+     }
+ },1000)
+window.onresize=function(){
+    //  alert(111111111)
+    console.log(111111)
+    cusThead(document,true)
+ }
+ console.log(document.querySelector("table").tBodies[0].rows[0].cells[0].currentStyle)
+</script>

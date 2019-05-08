@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let s1 = Symbol("123");
+      console.log(s1); //Symbol(123)
+      let s2 = Symbol("123");
+      console.log(s2); //Symbol(123)
+      console.log(s1 == s2); //false
+      console.log(Symbol.prototype.__proto__);
+
+      console.log(Symbol.iterator); //Symbol(Symbol.iterator)
+      var obj = {};
+      obj[Symbol.iterator] = function*() {
+        //没有搞明白这个Symbol.iterator
+        yield 1;
+        yield 2;
+        yield 3;
+      };
+      console.log(...obj);
+
+      let item = Symbol("item");
+      class one {
+        constructor() {
+          this.sy1 = Symbol("sy1");
+        }
+        [item]() {
+          alert(1);
+        }
+        item() {
+          alert(2);
+        }
+        [this.sy1]() {
+          alert(3);
+        }
+      }
+      let use = new one();
+
+      console.log(use);
+
+      use[item]();
+    </script>
+  </body>
+</html>

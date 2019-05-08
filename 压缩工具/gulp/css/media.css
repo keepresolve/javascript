@@ -1,0 +1,199 @@
+
+/* 媒体查询 */
+@media screen and (max-width: 1350px) {
+    .session_main{
+        width: 589px;
+        height: 625px;
+        top: calc(50% - 312.5px);
+    }
+    .session_main_left{
+        width: 589px;
+    }
+    .direct-chat-text{
+        max-width:500px!important;
+    }
+    .reconnect_kefu{
+        top:75px;
+        left: 230px;	
+    }
+}
+@media screen and (max-width: 800px) {
+    .reconnect_kefu{
+        top:45px;
+        left: 115px;	
+    }
+    .session_main{
+        width: 359px;
+        height: 560px;
+        top: calc(50% - 300px);
+    }
+    .session_main_left{
+        width: 359px;
+        height: calc(100% - 70px)
+    }
+    .leave_word_main{
+        width: 360px;
+        height:560px;
+        top: calc(50% - 300px);
+    }
+    .post_message_main>div{
+        margin-bottom: 0px;
+    }
+    .post_message_main>div input{
+        width: 320px;
+        height: 35px;
+    }
+    .post_message_main>div label{
+        line-height: 30px;
+    }
+    .post_message_main>div textarea {
+        height: 50px;
+        width: 318px;
+    }
+    .post_message_main {
+        margin-top: 0px;
+        padding: 0 20px;
+        height: 280px;
+    }
+    #send_message{
+        margin-right:20px;
+        margin-top:20px; 
+    }
+    iframe .minimize{
+        display: block!important;
+    }
+    .session_main_right{
+        width: 180px;
+    }
+    #message_box{
+        height: 98px;
+    }
+    .lable_div{
+        box-sizing: border-box;
+        font-family: "Noto Sans",'Microsoft Yahei','SimSun';
+        font-size:14px;
+        color:#838990;
+        letter-spacing:0;
+    }
+    .msg_center{
+        font-size:14px;
+    }
+    .direct-chat-text{
+        max-width:260px!important;
+    }
+    .msg_send{
+        height: 120px;
+    }
+    .session_win{
+        height: calc(100% - 120px);
+    }
+    .toolbar{
+        height:30px!important;
+    }
+    .toolbar div{
+        width:20px;
+        height:20px;
+    }
+    .toolbar div img{
+        width:20px;
+        height:20px;
+    }
+    .upload_img, .upload_file {
+        padding-top:0px; 
+    }
+    .btn_enter:active{
+        background:#12a0e1;
+    }
+    .btn_enter:hover{
+        opacity: 0.8;
+    }
+    .btn_enter{
+        cursor: pointer;
+        width: 52px;
+        height: 30px;
+        line-height: 30px;
+        bottom:10px;
+        right: 10px;
+        background:#36c0ff;
+        border-radius:2px;
+    }
+    .msg_cont{
+        height:40px;
+        font-size:14px; 
+        margin-top:5px; 
+    }
+    .contenteditable_div{
+        top: 35px;
+        font-size: 14px;
+    }
+    .textarea_box{
+        width:318px;
+        height: 66px;
+    }
+    .facelist{
+        width: 307px;
+        height: 115px;
+        overflow: auto;
+    }
+    #typing_text{
+        font-size: 14px;
+    }
+    .clear_input{
+        position: absolute;
+        right: -2px;
+        top: -0.5px;
+    }
+    .textarea_box img{
+        top: 3px;
+        right: 3px;
+    }
+    .evaluation_header{
+        font-size: 12px;
+        padding: 10px;
+    }
+    #sub_evaluation{
+        margin: 10px auto;
+        width: 65px;
+        height: 25px;
+        line-height: 25px;
+    }
+    .evaluation_main{
+        height: 160px;
+        width: 260px;
+        top: calc(50% - 80px);
+        left: calc(50% - 130px);
+    }
+    .evaluation_main_close{
+        width: 14px;
+        height: 14px;
+    }
+    .scoring_criteria{
+        width: 204px;
+        height: 60px;
+        margin: 10px auto;
+    }
+    .scoring_criteria>div{
+        width: 60px;
+        height: 60px;
+        float: left;
+    }
+    .scoring_criteria>div img {
+        width: 30px;
+        height: 30px;
+        margin-left: 15px;
+    }
+    .scoring_criteria div div{
+        font-size: 12px;
+    }
+    .scoring_criteria1{
+        height: 50px;
+        margin-top: 10px;
+    }
+    .scoring_criteria2{
+        margin: 0px auto;
+           margin-top: 0px;
+           height: 60px;
+    }
+}
+/* 媒体查询 */
+

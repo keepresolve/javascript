@@ -1,0 +1,48 @@
+
+
+
+
+/*
+
+.imgBtn {
+    float: left;
+    text-decoration: none;
+    margin-top: 8px;
+    margin-left: 10px;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-position: 0 -13px;
+    height: 18px;
+    width: 20px;
+    cursor: pointer;
+}
+
+.imgBtn:active {
+    margin-top: 9px;
+}
+
+.imgBtn:hover {
+    background-position: 0 -31px
+}
+
+.postBtn {
+    float: right;
+    font: 13px "微软雅黑", Arial, Helvetica, sans-serif;
+    color: #808080;
+    padding: 9px 20px 7px 20px;
+    border-left: 1px solid #ccc;
+    cursor: pointer;
+    -moz-border-radius: 0 0 5px 0;
+    -webkit-border-radius: 0 0 5px 0;
+    border-radius: 0 0 5px 0;
+}
+
+.postBtn:hover {
+    color: #333;
+    background-color: #efefef;
+}
+
+.postBtn:active {
+    padding: 10px 20px 6px 20px;
+}*/
+

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- 优先使用 IE 最新版本和 Chrome -->
+		<meta http-equiv="X-UA-Compatible" content="ie=edge;chrome=1">
+		<meta name="author" content="caoshiyuan">
+		<title>客服服务</title>
+		<!-- 为移动设备添加 viewport -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<!-- windows phone 点击无高光 -->
+		<meta name="msapplication-tap-highlight" content="no">
+		<!-- n忽略电话号码和邮箱 -->
+		<meta name="format-detection" content="telephone=no">
+		<meta name="format-detection" content="email=no"/>
+		<!-- QQ强制竖屏 -->
+		<meta name="x5-orientation" content="portrait">
+		<!-- uc强制竖屏 -->
+		<meta name="screen-orientation" content="portrait">
+		<!-- 开启对web app程序的支持 -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<link rel="stylesheet" href="css/user.min.css">
+		<link rel="stylesheet" href="css/mobile.min.css">
+		<link rel="stylesheet" href="css/fonts/iconfont.css">
+		<!-- <script src="plugins/vConsole/vconsole.min.js"></script>
+		<script>
+			// 集成手机了浏览器在线调试
+			var vConsole = new VConsole();
+		</script> -->
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="session_main">
+				<div class="leave_word_header">
+					<i class="back icon iconfont icon-back"></i>
+					<span class="enterprise_name"></span>
+					<div class="switch_position" style="display:none;color:white!important;margin-right:0px!important;">转人工</div>
+				</div>
+				<div class="session_main_left">
+					<div class="session_win direct-chat-primary">
+						<div class="direct-chat-messages">
+						</div>
+						<div id="typing_text" style="display:none">
+							<span class="">客服正在输入...</span>
+						</div>
+					</div>
+					<div class="msg_send">
+						<div class="toolbar">
+							<div class="web_face" isshow='0'>
+								<img class="toolbar_img" src="img/webfaceleave.png" movesrc="img/webfacemove.png" leavesrc="img/webfaceleave.png">
+							</div>
+							<div class="upload_img">
+								<input type="file" name="" class="toolbar_img" accept="image/gif, image/jpeg, image/jpg, image/png" id="update_img">
+								<img class="toolbar_file_img" src="img/pickpicleave.png" movesrc="img/pickpicmove.png" leavesrc="img/pickpicleave.png">
+							</div>
+						</div>
+						<div id="send_box">
+							<div onpaste="return false" id="text_div" class="msg_cont placeholder"></div>
+							<div class="btn_enter">
+								<i class="icon iconfont icon-send"></i>
+							</div>
+						</div>
+						<div class="msg_send_mask"></div>
+						<div style="display:none" class="wap_reconnect_kefu">
+							<img  src="img/wap_refresh_icon.png">
+							<span class="refresh_icon">点击重新连接客服</span>
+						</div>
+					</div>
+					<div class="main_mask" style="display:none;"></div>
+				</div>
+			</div>
+			<div class="leave_word_main">
+				<div class="leave_word_header">
+					<i class="back icon iconfont icon-back"></i>
+					<span class="enterprise_name">客户服务</span>
+				</div>
+				<div class="post_message_main">
+					<h4 class="leave_word_prompting"></h4>
+					<div class="input_box">
+						<div class="lable_div">
+							<label>
+								<span style="color:#ff0000;">* </span>姓名</label>
+						</div>
+						<input style="width:100%;" autocomplete="off" type="text" placeholder="请输入您的姓名" name="name" onkeyup="this.value=this.value.replace(/[\d]/g,'')"
+						onafterpaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[\d]/g,''))" maxlength=10>
+						<img src="img/clear-input.png" class="clear_input name_img" style="display:none">
+					</div>
+					<div class="input_box">
+						<div class="lable_div">
+							<label>
+								<span style="color:#ff0000;">* </span>联系电话</label>
+						</div>
+						<input style="width:100%;" autocomplete="off" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+						type="text" placeholder="请输入您的手机号" name="phone" maxlength=11>
+						<img src="img/clear-input.png" class="clear_input phone_img" style="display:none">
+					</div>
+					<div class="input_box">
+						<div class="lable_div">
+							<label>邮箱</label>
+						</div>
+						<input style="width:100%;" autocomplete="off" type="text" placeholder="请输入你的邮箱" name="email">
+						<img src="img/clear-input.png" class="clear_input email_img" style="display:none">
+					</div>
+					<div id="message_box">
+						<div class="lable_div">
+							<label>
+								<span style="color:#ff0000;">* </span>留言内容</label>
+						</div>
+						<div class="textarea_box" style="width:100%;">
+							<textarea name="message" placeholder="请输入留言内容" maxlength=500></textarea>
+							<img src="img/clear-input.png" class="clear_input" style="display:none">
+							<span class="message_text_num">
+								<span class="message_text_num_span">0</span>/500</span>
+						</div>
+					</div>
+					<div id="send_message">提交留言</div>
+				</div>
+			</div>
+			<ul class="facelist" style="display:none">
+			</ul>
+		</div>
+		<!-- 图片查看 -->
+		<div class="img_plane">
+			<img src="img/Shapeclose.png" class="plane_close">
+			<img   id="img_show" src="img/Shapeclose.png" alt="">
+		</div>
+		<!-- jQuery 3 -->
+		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+		<!-- socket -->
+		<script src="https://cdn.bootcss.com/socket.io/2.1.0/socket.io.js"></script>
+		<!-- 用户 -->
+		<script src="js/bundle.min.js"></script>
+		<script>
+			$(function () {
+				var height=document.documentElement.clientHeight
+				var lastTouchEnd=0; 
+				$(".back").click(function () {
+					history.go(-1); 
+				})
+				$('#text_div').get(0).oninput = function () {
+					if($(this).height()>18){
+						$(this).css("bottom","6px")
+					}else{
+						$(this).css("bottom","14px")
+					}	
+				}
+				//ios 自带浏览器切换第输入发触发scroll事件
+				// $(window).scroll(function () {
+				// 	// $(".leave_word_header").css({top:$(window).scrollTop()>0?$(window).scrollTop():0})
+				// })
+				//  自带浏览器切换 安卓/ios uc切换第输入发触发resize 
+				window.addEventListener("resize",function(e){
+					setTimeout(function(){
+						var u = navigator.userAgent;
+						if((u.indexOf("iphone")>-1&&u.indexOf('Safari')==-1)||u.indexOf("ipad")>-1){
+							window.scrollTo(0, $('body')[0].offsetHeight)
+						}
+						$(".direct-chat-messages").scrollTop($(".direct-chat-messages").get(0).scrollHeight-$(".direct-chat-messages")[0].offsetHeight)
+					},500)		
+				})
+				//禁止ios缩放
+				// document.addEventListener('touchstart',function (event) {  
+				// 	if(event.touches.length>1){  
+				// 		event.preventDefault();  
+				// 	}  
+				// })  
+				// document.addEventListener('touchend',function (event) {  
+				// 	var now=(new Date()).getTime();  
+				// 	if(now-lastTouchEnd<=300){  
+				// 		event.preventDefault();  
+				// 	}  
+				// 	lastTouchEnd=now;  
+				// },false)  
+			 });
+		</script>
+	</body>
+</html>

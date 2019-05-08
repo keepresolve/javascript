@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /**二叉搜索树（BST）
+     * 左侧节点存储（比父节点）小
+     * 右侧节点存储（比父节点）大（或者等于）的值。'
+     * **/
+
+    function BinarySearchTree() {
+      let root = null
+      let Node = function (key) {
+        this.key = key
+        this.left = null
+        this.right = null
+      }
+      // private
+      // 插入创建
+      function insertNode(parent, node) {
+        if (node.key < parent.key) {
+          if (parent.left == null) {
+            parent.left = node
+          } else {
+            insertNode(parent.left, node)
+          }
+        } else {
+          if (parent.right == null) {
+            parent.right = node
+          } else {
+            insertNode(parent.right, node)
+          }
+        }
+      }
+      // 中序遍历
+      function inOrderTraverseNode(node, callback) {
+        if (node != null) {
+          inOrderTraverseNode(node.left, callback)
+          callback(node.key)
+          inOrderTraverseNode(node.right, callback)
+        }
+      }
+      function preOrderTraverseNode(node, callback) {
+        if (node != null) {
+          callback(node.key)
+          preOrderTraverseNode(node.left, callback)
+          preOrderTraverseNode(node.right, callback)
+        }
+
+      }
+      // public
+      this.insert = function (key) {
+        var newNode = new Node(key);
+        if (root == null) {
+          root = newNode
+        } else {
+          insertNode(root, newNode)
+        }
+      }
+      this.getTreeList = function () {
+        return root
+      }
+      // this.search=search
+      /**先序遍历
+       * 是以优先于后代节点的顺序访问每个节点的。先序遍历的一种应用是打印一个结构化的文档。
+       * **/
+      this.preOrderTraverse = function (callback) {
+        preOrderTraverseNode(root, callback)
+      }
+      /**中序遍历
+       * 是一种以上行顺序访问BST所有节点的遍历方式，也就是以从最小到最大的顺序访问所有节点。
+       * 中序遍历的一种应用就是对树进行排序操作。我们来看它的实现
+       * **/
+      this.inOrderTraverse = function (callback) {
+        inOrderTraverseNode(root, callback)
+      }
+    }
+    let BSTree = new BinarySearchTree()
+    BSTree.insert(10)
+    BSTree.insert(11)
+    BSTree.insert(12)
+    BSTree.insert(13)
+    BSTree.insert(8)
+    BSTree.insert(9)
+    
+    console.log("当前的数据", BSTree.getTreeList())
+    console.time("先序遍历")
+    BSTree.preOrderTraverse((key) => {
+      console.log({ key })
+    })
+    console.timeEnd("先序遍历")
+    console.time("中序遍历")
+    BSTree.inOrderTraverse((key) => {
+      console.log({ key })
+    })
+    console.timeEnd("中序遍历")
+
+
+    var inOrderTraverseNode = function (node, callback) {
+      if (node !== null) { //{2} 
+        inOrderTraverseNode(node.left, callback); //{3} 
+        callback(node.key); //{4} 
+        inOrderTraverseNode(node.right, callback); //{5} 
+      }
+    };
+    function printNode(value) { //{6} 
+      console.log(value);
+    }
+
+    function BinarySearchTree1() {
+      var Node = function (key) {
+        //{1}
+        this.key = key;
+        this.left = null;
+        this.right = null;
+      };
+      var root = null; //{2}
+      this.getTreeList = function () {
+        return root
+      }
+      this.insert = function (key) {
+        var newNode = new Node(key); //{1}
+        if (root === null) {
+          //{2}
+          root = newNode;
+        } else {
+          insertNode(root, newNode); //{3}
+        }
+
+      };
+      this.inOrderTraverse = function (callback) {
+        inOrderTraverseNode(root, callback); //{1} 
+      };
+    }
+
+    var insertNode = function (node, newNode) {
+      if (newNode.key < node.key) {
+        //{4}
+        if (node.left === null) {
+          //{5}
+          node.left = newNode; //{6}
+        } else {
+          insertNode(node.left, newNode); //{7}
+        }
+      } else {
+        if (node.right === null) {
+          //{8}
+          node.right = newNode; //{9}
+        } else {
+          insertNode(node.right, newNode); //{10}
+        }
+      }
+    };
+
+    let BSTree1 = new BinarySearchTree1()
+    BSTree1.insert(10)
+    BSTree1.insert(11)
+    BSTree1.insert(12)
+    BSTree1.insert(13)
+    BSTree1.insert(8)
+    BSTree1.insert(9)
+    console.log(BSTree1.getTreeList())
+  </script>
+</body>
+
+</html>

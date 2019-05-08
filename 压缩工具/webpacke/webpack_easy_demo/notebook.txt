@@ -1,0 +1,24 @@
+第一步：
+    全局安装webpack;  webpack -v
+
+第二步：
+    下载css-loader,style-loader
+    cnpm install css-loader style-loader
+
+第三步：
+    创建js2.js
+        module.exports = "<h1>欢迎使用webpack</h1>"
+    创建sty.css
+        body{
+            background-color: skyblue;
+        }
+    创建js1.js
+        var str = require("./js2");
+        require("!style-loader!css-loader!./sty.css")
+        document.write(str)
+
+第四步：
+    打包： webpack js1.js bundle.js
+
+第五步：
+    在index.html引用bundle.js文件

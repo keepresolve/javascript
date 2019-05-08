@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/xlsx/0.12.12/xlsx.core.min.js"></script>
+    <script src="https://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.js"></script>
+
+</head>
+
+<body>
+    <input type="file" id="excel-file">
+    <table id="table">
+        <!-- <thead>
+            <tr>
+                    <th>asdasdasd</th>   
+            </tr>
+             
+        </thead>
+        <tbody> 
+            <tr>
+                      <td>asdasd</td>
+            </tr>
+        </tbody> -->
+    </table>
+    <button>asdasd</button>
+</body>
+
+</html>
+<script>
+    //创建一个工作簿
+    // var workbook = XLSX.utils.book_new();
+
+    // XLSX.utils.table_to_book(document.getElementById('table1'));
+    // console.log({ workbook })
+    // table 转化成 sheet 相当于创建一个表
+    // var ws1 = XLSX.utils.table_to_book(document.getElementById('table1'));
+    // console.log({ ws1 })
+    // XLSX.utils.book_append_sheet(workbook, ws1, "Sheet3")
+    // console.log({ ws1 })
+    // var new_ws_name = "SheetJS";
+
+    /* make worksheet */
+    // var ws_data = [
+    //     ["S", "h", "e", "e", "t", "J", "S"],
+    //     [1, 2, 3, 4, 5]
+    // ];
+    // var ws = XLSX.utils.aoa_to_sheet(ws_data);
+    // var persons=[]
+    /* Add the worksheet to the workbook */
+    // XLSX.utils.book_append_sheet(wb, ws, ws_name);
+    var workbook = null
+    var oldF2=null
+    var oldG2=null
+    $('#excel-file').change(function (e) {
+        var files = e.target.files;
+
+        var fileReader = new FileReader();
+        fileReader.onload = function (ev) {
+
+            try {
+                var data = ev.target.result
+
+                workbook = XLSX.read(data, {
+                    type: 'binary'
+                })// 以二进制流方式读取得到整份excel表格对象
+
+                persons = [];  // 存储获取到的数据
+            } catch (e) {
+                console.log('文件类型不正确');
+                return;
+            }
+            console.log({ workbook })
+            //table显示出来
+            var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            var container = document.getElementById('table');
+            container.innerHTML = XLSX.utils.sheet_to_html(worksheet);
+           console.log(workbook.Sheets["标准问题和多渠道答案"]) 
+           oldF2=workbook.Sheets["标准问题和多渠道答案"]["F2"]
+           oldG2=workbook.Sheets["标准问题和多渠道答案"]["G2"]
+           workbook.Sheets["标准问题和多渠道答案"]["F2"]=undefined
+           workbook.Sheets["标准问题和多渠道答案"]["G2"]=undefined
+            // 表格的表格范围，可用于判断表头是否数量是否正确
+            var fromTo = '';
+            //转成对象数组
+            for (var sheet in workbook.Sheets) {
+                if (workbook.Sheets.hasOwnProperty(sheet)) {
+                    fromTo = workbook.Sheets[sheet]['!ref'];
+                    console.log(fromTo);
+                    persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                    // break; // 如果只取第一张表，就取消注释这行
+                }
+            }
+            // var aaa=XLSX.utils.aoa_to_sheet(persons)
+            console.log(persons);
+
+        };
+
+        // 以二进制方式打开文件
+        fileReader.readAsBinaryString(files[0]);
+    });
+    $("button").click(function () {
+        //   function doit(type, fn, dl) {
+        //         var elt = document.getElementById('data-table');
+        //         var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
+        //         return dl ?
+        //             XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+        //             XLSX.writeFile(wb, fn || ('test.' + (type || 'xlsx')));
+        //     }
+        var wopts = { bookType:'xlsx', bookSST:false, type:'array' };
+        workbook.Sheets["标准问题和多渠道答案"]["F2"]=oldF2
+        workbook.Sheets["标准问题和多渠道答案"]["G2"]=oldG2
+        var wbout = XLSX.write(workbook, wopts);
+          console.log({wbout})
+        /* the saveAs call downloads a file on the local machine */
+        saveAs(new Blob([wbout], { type: "application/octet-stream" }), "test.xlsx");
+        // var type = "xlsx", fn = undefined
+        // var elt = document.getElementById('table');
+        // var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
+        // console.log(XLSX.writeFile(wb, fn || ('test.' + (type || 'xlsx'))))
+        // window.open(XLSX.writeFile(wb, fn || ('test.' + (type || 'xlsx'))))
+    })
+</script>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    img {
+      vertical-align: bottom;
+    }
+    #box {
+      position: relative;
+      margin: 0 auto;
+      width: 780px;
+    }
+    #box .panel {
+      position: absolute;
+    }
+    #box .panel img {
+      margin: 10px;
+      padding: 10px;
+      width: 220px;
+      background: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 8px #ccc;
+    }
+  </style>
+  <body>
+    <div id="box">
+      <div class="panel"><img src="img/1.jpg" /></div>
+      <div class="panel"><img src="img/2.jpg" /></div>
+      <div class="panel"><img src="img/3.jpg" /></div>
+      <div class="panel"><img src="img/4.jpg" /></div>
+      <div class="panel"><img src="img/5.jpg" /></div>
+      <div class="panel"><img src="img/6.jpg" /></div>
+      <div class="panel"><img src="img/7.jpg" /></div>
+      <div class="panel"><img src="img/8.jpg" /></div>
+      <div class="panel"><img src="img/9.jpg" /></div>
+      <div class="panel"><img src="img/10.jpg" /></div>
+      <div class="panel"><img src="img/11.jpg" /></div>
+      <div class="panel"><img src="img/12.jpg" /></div>
+      <div class="panel"><img src="img/13.jpg" /></div>
+      <div class="panel"><img src="img/14.jpg" /></div>
+      <div class="panel"><img src="img/15.jpg" /></div>
+      <div class="panel"><img src="img/16.jpg" /></div>
+      <div class="panel"><img src="img/17.jpg" /></div>
+      <div class="panel"><img src="img/18.jpg" /></div>
+      <div class="panel"><img src="img/19.jpg" /></div>
+      <div class="panel"><img src="img/20.jpg" /></div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    let box = document.getElementById("box");
+    let panel = Array.from(box.children);
+    // 声明panel的宽度
+    const PANEL_WIDTH = panel[0].offsetWidth;
+    // 声明列数
+    let totalColumn = Math.trunc(
+      document.documentElement.clientWidth / PANEL_WIDTH
+    );
+    // 就算box的宽度
+    box.style.width = totalColumn * PANEL_WIDTH + "PX";
+    // 声明图片的宽度
+    const IMG_WIDTH = 220;
+    // 记录每列的高度
+    let columnHeight = [];
+    panel.forEach(function(v, k) {
+      if (k < totalColumn) {
+        v.style.left = k * PANEL_WIDTH + "PX";
+        v.style.top = 0;
+        // 记录列的高度
+        columnHeight.push(v.offsetHeight);
+      } else {
+        //剩余的图片找最低的列高度
+        let minHeight = Math.min(...columnHeight);
+        // 查找最小值在数组中的小标
+        let minHeightKey = columnHeight.indexOf(minHeight);
+        // 指定位置
+        v.style.left = minHeightKey * PANEL_WIDTH + "px";
+        v.style.top = minHeight + "px";
+        // 更新列的高度
+        columnHeight[minHeightKey] = minHeight + v.offsetHeight;
+      }
+    });
+  </script>
+</html>

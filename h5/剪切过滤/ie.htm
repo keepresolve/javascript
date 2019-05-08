@@ -1,0 +1,198 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <input type="checkbox" id="selectPasted" checked> Selected pasted content
+        <br>
+        <input type="button" id="paste" value="Paste HTML" unselectable="on">
+
+        <div id="test" contenteditable="true">
+            Here is some nice text
+        </div>
+
+    </div>
+    <script>
+        function pasteHtmlAtCaret(html, selectPastedContent) {
+            var sel, range;
+            if (window.getSelection) {
+                // IE9 and non-IE
+                sel = window.getSelection();
+                if (sel.getRangeAt && sel.rangeCount) {
+                    range = sel.getRangeAt(0);
+                    range.deleteContents();
+
+                    // Range.createContextualFragment() would be useful here but is
+                    // only relatively recently standardized and is not supported in
+                    // some browsers (IE9, for one)
+                    var el = document.createElement("div");
+                    el.innerHTML = html;
+                    var frag = document.createDocumentFragment(), node, lastNode;
+                    while ((node = el.firstChild)) {
+                        lastNode = frag.appendChild(node);
+                    }
+                    var firstNode = frag.firstChild;
+                    range.insertNode(frag);
+
+                    // Preserve the selection
+                    if (lastNode) {
+                        range = range.cloneRange();
+                        range.setStartAfter(lastNode);
+                        if (selectPastedContent) {
+                            range.setStartBefore(firstNode);
+                        } else {
+                            range.collapse(true);
+                        }
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                }
+            } else if ((sel = document.selection) && sel.type != "Control") {
+                // IE < 9
+                var originalRange = sel.createRange();
+                originalRange.collapse(true);
+                sel.createRange().pasteHTML(html);
+                if (selectPastedContent) {
+                    range = sel.createRange();
+                    range.setEndPoint("StartToStart", originalRange);
+                    range.select();
+                }
+            }
+        }
+
+        document.getElementById("paste").onclick = function () {
+            document.getElementById('test').focus();
+        }
+    </script>
+</body>
+
+</html> -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <title>contenteditable</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .im-message-area {
+            width: 98%;
+            padding: 2px;
+            height: 75px;
+            border: #000 solid 1px;
+            background: #fff;
+            font: 12px/20px arial, "5b8b4f53";
+            word-wrap: break-word;
+            overflow-y: auto;
+            line-height: 1;
+        }
+
+        .ul {
+            display: none;
+        }
+
+        .ul li {
+            background-color: #CCC;
+            width: 50px;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+        function inimage(text) {
+            // var obj = $(".im-message-area")[0];
+            // var range, node;
+            // if (!obj.hasfocus) {
+            //     obj.focus();
+            // }
+            // if (window.getSelection && window.getSelection().getRangeAt) {
+            //     range = window.getSelection().getRangeAt(0);
+            //     range.collapse(false);
+            //     node = range.createContextualFragment(text);
+            //     var c = node.lastChild;
+            //     range.insertNode(node);
+            //     if (c) {
+            //         range.setEndAfter(c);
+            //         range.setStartAfter(c)
+            //     }
+            //     var j = window.getSelection();
+            //     j.removeAllRanges();
+            //     j.addRange(range);
+
+            // } else if (document.selection && document.selection.createRange) {
+            //     document.selection.createRange().pasteHTML(text);
+            // }
+       
+                // 选择表情 并在记录的光标位置插入
+                var selection = window.getSelection ? window.getSelection() : document.selection
+                var range = selection.createRange ? selection.createRange() : selection.getRangeAt(0)
+                
+                if (!window.getSelection) {
+                    // $("#im_message_area").focus()
+                    // this.$refs.inputFormat.focus()
+                    range.pasteHTML(text)
+                    range.collapse(false)
+                    range.select()
+                } else {
+                    // $("#im_message_area").focus()
+                    range.collapse(false)
+                    var hasR = range.createContextualFragment(text)
+                    var hasRLlastChild = hasR.lastChild
+                    while (hasRLlastChild && hasRLlastChild.nodeName.toLowerCase() === 'br' && hasRLlastChild.previousSibling && hasRLlastChild.previousSibling.nodeName.toLowerCase() === 'br') {
+                        var e = hasRLlastChild
+                        hasRLlastChild = hasRLlastChild.previousSibling
+                        hasR.removeChild(e)
+                    }
+                    range.insertNode(hasR)
+                    if (hasRLlastChild) {
+                        range.setEndAfter(hasRLlastChild)
+                        range.setStartAfter(hasRLlastChild)
+                    }
+                    selection.removeAllRanges()
+                    selection.addRange(range)
+                }
+            
+        }
+        $(document).ready(function () {
+            // $('#button').click(function () {
+                $('.ul').show();
+            // })
+            $('.ul li').each(function () {
+                $(this).click(function () {
+                    inimage($(this).text());
+                })
+            })
+            $("#im_message_area").bind("paste",function(){
+            
+               inimage("<p></>1243123123")
+            //    window.event.returnValue=false
+            return false
+        })
+        });
+      
+    </script>
+</head>
+
+<body>
+    <div contenteditable="true" id="im_message_area" class="im-message-area">asdasd
+        <br>
+    </div>
+    <a href="javascript:void(0)" id="button">按钮</a>
+    <ul class="ul">
+        <li>(笑)</li>
+        <li>(哭)</li>
+        <li>(乐)</li>
+    </ul>
+</body>
+
+</html>

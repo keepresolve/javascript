@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"> -->
+</head>
+<script>
+  document.onreadystatechange = function () {
+    console.log(document.readyState)
+  }
+  document.addEventListener("DOMContentLoaded", function (event) {
+    console.log("DOM fully loaded and parsed");
+  });
+  document.addEventListenerfunction () {
+    console.log("document is loaded")
+  }
+</script>
+<style>
+  body,
+  html {
+    height: 100%;
+    background: #e9f0f9;
+  }
+</style>
+
+<body draggable="true">
+  <!-- Create the editor container -->
+  <div id="editor">
+    <p>Hello World!</p>
+    <p>Some initial
+      <strong>bold</strong> text</p>
+    <p>
+      <br>
+    </p>
+  </div>
+
+  <!-- Include the Quill library -->
+  <!-- <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script> -->
+
+  <!-- Initialize Quill editor -->
+  <script>
+    // var quill = new Quill('#editor', {
+    //   theme: 'snow'
+    // });
+
+    document.body.addEventListener("dragover", function (e) {
+      //    e.stopPropagation();
+      //  e.preventDefault()
+
+      //  window.event.returnValue=false
+      //  return false
+    }, false)
+    //   document.body.addEventListener("drop",function(e){
+    //     e.stopPropagation();
+
+    //     e.preventDefault();
+    //   },
+    //     false)
+//    document.body.addEventListener("dragenter", function(e){ 
+//     e.stopPropagation(); 
+//     e.preventDefault(); 
+// }, false);  
+// document.body.addEventListener("dragover", function(e){ 
+//     e.stopPropagation(); 
+//     e.preventDefault(); 
+// }, false); 
+// document.body.addEventListener("drop", function(e){ 
+//     e.stopPropagation(); 
+//     e.preventDefault(); 
+
+// }, false); 
+  </script>
+</body>
+
+</html>
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <style type="text/css">
+    #div1 {
+      width: 198px;
+      height: 66px;
+      padding: 10px;
+      border: 1px solid #aaaaaa;
+    }
+  </style>
+  <script type="text/javascript">
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData("Text", ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      var data = ev.dataTransfer.getData("Text");
+      ev.target.appendChild(document.getElementById(data));
+    }
+  </script>
+</head>
+
+<body>
+
+  <p>请把 W3School 的图片拖放到矩形中：</p>
+
+  <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <br />
+  <img id="drag1" src="file:///C:/Users/codes/Pictures/Saved%20Pictures/1.png" draggable="true" ondragstart="drag(event)" />
+
+</body>
+
+</html>

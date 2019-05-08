@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>北京易米云佳网络科技网络有限公司</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<!-- Tell the browser to be responsive to screen width -->
+		<meta name ="viewport" content ="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no"> 
+		<!-- <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<!-- user style -->
+		<link rel="stylesheet" href="css/user.min.css">
+		<link rel="stylesheet" href="css/media.min.css">
+	</head>
+		<body>
+			<div class="wrapper">
+				<div class="session_main">
+					<div class="leave_word_header">
+						<div class="ep_logo_box" style="float:left;width:40px;height:40px;border-radius:50%;overflow:hidden;">
+							<img class="ep_logo" src="img/eplogo.png">
+						</div>
+						<span class="enterprise_name"></span>
+						<!-- <div class="switch_position" style="display:none;">人工客服</div> -->
+						<div class="minimize" style="display:none;">
+							<img src="img/min_imize.png">
+						</div>
+						<!-- <div class="toggle" style="display:none;">
+							<img src="img/toggle.png">
+						</div> -->
+					</div>
+					<div class="session_main_left">
+						<div class="session_win direct-chat-primary">
+							<div class="direct-chat-messages">
+							
+							</div>
+							<!-- Conversations are loaded here -->
+							<ul class="facelist" style="display:none">
+					        </ul>
+					        <div id="typing_text" style="display:none">
+								<span  class="">客服正在输入...</span>
+							</div>
+							<div class="completeList" style="display:none;" >
+							</div>
+						</div>
+						<div class="msg_send">
+							<div class="toolbar">
+					            <div class="web_face"  isshow='0'>
+                                    <img class="toolbar_img" src="img/webfaceleave.png" movesrc="img/webfacemove.png" leavesrc="img/webfaceleave.png">
+                                </div>
+                                <div class="upload_img">
+                                	<input type="file" name="" class="toolbar_img" accept="image/gif, image/jpeg, image/jpg, image/png" id="update_img" >
+                                    <img class="toolbar_file_img" src="img/pickpicleave.png" movesrc="img/pickpicmove.png" leavesrc="img/pickpicleave.png">
+                                </div>
+                                 <!--<div class="upload_file">
+                                    <img class="toolbar_img" src="img/pickfile.png" movesrc="" leavesrc="">
+								</div> -->
+								<div class="switch_position" style="display:none;">转人工客服</div>
+							</div>
+							<!-- 使用伪类模拟placeholer -->
+						    <div id="text_div" class="msg_cont placeholder" ></div>
+							<div class="btn_enter">发送</div>
+							<div class="msg_send_mask" ></div>
+							<div style="display:none" class="reconnect_kefu">
+								<img style="position: relative;top: 1.2px;" src="img/refresh_icon.png">
+								<span class="refresh_icon">点击重新连接客服</span>
+							</div>
+						</div>
+					</div>
+					<div class="session_main_right" style="display:none">
+						<div class="announcement">
+							<div class="announcement_pic"></div>
+							<textarea  readonly class="announcement_con"></textarea>
+						</div>
+					</div>
+					<div class="main_mask" style="display:none;"></div>
+				</div>
+				<div class="leave_word_main" style="display:none;">
+					<div class="leave_word_header">
+						<div class="ep_logo_box" style="float:left;width:40px;height:40px;border-radius:50%;overflow:hidden;">
+							<img class="ep_logo" src="../default_image/kefu_icon.png">
+						</div>
+						<span class="enterprise_name">北京易米云佳网络科技网络有限公司</span>
+						<div class="minimize" style="display:none;">
+							<img src="img/min_imize.png">
+						</div>
+						<!-- <div class="toggle" style="display:none;">
+							<img src="img/toggle.png">
+						</div> -->
+					</div>
+					<h4 class="leave_word_prompting"></h4>
+					<div class="post_message_main">
+						<div class="input_box">
+							<div class="lable_div">
+								<label><span style="color:#ff0000;">*</span> 姓名</label>
+							</div>
+							<input autocomplete="off"  type="text" placeholder="请输入您的姓名" name="name"  maxlength=10>
+							<img src="img/clear-input.png" class="clear_input name_img"  style="display:none"> 
+						</div>
+						<div  class="input_box">
+							<div class="lable_div">
+								<label><span style="color:#ff0000;">*</span> 联系电话</label>
+							</div>
+							<input autocomplete="off"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" type="text" placeholder="请输入您的手机号" name="phone" maxlength=11 >
+							<img src="img/clear-input.png" class="clear_input phone_img"  style="display:none"> 
+						</div>
+						<div class="input_box">
+							<div class="lable_div">
+								<label>  邮箱</label>
+							</div>
+							<input autocomplete="off"  type="text"  placeholder="请输入你的邮箱" name="email">
+							<img src="img/clear-input.png" class="clear_input email_img"  style="display:none"> 
+						</div>
+						<div id="message_box" >
+							<div class="lable_div">
+								<label><span style="color:#ff0000;">*</span> 留言内容</label>
+							</div>
+							<div class="textarea_box">
+								<textarea name="message" placeholder="请输入留言内容" maxlength=500 ></textarea>
+								<img src="img/clear-input.png" class="clear_input_textarea clear_input"  style="display:none"> 
+								<span class="message_text_num"><span class="message_text_num_span">0</span>/500</span>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div id="send_message" style="opacity:0.6" >提交留言</div>
+					</div>
+					<div class="post_success_box" style="display:none;">
+						<div class="post_success">
+							<img src="img/message-success.png">
+							<div>提交成功!</div>
+							<div style="margin-top:0px;">我们将在第一时间与您联系</div>
+						</div>
+					</div>
+				</div>
+				<div class="show_box" style="display:none">
+					<img src="img/Shapeclose.png" class="show_img_close" >
+					<div class="show_img"></div>
+				</div>
+			</div>
+		<!-- jQuery 3 -->
+		<!-- script src="plugins/jquery/jquery.min.js"></script -->
+		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdn.bootcss.com/socket.io/2.1.0/socket.io.slim.js"></script>
+		<script src="js/bundle.min.js"></script>
+	</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+<style>
+    * {
+        padding: 0px;
+        margin: 0;
+        list-style: none;
+    }
+
+    ul {
+        width: 100%;
+        /* height:20px; */
+        line-height: 20px;
+        font-size: 14px;
+        overflow: hidden;
+    }
+
+    ul li {
+        float: left;
+        padding: 5px;
+        cursor: pointer;
+        border: 1px solid #ddd;
+    }
+
+    .editor {
+        width: 100%;
+        height: 200px;
+        border: 2px solid #ddd;
+        overflow: auto;
+    }
+</style>
+
+<body>
+    <ul>
+        <li data-value="red" draggable="true" title="red" style="color:red">
+            backcolor
+        </li>
+        <li data-value="yellow" draggable="true" title="yellow" style="color:yellow">
+            backcolor
+        </li>
+        <li data-value="blue" draggable="true" title="blue" style="color:blue">
+            backcolor
+        </li>
+        <li data-value="orange" draggable="true" title="orange" style="color:orange">
+            backcolor
+        </li>
+        <li data-value="black" draggable="true" title="black" style="color:black">
+            backcolor
+        </li>
+        <li data-value="#fff    " draggable="true" title="black" style="color:black">
+            backcolor
+        </li>
+    </ul>
+    <ul>
+        <li>
+            bold
+        </li>
+        <li>
+            removeformat
+        </li>
+    </ul>
+    <div>
+        <input type="file" draggable="true" id="image">
+    </div>
+    <h1> designMode 设置富文本</h1>
+    <iframe name="editor" style="width:100%;height:200px;border:2px solid #ddd;" src="./iframe.html" frameborder="0"></iframe>
+    <h1> contenteditable 设置富文本</h1>
+    <div contenteditable="true" class="editor">
+
+    </div>
+    <iframe src="" style="width:100%;height:500px;border:2px solid #ddd;" frameborder="0"></iframe>
+</body>
+<script>
+    window.onload = function () {
+        var doc = frames["editor"].document
+        doc.designMode = "on"
+        $("ul li").click(function () {
+            document.execCommand(this.innerText, false, this.dataset.value ? this.dataset.value : null)
+            doc.execCommand(this.innerText, false, this.dataset.value ? this.dataset.value : null)
+        })
+        $("#image").change(function () {
+            var oFReader = new window.FileReader()
+            oFReader.onload = function (oFREvent) {
+                doc.execCommand("insertimage", false, oFREvent.target.result)
+            }
+            oFReader.readAsDataURL(this.files[0]);
+        })
+        document.body.ondrop = function (e) {
+            // e.preventDefault()
+        }
+        var editor = $(".editor").get(0)
+        editor.ondrop = function (e) {
+            // e.preventDefault()
+            console.log(e.dataTransfer.getData("text"))
+            e.dataTransfer.setData("text", "111")
+        }
+        // editor.ondragenter
+
+    }
+    // function robotLogin() {
+    //     return new Promise(function (resolve, reject) {
+    //         $.post("http://localhost:3000/users/login", { email: "codesircao@126.com", userName: "emicnet" }, function (res) {
+    //              resolve(res)
+    //         })
+    //     })
+
+
+    // }
+    // robotLogin()
+    //     .then(res => {
+    //         console.log(res)
+    //         var jwtStr = res.data.jwtStr;
+    //         var invokeKey = res.data.invokeKey;
+    //         $.ajax({
+    //             url:
+    //                 "http://emicnet.faqrobot.cn/auth/jwt/crossSiteLoginByJWT?jwtStr=" +
+    //                 jwtStr +
+    //                 "&invokeKey=" +
+    //                 invokeKey +
+    //                 "&saveFlag=true ",
+    //             dataType: "jsonp",
+    //             success: function (res) {
+    //                 console.log(res,23132)
+    //                 $("iframe").eq(1).attr("src","http://emicnet.faqrobot.cn/web/data/queryAndArea.html")
+    //             },
+    //             error: function (err) {
+    //                 console.error("err", err);
+    //             }
+    //         });
+
+    //     })
+    //     .catch(err => {
+    //         console.error("err", err);
+    //     });
+    // $.post("http://localhost:3000/users/login", { email: "codesircao@126.com", userName: "emicnet" }, function (res) {
+    // console.log(res)
+    // })
+    $.post("http://localhost:3000/users/login", { email: "codesircao@126.com", userName: "emicnet" }, function (res) {
+
+        var jwtStr = res.data.jwtStr;
+        var invokeKey = res.data.invokeKey;
+        $.ajax({
+            url:
+                "http://emicnet.faqrobot.cn/auth/jwt/crossSiteLoginByJWT?jwtStr=" +
+                jwtStr +
+                "&invokeKey=" +
+                invokeKey +
+                "&saveFlag=true ",
+            dataType: "jsonp",
+            success: function (res) {
+                console.log(res, 23132)
+                $("iframe").eq(1).attr("src", "http://emicnet.faqrobot.cn/web/data/queryAndArea.html")
+            },
+            error: function (err) {
+                console.error("err", err);
+            }
+        });
+    })
+</script>
+
+</html>

@@ -1,0 +1,279 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    
+       div{
+           width: 1000px;
+           height:800px;
+           border:1px solid red;
+           overflow: auto;
+       }
+    </style>
+</head>
+
+<body>
+        <div contenteditable="true" style="border:1px solid red" class="aaa"></div>
+    <script>
+        document.querySelector('div').addEventListener('paste', function(e){
+            // Prevent the default pasting event and stop bubbling
+            e.preventDefault();
+            e.stopPropagation();
+            // Get the clipboard data
+            let paste = (e.clipboardData || window.clipboardData).getData('text/html');
+            // Do something with paste like remove non-UTF-8 characters
+            paste = paste.replace(/ style=\"(.*?)\"/g,"").replace(/class="[^"]*?"/g,"")
+            // Find the cursor location or highlighted area
+            console.log({paste:paste})
+            const selection = window.getSelection();
+             
+            // Cancel the paste operation if the cursor or highlighted area isn't found
+            if (!selection.rangeCount) return false;
+
+            // Paste the modified clipboard content where it was intended to go
+            selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+        });
+
+
+    </script>
+</body>
+
+</html> -->
+<!-- <html>   
+        <head>   
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312">   
+        <title>clipboard</title>   
+        <SCRIPT language=JavaScript>   
+          
+        function copy()   
+        {   
+          var obj=document.getElementById("txarea");   
+          window.clipboardData.setData("Text",obj.value);   
+        }   
+          
+        function paste() {   
+          var obj=document.getElementById("txarea");   
+          var clipboard = window.clipboardData.getData('Text');   
+          clipboard == null ? alert('no data') : obj.value = clipboard;   
+        }   
+          
+        </SCRIPT>   
+        <INPUT name=Button onClick="txarea.value=''" type=button value='clear'>   
+        <INPUT name=Button onClick="copy('textarea')" type=button value='copy'>   
+        <INPUT name=Button onClick="paste('textarea')"; type=button value='paste'><br>   
+        <textarea name="txarea" id="txarea" cols="105" rows="11" class="transform"></textarea></p>   
+        </body>   
+        </html>   -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <script> 
+                function copyToClipboard() 
+                { 
+                var d=document.all("source").value; 
+                window.clipboardData.setData('text', d); 
+                } 
+                </script> 
+            
+                <button onclick="copyToClipboard();">拷贝</button> 
+                <input type="text" size=20 id="source" value="测试数据"> 
+                
+                 
+                <button onclick="alert(window.clipboardData.getData('text'));">显示</button> 
+                <button onclick="window.clipboardData.clearData('text');">清空</button> 
+            
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>upload</title>
+    <style>
+        .upload-span {
+            display: inline-block;
+            width: 120px;
+            height: 40px;
+            color: #FFFFFF;
+            text-align: center;
+            line-height: 40px;
+            background-color: blue;
+            border: 2px solid blue;
+            border-radius: 5px;
+            cursor: pointer;
+            letter-spacing: 2px;
+        }
+
+        .upload-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 9;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(84, 84, 84, 0.3);
+            display: none;
+        }
+
+        .upload-component {
+            position: absolute;
+            z-index: 99;
+            top: 50%;
+            left: 50%;
+            margin-left: -120px;
+            margin-top: -60px;
+            width: 240px;
+            height: 120px;
+            background-color: #FFFFFF;
+            display: none;
+        }
+
+        .upload-close {
+            position: relative;
+            height: 30px;
+            background-color: rgb(234, 234, 234);
+        }
+
+        .upload-close span {
+            position: absolute;
+            right: 15px;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
+        .upload-content,
+        .confirm-cancel {
+            margin-top: 15px;
+        }
+
+        .progress {
+            position: relative;
+            width: 90%;
+            height: 22px;
+            margin-left: 4.88888%;
+            text-align: center;
+            line-height: 22px;
+            border: 1px solid #ccc;
+        }
+
+        .upload-text {
+            position: absolute;
+            z-index: 99999;
+            color: red;
+        }
+
+        .uploaded {
+            position: absolute;
+            left: 0;
+            z-index: 9999;
+            width: 0%;
+            height: 100%;
+            background-color: blue;
+            color: #FFFFFF;
+        }
+
+        .confirm-cancel span {
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background-color: #ccc;
+            cursor: wait;
+        }
+
+        .confirm {
+            margin-left: 40%;
+        }
+
+        .cancel {
+            margin-left: 10px;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+
+<body>
+    <span class="upload-span">开始上传文件</span>
+    <div class="upload-mask"></div>
+    <div class="upload-component">
+        <div class="upload-close">
+            <span class="upload-close-span">关闭</span>
+        </div>
+        <div class="upload-content">
+            <div class="progress">
+                <span class="upload-text"></span>
+                <span class="uploaded"></span>
+            </div>
+            <div class="confirm-cancel">
+                <span class="confirm">确认</span>
+                <span class="cancel">取消</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            var $uploadSpan = $('.upload-span');
+            var $uploadMask = $('.upload-mask');
+            var $uploadContent = $('.upload-component');
+            var $closeConfirmCancel = $('.upload-close-span,.confirm,.cancel');
+            var $uploadTextSpan = $('.upload-text');
+            function showMask() {
+                $(".upload-mask,.upload-component").css({ display: 'block' });
+                progressBar();
+                $uploadSpan.off('click', showMask);
+            }
+            function hiddenMask() {
+                $uploadMask.css({ display: 'none' });
+                $uploadSpan.on('click', showMask);
+            }
+            function closeConfirmCancel() {
+                $uploadContent.css({ display: 'none' });
+                $uploadTextSpan.text('').next().css({ width: 0 });
+                hiddenMask();
+            }
+            // 模拟进度
+            function progressBar() {
+                var max = 100;
+                var init = 0;
+                var uploaded;
+                var test = setInterval(function () {
+                    init += 5;
+                    uploaded = parseInt(init / max * 100) + '%';
+                    $uploadTextSpan.text(uploaded).next().css({ width: uploaded });
+                    if (init === 100) {
+                        clearInterval(test);
+                        $uploadTextSpan.text('上传完成');
+                        $('.confirm-cancel span').css({ cursor: 'pointer' });
+                        $('.confirm').css({ backgroundColor: 'rgb(111,197,293)' });
+                        $('.cancel').css({ backgroundColor: 'rgb(175,194,211)' })
+                        $closeConfirmCancel.on('click', closeConfirmCancel);
+                    }
+                    else {
+                        $closeConfirmCancel.off('click', closeConfirmCancel);
+                        $('.upload-close-span').on('click', function () {
+                            clearInterval(test);
+                            closeConfirmCancel();
+                        });
+                    }
+                }, 1000);
+            }
+            $uploadSpan.on('click', showMask);
+        })
+    </script>
+</body>
+
+</html>

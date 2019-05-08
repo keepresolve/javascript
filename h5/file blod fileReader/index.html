@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style>
+    pre {
+      width: 300px;
+      height: 300px;
+      border: 1px dotted darkblue;
+    }
+    .paste {
+      width: 500px;
+      height: 500px;
+      border: 1px solid blue;
+    }
+  </style>
+  <body>
+    <input type="file" multiple />
+    <pre draggable="true" id="data"></pre>
+    <div class="paste"></div>
+    <script>
+      document.querySelector("input").onchange = function() {
+        console.log(this.files);
+      };
+
+      var ipt = document.querySelector("#data");
+      ipt.ondragover = function() {
+        return false;
+      };
+
+      //  dataTransfer事件对象 存储鼠标等事件的数据
+      ipt.ondrop = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e = e || window.event;
+        var files = e.dataTransfer.files;
+        console.log(files);
+        this.innerText = JSON.stringify(files);
+      };
+  console.log(Blob.arguments)
+      //   http://www.cnblogs.com/wangfajing/p/7202139.html?utm_source=itdadao&utm_medium=referral
+      //   BLOB (binary large object)，二进制大对象，是一个可以存储二进制文件的容器。
+      //   在计算机中，BLOB常常是数据库中用来存储二进制文件的字段类型。
+      //   BLOB是一个大文件，典型的BLOB是一张图片或一个声音文件，由于它们的尺寸，必须使用特殊的方式来处理（例如：上传、下载或者存放到一个数据库）。
+      //   根据Eric Raymond的说法，处理BLOB的主要思想就是让文件处理器（如数据库管理器）不去理会文件是什么，而是关心如何去处理它。
+      //   http://www.cnblogs.com/wangfajing/p/7202139.html?utm_source=itdadao&utm_medium=referral
+      //   第一个参数为一个数据序列，可以是任意格式的值。 第二个参数是一个包含两个属性的对象{ type: MIME的类型, endings: 决定第一个参数的数据格式，可以取值为 "transparent" 或者 "native"（transparent的话不变，是默认值，native 的话按操作系统转换） 。 }
+      var testBlob = new Blob([1], { type: "application/json" });
+      console.log(testBlob);
+      var file = new File([testBlob], "text.txt");
+      console.log(file);
+    //   var file = new File(["123","456"], "123.txt", { type: "text/plain;charset=utf-8" });
+    </script>
+    <script>
+      //   var file = app.$("videoInput").files[0]; //获取file input中的File对象
+      //   var reader = new FileReader();
+      //   reader.readAsDataURL(file);
+      //   var URL = URL || webkitURL;
+      //   var blob = URL.createObjectURL(file);
+
+      //   // 构造新File对象
+      //   var aafile = new File([blob], "aa.mp4");
+
+      //   获取剪切版的数据
+      document.addEventListener("paste", function(e) {
+        console.info(e);
+        var cbd = e.clipboardData;
+        for (var i = 0; i < cbd.items.length; i++) {
+          var item = cbd.items[i];
+          if (item.kind == "file") {
+            var blob = item.getAsFile();
+            if (blob.size === 0) {
+              return;
+            }
+            console.log(item, item.getAsFile());
+          } else {
+            console.log(item.kind);
+            console.log(item, item.getAsString());
+          }
+        }
+      });
+
+      //       var reader = new FileReader();
+      // reader.onload = function(res){
+      //     var blob = res.target.reslut;
+      //     var aafile = new File([blob ], "aa.mp4");
+      //     console.log(aafile);
+      // }
+      // reader.readAsDataURL(file);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>  
+        // //async声明一个异步函数返回promise  异步函数不会阻塞后面代码执行
+        // async function timeout() {
+        //     return 'hello world';
+        // }
+
+        // console.log("async声明一个异步函数返回promise", timeout());//async声明一个异步函数返回promise  reslove成功  reject 失败
+        // timeout().then(result => {
+        //     console.log("执行", result);  
+        // })
+        // console.log('虽然在后面，但是我先执行')  
+
+
+
+        // async function timeout(flag) {
+        //     if (flag) {
+        //         return 'hello world'
+        //     } else {
+        //         throw 'my god, failure'
+        //     }
+        // }
+        // console.log(timeout(true))  // 调用Promise.resolve() 返回promise 对象。
+        // console.log(timeout(false)); // 调用Promise.reject() 返回promise 对象。
+        // timeout(false).catch(err => {
+        //     console.log(err)
+        // })
+
+
+
+
+        // await 注意await 关键字只能放到async 函数里面
+        function doubleAfter2seconds(num) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve(2 * num)
+                }, 1000);
+            })
+        }
+        // // 调用
+        // async function testResult() {
+        //     let result = await doubleAfter2seconds(30);
+        //     console.log(result);
+
+        // }
+        // testResult();
+
+        async function testResult() {
+            let first = await doubleAfter2seconds(30);
+            let second = await doubleAfter2seconds(50);
+            let third = await doubleAfter2seconds(30);
+            console.log(first + second + third);
+        }
+        testResult()
+    </script>
+</body>
+
+</html>

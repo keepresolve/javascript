@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <link
+            href="https://cdn.bootcss.com/jquery-jcrop/2.0.4/css/Jcrop.css"
+            rel="stylesheet"
+        />
+        <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+        <script src="https://cdn.bootcss.com/jquery-jcrop/2.0.4/js/Jcrop.min.js"></script>
+    </head>
+    <style lang="css">
+        body,html{
+            height: 100%;
+        }
+    </style>
+    <body>
+        <img
+            id="element_id"
+            src="http://assets.jq22.com/plugin/pc-b0c59ad8-2db2-11e4-954d-000c29f61318.png"
+        />
+    </body>
+    <script>
+        // I did JSON.stringify(jcrop_api.tellSelect()) on a crop I liked:
+        var c = { x: 13, y: 7, x2: 487, y2: 107, w: 474, h: 100 }
+
+        $('body').Jcrop({
+            bgFade: true,
+            setSelect: [c.x, c.y, c.x2, c.y2]
+        })
+
+        // var api = $.Jcrop('#cropbox', {
+        //     onChange: showPreview,
+        //     onSelect: showPreview,
+        //     aspectRatio: 1
+        // })
+    </script>
+</html>

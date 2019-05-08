@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+
+<head>
+  <title>SheetJS JS-XLSX In-Browser Write Demo</title>
+  <meta charset="utf-8" />
+</head>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/xlsx/0.12.11/shim.min.js"></script>
+<script src="https://cdn.bootcss.com/xlsx/0.12.11/xlsx.full.min.js"></script>
+
+<body>
+  <input type="file" id="excel-file">
+</body>
+<script>
+
+  $('#excel-file').change(function (e) {
+    var files = e.target.files;
+
+    var fileReader = new FileReader();
+    fileReader.onload = function (ev) {
+
+      try {
+        var data = ev.target.result,
+          workbook = XLSX.read(data, {
+            type: 'binary'
+          })// 以二进制流方式读取得到整份excel表格对象
+
+        persons = [];  // 存储获取到的数据
+      } catch (e) {
+        console.log('文件类型不正确');
+        return;
+      }
+      console.log({ workbook })
+
+      // 表格的表格范围，可用于判断表头是否数量是否正确
+      // var fromTo = '';
+      // 遍历每张表读取
+      for (var sheet in workbook.Sheets) {
+        if (workbook.Sheets.hasOwnProperty(sheet)) {
+          fromTo = workbook.Sheets[sheet]['!ref'];
+          console.log(fromTo);
+          persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+          // break; // 如果只取第一张表，就取消注释这行
+        }
+      }
+      // var aaa=XLSX.utils.aoa_to_sheet(persons)
+      console.log(persons);
+      /* original data */
+      var filename = "write.xlsx";
+      // var data = [[1, 2, 3], [true, false, null, "sheetjs"], ["foo", "bar", new Date("2014-02-19T14:30Z"), "0.3"], ["baz", null, "qux"]]
+      var data = persons
+      var ws_name = "SheetJS";
+
+
+      var wb = XLSX.utils.book_new(), ws = XLSX.utils.aoa_to_sheet(data);
+
+      /* add worksheet to workbook */
+      XLSX.utils.book_append_sheet(wb, ws, ws_name);
+
+      /* write workbook */
+
+      XLSX.writeFile(wb, filename);
+    };
+
+    // 以二进制方式打开文件
+    fileReader.readAsBinaryString(files[0]);
+  });
+
+
+</script>
+
+</html>

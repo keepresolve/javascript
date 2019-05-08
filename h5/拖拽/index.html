@@ -1,0 +1,193 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script id="emickf_ee549f8c0be21546" src="./script.js?id=show"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+<script> 
+console.log("sadasd")
+</script>
+<body>
+    <div id="show" draggable="true">
+    </div>
+    
+</body>
+
+</html> -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=" utf-8">
+    <meta name="author" content="http://www.softwhy.com/" />
+    <title>拖拽效果限制范围-蚂蚁部落</title>
+    <script id="emickf_ee549f8c0be21546" src="./script.js?id=show"></script>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            padding: 50px;
+        }
+
+        #box {
+            width: 350px;
+            height: 250px;
+            background: red;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #drag {
+            width: 50px;
+            height: 50px;
+            background: green;
+            position: absolute;
+            width:inherit
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            var obox = document.getElementById("box");
+            var odrag = document.getElementById("drag");
+            var isDrag = false;
+            var x, y;
+
+            odrag.onmousedown = down;
+            document.onmousemove = move;
+            document.onmouseup = up;
+
+            function down(ev) {
+                var ev = window.event || ev;
+                x = ev.clientX - this.offsetLeft;
+                y = ev.clientY - this.offsetTop;
+                this.style.cursor = "move";
+                isDrag = true;
+            }
+            function move(ev) {
+                if (isDrag) {
+                    var ev = window.event || ev;
+                    odrag.style.left = (ev.clientX - x) + "px";
+                    odrag.style.top = (ev.clientY - x) + "px";
+                    if (parseInt(odrag.style.left) < 0) {
+                        odrag.style.left = 0;
+                    }
+                    if (parseInt(odrag.style.top) < 0) {
+                        odrag.style.top = 0;
+                    }
+                    if (parseInt(odrag.style.left) > obox.clientWidth - odrag.clientWidth) {
+                        odrag.style.left = (obox.clientWidth - odrag.clientWidth) + "px";
+                    }
+                    if (parseInt(odrag.style.top) > obox.clientHeight - odrag.clientHeight) {
+                        odrag.style.top = (obox.clientHeight - odrag.clientHeight) + "px";
+                    }
+                }
+            }
+            function up() {
+                isDrag = false;
+                odrag.style.cursor = "pointer";
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="box" id="show">
+        <div id="drag"></div>
+    </div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <title>客户区可见范围限制拖拽</title>
+ <style type="text/css">
+  * {
+   padding: 0;
+   margin: 0;
+  }
+  #div1 {
+   width: 500px;
+   height: 500px;
+   background: orange;
+   position: relative;
+   left: 100px;
+   top: 30px;
+  }
+  #div2 {
+   width: 100px;
+   height: 100px;
+   background: black;
+   position: absolute;
+   border: 1px solid blue;
+  }
+ </style>
+</head>
+<body>
+ <div id="div1">
+  <div id="div2"></div>
+ </div>
+
+ <script type="text/javascript">
+  var oDiv1 = document.getElementById('div1');
+  var oDiv2 = document.getElementById('div2');
+
+  function getStyle(obj, attr) {
+   if (obj.currentStyle) {
+    return obj.currentStyle[attr];
+   } else {
+    return getComputedStyle(obj, null)[attr];
+   }
+  }
+  oDiv2.onmousedown = function(ev) {
+   var oEvent = ev || event;
+   // var disX = oEvent.clientX - oDiv2.offsetLeft;
+   // var disY = oEvent.clientY - oDiv2.offsetTop;
+   var disX = oEvent.clientX - parseInt(getStyle(oDiv2, 'left'));
+   var disY = oEvent.clientY - parseInt(getStyle(oDiv2, 'top'));
+
+   document.onmousemove = function(ev) {
+    var oEvent = ev || event;
+    var l = oEvent.clientX - disX;
+    var t = oEvent.clientY - disY;
+
+
+    if (l < 0) {
+     l = 0;
+    } else if (l > oDiv1.offsetWidth - /*parseInt(getStyle(oDiv2,'width'))*/oDiv2.offsetWidth) {
+     l = oDiv1.offsetWidth - oDiv2.offsetWidth;
+    }
+    if (t < 0) {
+     t = 0;
+    } else if (t > oDiv1.offsetHeight - oDiv2.offsetHeight) {
+     t = oDiv1.offsetHeight - oDiv2.offsetHeight;
+    }
+    oDiv2.style.left = l + 'px';
+    oDiv2.style.top = t + 'px';
+   };
+
+
+   document.onmouseup = function() {
+    document.onmousemove = null;//如果不取消，鼠标弹起div依旧会随着鼠标移动
+    document.onmouseup = null;
+   };
+  };
+ </script>
+</body>
+</html> -->

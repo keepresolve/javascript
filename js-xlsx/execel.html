@@ -1,0 +1,55 @@
+！
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+
+<body>
+    <input tabindex="-1" id="select_range" data-input="false" class="font-small" type="file">
+    <a href="javascript:void(0)" id="aa">保存</a>
+</body>
+<script>
+    $('#select_range').change(function (evt) {
+        var files = evt.target.files,
+            reader = new FileReader();
+        reader.onload = function () {
+            var range = 'XXXXXXXXXX';
+
+        };
+        reader.readAsText(files[0]);
+    });
+    function fake_click(obj) {
+        var ev = document.createEvent("MouseEvents");
+        ev.initMouseEvent(
+            "click", true, false, window, 0, 0, 0, 0, 0
+            , false, false, false, false, 0, null
+        );
+        obj.dispatchEvent(ev);
+    }
+
+    //name-文件名；data-要保存的字符串。
+    function export_raw(name, data) {
+        var urlObject = window.URL || window.webkitURL || window;
+        var export_blob = new Blob([data]);
+        var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+        save_link.href = urlObject.createObjectURL(export_blob);
+        save_link.download = name;
+        fake_click(save_link);
+    }
+    //点击按钮
+
+    $('#aa').click(function () {
+        var data = "要保存的文本";
+        export_raw('range.json', data);
+
+    })
+
+</script>
+
+</html>

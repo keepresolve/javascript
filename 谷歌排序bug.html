@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <!-- https://blog.csdn.net/code_ac/article/details/74158681 -->
+    <script>
+    //   var list = [{ n: "a", v: 1 }, { n: "b", v: 1 }, { n: "c", v: 2 }, { n: "d", v: 1 }, { n: "e", v: 1 }, { n: "f", v: 1 }, { n: "g", v: 1 }, ];
+    //     list.sort(function (a, b) {
+    //         return a.v - b.v;
+    //     });
+    //     for (var i = 0; i < list.length; i++) {
+    //         console.log(list[i].n);
+    //     }   
+    //10个以下正常 经过查阅资料，网上对这个问题似乎没有多少实际的解决办法。据说谷歌开发者认为这不是个bug不予解决，因为V8引擎的原因，为了高效排序，称之为不稳定排序。其实这也不算是一个BUG，不同人会有不同的看法：a:"因为排序依据是相同的就是没有顺序，没有顺序就是乱序，这种结果是正确的"；b:"既然排序依据是相同的那就按照原始顺序输出"（这应该是大多数据语言里常规的做法）。网上有牛人说数组超过10条后会调用另一种排序方法（插入排序），10以下用的是快速排序算法，为了提交效率，所以会出现这种情况。
+    
+
+    var list = [{ n: "a", v: 2 }, { n: "b", v: 1 }, { n: "c", v: 1 }, { n: "d", v: 1 }, { n: "e", v: 1 }, { n: "f", v: 1 }, { n: "g", v: 1 },{ n: "h", v: 1 },{ n: "i", v: 1 },{ n: "j", v: 1 },{ n: "k", v: 1 } ];
+      
+        for (var i = 0; i < list.length; i++) {
+            list[i].oldIndex = i;
+        }
+        list.sort(function (a, b) {
+            if(!(a.v - b.v)){
+                console.log(a.v - b.v)
+            }else{
+                console.log("wqeqw",a.v - b.v)
+            }
+            return a.v - b.v || a.oldIndex - b.oldIndex;
+        });
+          for (var i = 0; i < list.length; i++) {
+            console.log(list[i].n);
+        }   
+    </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /*picBase是base64图片带头部的完整编码*/
+        function putb64(picBase) {
+
+            /*picUrl用来存储返回来的url*/
+            var picUrl;
+
+            /*把头部的data:image/png;base64,去掉。（注意：base64后面的逗号也去掉）*/
+            picBase = picBase.substring(22);
+
+            /*通过base64编码字符流计算文件流大小函数*/
+            function fileSize(str) {
+                var fileSize;
+                if (str.indexOf('=') > 0) {
+                    var indexOf = str.indexOf('=');
+                    str = str.substring(0, indexOf);//把末尾的’=‘号去掉
+                }
+
+                fileSize = parseInt(str.length - (str.length / 8) * 2);
+                return fileSize;
+            }
+
+            /*把字符串转换成json*/
+            function strToJson(str) {
+                var json = eval('(' + str + ')');
+                return json;
+            }
+
+
+            var url = "http://up.qiniu.com/putb64/" + fileSize(picBase);
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    var keyText = xhr.responseText;
+
+                    /*返回的key是字符串，需要装换成json*/
+                    keyText = strToJson(keyText);
+
+                    /* http://ojvh6i96g.bkt.clouddn.com/是我的七牛云空间网址，keyText.key 是返回的图片文件名*/
+                    picUrl = "http://ojvh6i96g.bkt.clouddn.com/" + keyText.key;
+                    alert(picUrl);
+
+                }
+            }
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/octet-stream");
+            xhr.setRequestHeader("Authorization", "UpToken 这里填写你的token（注意前面的UpToken后面有空格）");
+            xhr.send(picBase);
+
+        }
+        //    ________________
+
+
+
+
+
+
+
+
+
+        function sumitImageFile(base64Codes) {
+            var form = document.forms[0];
+
+            var formData = new FormData(form);   //这里连带form里的其他参数也一起提交了,如果不需要提交其他参数可以直接FormData无参数的构造函数  
+
+            //convertBase64UrlToBlob函数是将base64编码转换为Blob  
+            formData.append("imageName", convertBase64UrlToBlob(base64Codes));  //append函数的第一个参数是后台获取数据的参数名,和html标签的input的name属性功能相同  
+
+            //ajax 提交form  
+            $.ajax({
+                url: form.action,
+                type: "POST",
+                data: formData,
+                dataType: "text",
+                processData: false,         // 告诉jQuery不要去处理发送的数据  
+                contentType: false,        // 告诉jQuery不要去设置Content-Type请求头  
+
+                success: function (data) {
+                    window.location.href = "${ctx}" + data;
+                },
+                xhr: function () {            //在jquery函数中直接使用ajax的XMLHttpRequest对象  
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.upload.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+                            console.log("正在提交." + percentComplete.toString() + '%');        //在控制台打印上传进度  
+                        }
+                    }, false);
+
+                    return xhr;
+                }
+
+            });
+        }
+
+        /**  
+         * 将以base64的图片url数据转换为Blob  
+         * @param urlData  
+         *            用url方式表示的base64图片数据  
+         */
+        function convertBase64UrlToBlob(urlData) {
+
+            var bytes = window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte  
+
+            //处理异常,将ascii码小于0的转换为大于0  
+            var ab = new ArrayBuffer(bytes.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < bytes.length; i++) {
+                ia[i] = bytes.charCodeAt(i);
+            }
+
+            return new Blob([ab], { type: 'image/png' });
+        }
+
+
+    </script>
+</body>
+
+</html>
