@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="http://cdn.static.runoob.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
 </head>
 
 <body>
@@ -19,59 +22,203 @@
 
     </embed> -->
 
-    <bgsound id='snd_ie' src="" loop="loop">
+    <!-- <bgsound id='snd_ie' src="" loop="loop">
         <object id='snd_chrome' width="0px" height="0px" type="audio/x-wav" data=""></object>
         <input type="button" value="开始" onclick="playSound()">
         <input type="button" value="暂停" onclick="stopSound()">
         <embed id="embedPlay" src="http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4"
             autostart="true" loop="false"></embed>
         <audio id='audio' src="http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4"
-            controls></audio>
+            controls></audio> -->
+
+    <input type="file" id="file" multiple="multiple" accept=".wav,.mp3">
+    <ul>
+        <li>第一段语音</li>
+        <li>第二段语音</li>
+        <li>第三段语音</li>
+    </ul>
+    <ul id='list' ></ul>
+    <button id='btn'>试听</button>
+    <span id="duration"></span>
+    <input type="range" id="range" max='0' step="0.1">
+
 </body>
-<script>
+<script type="text/babel">
+    let duration = document.querySelector("#duration")
+    let currentTime = 0
+    let total = 0
+    let range = document.querySelector("#range")
+    let srcArr = ["./mp3/1.wav", './mp3/2.wav', './mp3/3.wav']
+    let audioArr = []
+    let timer=null
+    document.querySelector("#btn").onclick = function () {
+        start(srcArr)
+    }
+    function loadPromise(src) {
+        return new Promise((resolve, reject) => {
+            let audio = document.createElement("audio")
+            audio.src = src
+            audio.load && audio.load()
+            audio.oncanplay = (obj) => {
+                // audio.duration = obj.srcElement.duration
+                resolve(audio)
+                audio.oncanplay = null
+            }
+            audio.onerror = () => {
+                reject(
+                    audio
+                )
+                audio.onerror = null
+            }
+        })
+    }
+    function start(srcArr) {
+        currentTime = 0
+        total = 0
+        Promise.all(srcArr.map(src => loadPromise(src))).then((result) => {
+            if (audioArr.length > 0) stopAll(audioArr)
+            audioArr = result
+            addEvent(audioArr)
+            audioArr[0].play()
+            // duration.innerHTML = "0:0/" + Math.floor(total / 60) + ':' + Math.round(total % 60)
+            range.onchange = function (value) {
+                clearTimeout(timer)
+                stopAll(audioArr)
+                timer=setTimeout(() => {
+                    addEvent(audioArr)
+                    let rangeTime = 0
+                    let preRangeTime=0
+                    if (audioArr.length > 0) {
+                        for(var i=0;  i< audioArr.length;i++){
+                            preRangeTime = rangeTime 
+                            rangeTime += audioArr[i].duration
+                            if (range.value <= rangeTime&&range.value>preRangeTime) {
+                                audioArr[i].currentTime=range.value-preRangeTime
+                                console.log(audioArr[i].currentTime,range.value,preRangeTime,rangeTime)
+                                audioArr[i].play()
+                                break
+                            }
+                        }
+                    }
+                    duration.innerHTML = Math.floor(range.value / 60) + ':' + Math.round(range.value % 60) + "/" + Math.floor(total / 60) + ':' + Math.round(total % 60)
+                }, 300);
+            }
+        }).catch(err => {
+            console.log({ err })
+        })
+    }
+
+
+    function stopAll(audioArr) {
+        
+        audioArr.forEach(el => {
+            el.pause()
+            el.ontimeupdate = null
+            el.onended = null
+        })
+    }
+    function addEvent(audioArr){
+           total=0
+            audioArr.forEach(el => el.pause())
+            audioArr.forEach((el, index) => {
+            el.index = index
+            total += el.duration
+            el.ontimeupdate = function () {
+                currentTime = el.currentTime + getcurrentTime(el, audioArr)
+                range.value=currentTime.toFixed(1)
+                duration.innerHTML = Math.floor(currentTime / 60) + ':' + Math.round(currentTime % 60) + "/" + Math.floor(total / 60) + ':' + Math.round(total % 60)
+            }
+            el.onended = function () {
+                let nextAudio = audioArr[el.index + 1]
+                if (nextAudio) nextAudio.play()
+            }
+        })
+        range.max = total
+    }
+
+
+    function getcurrentTime(el, arr) {
+            let duration = 0
+            let preAudio = arr[el.index - 1]
+            if (preAudio) {
+                duration = preAudio.duration
+                duration += getcurrentTime(preAudio, arr)
+            }
+            return duration
+
+        }
+
+     
+        let fileList=[]
+        let file=document.querySelector("#file")
+        let list=document.querySelector("#list")
+        file.onchange=function(){
+            console.log(file.files)
+            fileList=fileList.concat(...file.files)
+            let str= fileList.map(v=>{
+                srcArr.push(getObjectURL(v))
+                return `<li>${v.name}</li>`
+               })
+            
+            list.innerHTML=`
+                ${str.join()}
+            `
+        }
+        // <!--把文件转换成可读URL-->
+        function getObjectURL(file) {
+            var url = null;
+            // if (window.createObjectURL != undefined) { // basic
+            //     url = window.createObjectURL(file);
+            // } else if (window.URL != undefined) { // mozilla(firefox)
+            //     url = window.URL.createObjectURL(file);
+            // } else if (window.webkitURL != undefined) { // webkit or chrome
+            //     url = window.webkitURL.createObjectURL(file);
+            // }
+            return  URL.createObjectURL(file) ;
+        }
     // window.onload = function () {
-    var embedPlay = document.getElementById("embedPlay")
-    var snd_chrome = document.getElementById('snd_chrome');
-    var snd_ie = document.getElementById('snd_ie');
-    function playSound() {             //IE放 背景音乐          
-        snd_ie.src = "http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4";
-        //chrome            var snd_chrome = document.getElementById('snd_chrome');           
-        snd_chrome.data = "http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4";
-    }
-
-    function stopSound() {
-
-        snd_ie.src = ""
-
-        snd_chrome.data = ""
-
-    }
-    audio.onpropertychange = function () {
-        console.log("onpropertychange", arguments)
-    }
-    audio.onended = function () {
-        console.log("ended", arguments)
-    }
-    audio.ontimeupdate = function () {
-        console.log("timeupdate", arguments)
-    }
-    audio.onvolumechange = function () {
-        console.log("volumechange", arguments)
-    }
-    audio.onplay = function () {
-        console.log("play", arguments)
-    }
-    audio.onerror = function () {
-        console.log("error", arguments)
-    }
-    audio.onplaying = function () {
-        console.log("playing", arguments)
-    }
+    // var embedPlay = document.getElementById("embedPlay")
+    // var snd_chrome = document.getElementById('snd_chrome');
+    // var snd_ie = document.getElementById('snd_ie');
+    // function playSound() {             //IE放 背景音乐          
+    //     snd_ie.src = "http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4";
+    //     //chrome            var snd_chrome = document.getElementById('snd_chrome');           
+    //     snd_chrome.data = "http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4";
     // }
 
+    // function stopSound() {
+
+    //     snd_ie.src = ""
+
+    //     snd_chrome.data = ""
+
+    // }
+    // audio.onpropertychange = function () {
+    //     console.log("onpropertychange", arguments)
+    // }
+    // audio.onended = function () {
+    //     console.log("ended", arguments)
+    // }
+    // audio.ontimeupdate = function () {
+    //     console.log("timeupdate", arguments)
+    // }
+    // audio.onvolumechange = function () {
+    //     console.log("volumechange", arguments)
+    // }
+    // audio.onplay = function () {
+    //     console.log("play", arguments)
+    // }
+    // audio.onerror = function () {
+    //     console.log("error", arguments)
+    // }
+    // audio.onplaying = function () {
+    //     console.log("playing", arguments)
+    // }
+    // // }
 
 
-    
+
+
 </script>
 
 </html>
