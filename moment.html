@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment.min.js"></script>
+</head>
+
+<body>
+    <script>
+        //   Format Dates
+        moment().format('MMMM Do YYYY, h:mm:ss a');
+        moment().format('dddd');
+        moment().format("MMM Do YY");
+        moment().format('YYYY [escaped] YYYY');
+        moment().format();
+
+        // moment().format('MMMM Do YYYY, h:mm:ss a');
+        // "May 10th 2019, 3:20:57 pm"
+        // moment().format('MMMM Do YYYY, h:mm:ss a');
+        // "May 10th 2019, 3:21:03 pm"
+        // moment().format('dddd');
+        // "Friday"
+        // moment().format("MMM Do YY");
+        // "May 10th 19"
+        // moment().format('YYYY [escaped] YYYY');
+        // "2019 escaped 2019"
+        // moment().format();
+        // "2019-05-10T15:21:38+08:00"
+
+
+
+        // Relative Time
+        moment("20111031", "YYYYMMDD").fromNow();
+        moment("20120620", "YYYYMMDD").fromNow();
+        moment().startOf('day').fromNow();
+        moment().endOf('day').fromNow();
+        moment().startOf('hour').fromNow();
+
+        // moment("20111031", "YYYYMMDD").fromNow();
+        // "8 years ago"
+        // moment("20120620", "YYYYMMDD").fromNow()
+        // "7 years ago"
+        // moment().startOf('day').fromNow();
+        // "15 hours ago"
+        // moment().startOf('day')
+        // M { _isAMomentObject: true, _isUTC: false, _pf: { … }, _locale: P, _d: Fri May 10 2019 00: 00: 00 GMT + 0800(中国标准时间), … } _d: Fri May 10 2019 00: 00: 00 GMT + 0800(中国标准时间) { } __proto__: Object_isAMomentObject: true_isUTC: false_isValid: true_locale: P { _calendar: { … }, _longDateFormat: { … }, _invalidDate: "Invalid date", ordinal: ƒ, _dayOfMonthOrdinalParse: /\d{1,2}(th|st|nd|rd)/, … } _pf: { empty: false, unusedTokens: Array(0), unusedInput: Array(0), overflow: -2, charsLeftOver: 0, … } __proto__: Object
+        // moment().endOf('day').fromNow();
+        // "in 9 hours"
+        // moment().startOf('hour').fromNow();
+        // "25 minutes ago"
+        // Calendar Time
+        moment().subtract(10, 'days').calendar();
+        moment().subtract(6, 'days').calendar();
+        moment().subtract(3, 'days').calendar();
+        moment().subtract(1, 'days').calendar();
+        moment().calendar();
+        moment().add(1, 'days').calendar();
+        moment().add(3, 'days').calendar();
+        moment().add(10, 'days').calendar();
+
+        // moment().subtract(10, 'days').calendar();
+        // "04/30/2019"
+        // moment().subtract(6, 'days').calendar();
+        // "Last Saturday at 3:26 PM"
+        // moment().subtract(3, 'days').calendar();
+        // "Last Tuesday at 3:26 PM"
+        // moment().subtract(1, 'days').calendar()
+        // "Yesterday at 3:26 PM"
+        // moment().subtract(1, 'days')
+        // M { _isAMomentObject: true, _isUTC: false, _pf: { … }, _locale: P, _d: Thu May 09 2019 15: 26: 53 GMT + 0800(中国标准时间), … } _d: Thu May 09 2019 15: 26: 53 GMT + 0800(中国标准时间) { } _isAMomentObject: true_isUTC: false_isValid: true_locale: P { _calendar: { … }, _longDateFormat: { … }, _invalidDate: "Invalid date", ordinal: ƒ, _dayOfMonthOrdinalParse: /\d{1,2}(th|st|nd|rd)/, … } _pf: { empty: false, unusedTokens: Array(0), unusedInput: Array(0), overflow: -2, charsLeftOver: 0, … } __proto__: Object
+        // moment().calendar();
+        // "Today at 3:27 PM"
+        // moment().add(1, 'days').calendar();
+        // "Tomorrow at 3:27 PM"
+        // moment().add(3, 'days').calendar();
+        // "Monday at 3:27 PM"
+        // moment().add(10, 'days').calendar();
+        // "05/20/2019"
+
+
+
+        
+        // Multiple Locale Support
+        moment.locale();
+        moment().format('LT');
+        moment().format('LTS');
+        moment().format('L');
+        moment().format('l');
+        moment().format('LL');
+        moment().format('ll');
+        moment().format('LLL');
+        moment().format('lll');
+        moment().format('LLLL');
+        moment().format('llll');
+
+
+        moment.locale();
+        "en"
+        // moment().format('LT');
+        // "3:28 PM"
+        // moment().format('LTS');
+        // "3:28:41 PM"
+        // moment().format('L');
+        // "05/10/2019"
+        // moment().format('l');
+        // "5/10/2019"
+        // moment().format('LL');
+        // "May 10, 2019"
+        // moment().format('ll');
+        // "May 10, 2019"
+        // moment().format('LLL');
+        // "May 10, 2019 3:29 PM"
+        // moment().format('lll');
+        // "May 10, 2019 3:29 PM"
+        // moment().format('LLLL');
+        // "Friday, May 10, 2019 3:29 PM"
+        // moment().format('llll');
+        // "Fri, May 10, 2019 3:29 PM"
+    </script>
+</body>
+
+</html>

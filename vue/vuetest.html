@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js"></script>
+    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js"></script>
+</head>
+<style>
+    #app,
+    body,
+    html {
+        height: 100%;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <el-table :data="table" style="width: 100%">
+            <el-table-column label="投标人1">
+
+            </el-table-column>
+            <el-table-column label="投标人2">
+                <template slot-scope="scope">
+                    {{scope.$index}}
+                </template>
+                <el-table-column v-for="(item, index) in list" :key="index" :label="item.pName" width="180">
+                    <template slot-scope="scope">
+                        <el-radio-group v-model="radioStatu[index+'/'+scope.$index]">
+                            <el-radio v-for="(subItem, subIndex) in item.qualified" :key="subIndex"
+                                :label='subItem.statu'>
+                                {{subItem.unStatu}}</el-radio>
+                        </el-radio-group>
+                    </template>
+                </el-table-column>
+            </el-table-column>
+        </el-table>
+    </div>
+    <script>
+        Mock.mock('/api/tableMsg', 'get', {
+            'pdf': [
+                {
+                    pName: '重庆网控科技发展有限公司',
+                    'allPdf|1-4': ['pdf文件@natural(1,99)'],
+                    factor: '内存大小大于8G',
+                    'qualified': [
+                        { statu: '合格', unStatu: '合格' },
+                        { statu: '不合格', unStatu: '不合格' },
+                    ]
+                },
+                {
+                    pName: '普瑞太阳能有限公司',
+                    factor: '是否为INTEL生产',
+                    'allPdf|1-4': ['pdf文件@natural(1,99)'],
+                    'qualified': [
+                        { statu: '合格', unStatu: '合格' },
+                        { statu: '不合格', unStatu: '不合格' },
+                    ]
+                },
+                {
+                    pName: '夏丰热工研究院有限公司',
+                    factor: '分辨率是否为15英寸以上',
+                    'allPdf|1-4': ['pdf文件@natural(1,99)'],
+                    'qualified': [
+                        { statu: '合格', unStatu: '合格' },
+                        { statu: '不合格', unStatu: '不合格' },
+                    ]
+                }
+            ]
+        })
+        // console.log({data:data.toJSONSchema()})
+        new Vue({
+            el: "#app",
+            data: {
+                msg: "asdasd",
+                list: [],
+                table: [{}, {}, {}],
+                radioStatu: {}
+
+
+            },
+            mounted() {
+                this.$nextTick(() => {
+                    console.log(111)
+                })
+                axios.get('/api/tableMsg').then(data => {
+                    console.log(data)
+                    this.list = data.data.pdf
+                    this.list.map(v => {
+                        v.qualified.map((j, i) => j.checked = j.statu)
+                    })
+                })
+            },
+
+        })
+    </script>
+</body>
+
+</html>

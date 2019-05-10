@@ -1,0 +1,35 @@
+<html>
+<head>
+<title>滚动信息 - 51windows.net</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<style type="text/css">
+</style>
+<!-- 下载、并安装插件：微软TTS5.1语音引擎(中文) -->
+<script type="text/javascript">
+	function listen1(){
+        var voiceObj = new ActiveXObject("Sapi.SpVoice");
+        console.log(voiceObj)
+		//朗读
+		voiceObj.Speak("开始",1);
+	}
+	function listen2(){
+		var voiceObj = new ActiveXObject("Sapi.SpVoice");
+		//语速
+		voiceObj.Rate=-1;  
+		//音量
+		voiceObj.Volume=60;
+		//换女声
+		voiceObj.Voice=voiceObj.GetVoices('','').Item(2);
+		var text=document.getElementById("p1").innerHTML;
+		
+		//朗读
+		voiceObj.Speak(text,1);
+	}
+</script>
+</head>
+<body>
+	<input type="button" value="点击播放" onclick="listen1();">
+	<input type="button" value="点击播放2" onclick="listen2();">
+	<p id="p1">啦啦啦啦啦啦啦</p>
+</body>
+</html>

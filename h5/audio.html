@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="http://cdn.static.runoob.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <!-- <script src="http://cdn.static.runoob.com/libs/html5shiv/3.7/html5shiv.min.js"></script> -->
     <script src="https://cdn.bootcss.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
@@ -31,13 +31,15 @@
         <audio id='audio' src="http://emic-cmb.emicloud.com/download?ticket=cea1ff5b0b3b13631c56848ef9f760a4"
             controls></audio> -->
 
+    <!-- <audio id='audio' src="/mp3/3.wav"
+            controls></audio>  -->
     <input type="file" id="file" multiple="multiple" accept=".wav,.mp3">
     <ul>
         <li>第一段语音</li>
         <li>第二段语音</li>
         <li>第三段语音</li>
     </ul>
-    <ul id='list' ></ul>
+    <ul id='list'></ul>
     <button id='btn'>试听</button>
     <span id="duration"></span>
     <input type="range" id="range" max='0' step="0.1">
@@ -48,26 +50,43 @@
     let currentTime = 0
     let total = 0
     let range = document.querySelector("#range")
-    let srcArr = ["./mp3/1.wav", './mp3/2.wav', './mp3/3.wav']
+    let srcArr = ["./mp3/1.mp3", './mp3/2.mp3', './mp3/3.mp3']
     let audioArr = []
     let timer=null
+    let isIE=IEVersion()!=-1
     document.querySelector("#btn").onclick = function () {
         start(srcArr)
     }
     function loadPromise(src) {
         return new Promise((resolve, reject) => {
             let audio = document.createElement("audio")
+            let type=src.split(".").pop()
+            if(isIE&&/wav/.test(type)){
+                reject(
+                        {
+                            info:"ie audio不支持wav播放",
+                            audio
+                        }
+                    )
+                return  
+            }
             audio.src = src
             audio.load && audio.load()
             audio.oncanplay = (obj) => {
+                // console.log("oncanplay",arguments)
                 // audio.duration = obj.srcElement.duration
                 resolve(audio)
                 audio.oncanplay = null
             }
-            audio.onerror = () => {
+            audio.onerror = (err) => {
                 reject(
+                  {
+                    err,
+                    info:"加载音频出错",
                     audio
+                  }
                 )
+                console.log("oncanplay",arguments)
                 audio.onerror = null
             }
         })
@@ -78,6 +97,7 @@
         Promise.all(srcArr.map(src => loadPromise(src))).then((result) => {
             if (audioArr.length > 0) stopAll(audioArr)
             audioArr = result
+            console.log({result})
             addEvent(audioArr)
             audioArr[0].play()
             // duration.innerHTML = "0:0/" + Math.floor(total / 60) + ':' + Math.round(total % 60)
@@ -104,7 +124,7 @@
                 }, 300);
             }
         }).catch(err => {
-            console.log({ err })
+            alert(err.info)
         })
     }
 
@@ -175,6 +195,39 @@
             //     url = window.webkitURL.createObjectURL(file);
             // }
             return  URL.createObjectURL(file) ;
+        }
+
+
+
+
+
+        function IEVersion() {
+            var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串  
+            var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; //判断是否IE<11浏览器  
+            var isEdge = userAgent.indexOf("Edge") > -1 && !isIE; //判断是否IE的Edge浏览器  
+            var isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf("rv:11.0") > -1;
+            if(isIE) {
+                var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+                reIE.test(userAgent);
+                var fIEVersion = parseFloat(RegExp["$1"]);
+                if(fIEVersion == 7) {
+                    return 7;
+                } else if(fIEVersion == 8) {
+                    return 8;
+                } else if(fIEVersion == 9) {
+                    return 9;
+                } else if(fIEVersion == 10) {
+                    return 10;
+                } else {
+                    return 6;//IE版本<=7
+                }   
+            } else if(isEdge) {
+                return 'edge';//edge
+            } else if(isIE11) {
+                return 11; //IE11  
+            }else{
+                return -1;//不是ie浏览器
+            }
         }
     // window.onload = function () {
     // var embedPlay = document.getElementById("embedPlay")
