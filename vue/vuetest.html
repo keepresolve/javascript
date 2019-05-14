@@ -2,15 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css" rel="stylesheet">
-    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js"></script>
-    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js"></script>
-    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js"></script>
-    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js"></script>
+    <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css " rel="stylesheet" />
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
 </head>
 <style>
     #app,
@@ -22,83 +22,131 @@
 
 <body>
     <div id="app">
-        <el-table :data="table" style="width: 100%">
-            <el-table-column label="投标人1">
-
-            </el-table-column>
+        合格率<span v-cloak> {{ baifenbi }}</span>
+        <el-table :data="tableData" style="width: 100%">
+            <el-table-column label="投标人1"> </el-table-column>
             <el-table-column label="投标人2">
                 <template slot-scope="scope">
-                    {{scope.$index}}
+                    {{ scope.$index }}
                 </template>
-                <el-table-column v-for="(item, index) in list" :key="index" :label="item.pName" width="180">
+                <el-table-column v-for="(item, index) in tableData" :key="index" :label="item.pName" width="180">
                     <template slot-scope="scope">
+                        {{ index }}{{ scope.$index }}
                         <el-radio-group v-model="radioStatu[index+'/'+scope.$index]">
                             <el-radio v-for="(subItem, subIndex) in item.qualified" :key="subIndex"
-                                :label='subItem.statu'>
-                                {{subItem.unStatu}}</el-radio>
+                                :label="subItem.statu">
+                                {{ subItem.unStatu }}</el-radio>
                         </el-radio-group>
                     </template>
                 </el-table-column>
             </el-table-column>
         </el-table>
+        <el-button @click='checkedAll'>全选</el-button>
+        <el-button :disabled='isSave'>提交按钮</el-button>
+        <el-button @click="submit">提交按钮</el-button>
     </div>
     <script>
-        Mock.mock('/api/tableMsg', 'get', {
-            'pdf': [
+        Mock.mock("/api/tableMsg", "get", {
+            pdf: [
                 {
-                    pName: '重庆网控科技发展有限公司',
-                    'allPdf|1-4': ['pdf文件@natural(1,99)'],
-                    factor: '内存大小大于8G',
-                    'qualified': [
-                        { statu: '合格', unStatu: '合格' },
-                        { statu: '不合格', unStatu: '不合格' },
+                    pName: "重庆网控科技发展有限公司",
+                    "allPdf|1-4": ["pdf文件@natural(1,99)"],
+                    factor: "内存大小大于8G",
+                    qualified: [
+                        { statu: "合格", unStatu: "合格" },
+                        { statu: "不合格", unStatu: "不合格" }
                     ]
                 },
                 {
-                    pName: '普瑞太阳能有限公司',
-                    factor: '是否为INTEL生产',
-                    'allPdf|1-4': ['pdf文件@natural(1,99)'],
-                    'qualified': [
-                        { statu: '合格', unStatu: '合格' },
-                        { statu: '不合格', unStatu: '不合格' },
+                    pName: "普瑞太阳能有限公司",
+                    factor: "是否为INTEL生产",
+                    "allPdf|1-4": ["pdf文件@natural(1,99)"],
+                    qualified: [
+                        { statu: "合格", unStatu: "合格" },
+                        { statu: "不合格", unStatu: "不合格" }
                     ]
                 },
                 {
-                    pName: '夏丰热工研究院有限公司',
-                    factor: '分辨率是否为15英寸以上',
-                    'allPdf|1-4': ['pdf文件@natural(1,99)'],
-                    'qualified': [
-                        { statu: '合格', unStatu: '合格' },
-                        { statu: '不合格', unStatu: '不合格' },
+                    pName: "夏丰热工研究院有限公司",
+                    factor: "分辨率是否为15英寸以上",
+                    "allPdf|1-4": ["pdf文件@natural(1,99)"],
+                    qualified: [
+                        { statu: "合格", unStatu: "合格" },
+                        { statu: "不合格", unStatu: "不合格" }
                     ]
                 }
             ]
-        })
+        });
         // console.log({data:data.toJSONSchema()})
         new Vue({
             el: "#app",
             data: {
                 msg: "asdasd",
-                list: [],
-                table: [{}, {}, {}],
-                radioStatu: {}
+                tableData: [],
+                table: [{}, {}, {}, {}],
+                radioStatu: {},
+                radioStatu2:{}
+            },
+            computed: {
+                baifenbi() {
+                    let checkedLength = 0; //选中的合格
+                    let length=0
+                    console.log(this.radioStatu2.length)
+                    console.log(this.radioStatu)
+                    for (var i in this.radioStatu) {
+                        if (this.radioStatu[i] == "合格") {
+                            checkedLength++;
+                        }
+                        length++
+                    }
+                    
+                    // 选中/总的单选数量
+                    return    length==0?0.00:(checkedLength / length).toFixed(2)
+
+              
 
 
+                    //
+                },
+                isSave(){
+                    var issave=false
+                    for (var i in this.radioStatu) {
+                        if (this.radioStatu[i] == "未选中") issave=true 
+                    }
+                    return issave
+                }
+            },
+            methods: {
+                checkedAll() {
+                    for (let key in this.radioStatu) {
+                        if (this.radioStatu.hasOwnProperty(key)) {
+                            console.log(this.radioStatu[key])
+                            this.radioStatu[key] = '合格'
+                        }
+                    }
+                },
+                submit(){
+                    let isCanSumit=true
+                    for (var i in this.radioStatu) {
+                        if (this.radioStatu[i] == "未选中") isCanSumit=false 
+                    }
+                    if(!isCanSumit) return alert("不行")
+                    alert("可以")
+                }
             },
             mounted() {
-                this.$nextTick(() => {
-                    console.log(111)
-                })
-                axios.get('/api/tableMsg').then(data => {
-                    console.log(data)
-                    this.list = data.data.pdf
-                    this.list.map(v => {
-                        v.qualified.map((j, i) => j.checked = j.statu)
-                    })
-                })
-            },
-
-        })
+                axios.get("/api/tableMsg").then(data => {
+                    console.log(data);
+                    this.tableData = data.data.pdf;
+                    var length = this.tableData.length
+                    for (let index = 0; index < length; index++) {
+                        for (let index1 = 0; index1 < length; index1++) {
+                            this.$set(this.radioStatu, index + '/' + index1, "未选中")
+                        }
+                    }
+                });
+            }
+        });
     </script>
 </body>
 

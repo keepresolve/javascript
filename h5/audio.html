@@ -43,17 +43,35 @@
     <button id='btn'>试听</button>
     <span id="duration"></span>
     <input type="range" id="range" max='0' step="0.1">
-
+    <input type="range" id="volumn" max='1'  value="0.5" step="0.1">
+     <button id='loop'>loop</button>
 </body>
 <script type="text/babel">
     let duration = document.querySelector("#duration")
     let currentTime = 0
     let total = 0
     let range = document.querySelector("#range")
+    let volumn = document.querySelector("#volumn")
+    let loop = document.querySelector("#loop")
     let srcArr = ["./mp3/1.mp3", './mp3/2.mp3', './mp3/3.mp3']
     let audioArr = []
     let timer=null
     let isIE=IEVersion()!=-1
+    volumn.onchange=function(){
+        console.log(audioArr)
+        audioArr.map(el=>{
+          el.volume = volumn.value   
+        })
+        
+    }
+    loop.onclick=function(){
+     
+        audioArr.map(el=>{
+          el.loop =  false
+        })
+        audioArr[audioArr.length-1].isLoop=!Boolean(audioArr[audioArr.length-1].isLoop)
+        
+    }
     document.querySelector("#btn").onclick = function () {
         start(srcArr)
     }
@@ -151,6 +169,11 @@
             el.onended = function () {
                 let nextAudio = audioArr[el.index + 1]
                 if (nextAudio) nextAudio.play()
+                if(el.index == audioArr.length-1){
+                     if(el.isLoop){
+                        audioArr[0].play()
+                     }
+                }
             }
         })
         range.max = total
