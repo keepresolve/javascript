@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css " rel="stylesheet" />
+    <!-- <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script> -->
+    <!-- <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script> -->
+    <!-- <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script> -->
+    <!-- <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script> -->
+    <script src="https://cdn.bootcss.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="../../cmd-amd-common/require.js"></script>
+</head>
+<style>
+    #app,
+    body,
+    html {
+        height: 100%;
+    }
+
+    #echarts {
+        height: 500px;
+        width: 100%;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div id="echarts"></div>
+    </div>
+    <script>
+
+
+    </script>
+    <script>
+
+
+    </script>
+</body>
+<script>
+    let resizeList = []
+    require.config({
+        path: {
+
+        }
+    })
+    require(['https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js', "https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js", "https://cdn.bootcss.com/vue/2.5.9/vue.js", "https://cdn.bootcss.com/element-ui/2.8.2/index.js", "https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"], function (axios, Mock, Vue, ui, echarts) {
+        console.log({ axios, Mock, Vue, ui, echarts })
+        Mock.mock("/api/echarts", "get", {
+
+            title: {
+                text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data: ['销量', "asd"]
+            },
+            xAxis: {
+                data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+
+        });
+        window.root = new Vue({
+            el: "#app",
+            data: {
+                option: {},
+                myChart: null
+            },
+            computed: {
+
+            },
+            watch: {
+                option: {
+                    handler(n) {
+                        console.log(n)
+                        if (this.myChart) {
+                            this.myChart.setOption(n);
+                            this.myChart.resize()
+                        }
+
+                    },
+                    deep: true
+
+                }
+            },
+            methods: {
+
+            },
+            beforeCreate() {
+
+                axios.get("/api/echarts").then(data => {
+                    this.option = data.data
+                    setTimeout(() => {
+                        this.option.series[0].type = 'pie'
+
+                    }, 5000);
+
+                });
+            },
+            created() {
+
+            },
+            mounted() {
+                this.myChart = echarts.init(document.getElementById('echarts'))
+                resizeList.push({
+                    callback: () => this.myChart.resize(),
+                    isExec:true
+                })
+                window.addEventListener("resize", () => {
+                    if (resizeList.length > 0) {
+                        resizeList.map(event =>event.isExec&&event.callback())
+                    }
+                })
+            }
+        });
+
+    });
+</script>
+
+</html>

@@ -1,231 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
-  </head>
-  <style>
+</head>
+<style>
     body,
     html {
-      height: 100%;
+        height: 100%;
     }
-  </style>
-  <body>
+</style>
+
+<body>
     <select name="" id="sel"></select>
-    <div style="height:450px;width:400px">
-      <div id="echarts1" style="width:100%;height:100%"></div>
+    <div style="height:600px;width:600px;border:1px solid">
+        <div id="echarts1" style="width:100%;height:100%"></div>
     </div>
-  </body>
-  <script>
+</body>
+<script>
     //   Echarts 设置数据图形的样式可以从三个层级入手，分别是：全局、系列和数据。
     //   绘制南丁格尔图
     let option1 = {
-      backgroundColor: "#2c343c",
-      visualMap: {
-        show: false,
-        min: 80,
-        max: 600,
-        inRange: {
-          colorLightness: [0, 1]
-        }
-      },
-      title: {
-        text: "12312"
-      },
-      series: [
-        {
-          name: "访问来源",
-          type: "pie",
-          radius: "55%",
-          data: [
-            { value: 235, name: "视频广告" },
-            { value: 274, name: "联盟广告" },
-            { value: 310, name: "邮件营销" },
-            { value: 335, name: "直接访问" },
-            { value: 400, name: "搜索引擎" }
-          ],
-          roseType: "angle",
-          label: {
-            //字体title
-            normal: {
-              textStyle: {
-                color: "red"
-              }
+        backgroundColor: "#2c343c",
+        visualMap: {
+            show: false,
+            min: 80,
+            max: 600,
+            inRange: {
+                colorLightness: [0, 1]
             }
-          },
-          labelLine: {
-            //连线
-            normal: {
-              lineStyle: {
-                color: "yellow"
-              }
+        },
+        title: {
+            text: "12312"
+        },
+        series: [
+            {
+                name: "访问来源",
+                type: "pie",
+                radius: "55%",
+                data: [
+                    { value: 235, name: "视频广告" },
+                    { value: 274, name: "联盟广告" },
+                    { value: 310, name: "邮件营销" },
+                    { value: 335, name: "直接访问" },
+                    { value: 400, name: "搜索引擎" }
+                ],
+                roseType: "angle",
+                label: {
+                    //字体title
+                    normal: {
+                        textStyle: {
+                            color: "red"
+                        }
+                    }
+                },
+                labelLine: {
+                    //连线
+                    normal: {
+                        lineStyle: {
+                            color: "yellow"
+                        }
+                    }
+                },
+                //每一项的颜色 图
+                itemStyle: {
+                    normal: {
+                        color: "blue",
+                        shadowBlur: 200,
+                        shadowColor: "rgba(0, 0, 0, 0.5)"
+                    }
+                },
+                // 高亮样式。
+                emphasis: {
+                    itemStyle: {
+                        // 高亮时点的颜色。
+                        color: "yellow"
+                    },
+                    label: {
+                        show: true,
+                        // 高亮时标签的文字。
+                        formatter: "This is a emphasis label."
+                    }
+                }
             }
-          },
-          //每一项的颜色 图
-          itemStyle: {
-            normal: {
-              color: "blue",
-              shadowBlur: 200,
-              shadowColor: "rgba(0, 0, 0, 0.5)"
-            }
-          },
-          // 高亮样式。
-          emphasis: {
-            itemStyle: {
-              // 高亮时点的颜色。
-              color: "yellow"
-            },
-            label: {
-              show: true,
-              // 高亮时标签的文字。
-              formatter: "This is a emphasis label."
-            }
-          }
-        }
-      ]
+        ]
     };
     let option2 = {
-      title: {
-        text: "动态数据",
-        subtext: "纯属虚构"
-      },
-      tooltip: {
-        trigger: "axis",
-        axisPointer: {
-          type: "cross",
-          label: {
-            backgroundColor: "#283b56"
-          }
-        }
-      },
-      legend: {
-        data: ["最新成交价", "预购队列1"]
-      },
-      toolbox: {
-        show: true,
-        feature: {
-          dataView: { readOnly: false },
-          restore: {},
-          saveAsImage: {}
-        }
-      },
-      dataZoom: {
-        show: false,
-        start: 0,
-        end: 100
-      },
-      xAxis: [
-        {
-          type: "category",
-          boundaryGap: true,
-          data: (function() {
-            var now = new Date();
-            var res = [];
-            var len = 10;
-            while (len--) {
-              res.unshift(now.toLocaleTimeString().replace(/^\D*/, ""));
-              now = new Date(now - 2000);
-            }
-            return res;
-          })()
+        title: {
+            text: "动态数据",
+            subtext: "纯属虚构"
         },
-        {
-          type: "category",
-          boundaryGap: true,
-          data: (function() {
-            var res = [];
-            var len = 10;
-            while (len--) {
-              res.push(10 - len - 1);
+        tooltip: {
+            trigger: "axis",
+            axisPointer: {
+                type: "cross",
+                label: {
+                    backgroundColor: "#283b56"
+                }
             }
-            return res;
-          })()
-        }
-      ],
-      yAxis: [
-        {
-          type: "value",
-          scale: true,
-          name: "价格",
-          max: 30,
-          min: 0,
-          boundaryGap: [0.2, 0.2]
         },
-        {
-          type: "value",
-          scale: true,
-          name: "预购量",
-          max: 1200,
-          min: 0,
-          boundaryGap: [0.2, 0.2]
-        }
-      ],
-      series: [
-        {
-          name: "预购队列1",
-          type: "bar",
-          xAxisIndex: 1,
-          yAxisIndex: 1,
-          data: (function() {
-            var res = [];
-            var len = 10;
-            while (len--) {
-              res.push(Math.round(Math.random() * 1000));
-            }
-            return res;
-          })()
+        legend: {
+            data: ["最新成交价", "预购队列1"]
         },
-        {
-          name: "最新成交价",
-          type: "line",
-          data: (function() {
-            var res = [];
-            var len = 0;
-            while (len < 10) {
-              res.push((Math.random() * 10 + 5).toFixed(1) - 0);
-              len++;
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: { readOnly: false },
+                restore: {},
+                saveAsImage: {}
             }
-            return res;
-          })()
-        }
-      ]
+        },
+        dataZoom: {
+            show: false,
+            start: 0,
+            end: 100
+        },
+        xAxis: [
+            {
+                type: "category",
+                boundaryGap: true,
+                data: (function () {
+                    var now = new Date();
+                    var res = [];
+                    var len = 10;
+                    while (len--) {
+                        res.unshift(now.toLocaleTimeString().replace(/^\D*/, ""));
+                        now = new Date(now - 2000);
+                    }
+                    return res;
+                })()
+            },
+            {
+                type: "category",
+                boundaryGap: true,
+                data: (function () {
+                    var res = [];
+                    var len = 10;
+                    while (len--) {
+                        res.push(10 - len - 1);
+                    }
+                    return res;
+                })()
+            }
+        ],
+        yAxis: [
+            {
+                type: "value",
+                scale: true,
+                name: "价格",
+                max: 30,
+                min: 0,
+                boundaryGap: [0.2, 0.2]
+            },
+            {
+                type: "value",
+                scale: true,
+                name: "预购量",
+                max: 1200,
+                min: 0,
+                boundaryGap: [0.2, 0.2]
+            }
+        ],
+        series: [
+            {
+                name: "预购队列1",
+                type: "bar",
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+                data: (function () {
+                    var res = [];
+                    var len = 10;
+                    while (len--) {
+                        res.push(Math.round(Math.random() * 1000));
+                    }
+                    return res;
+                })()
+            },
+            {
+                name: "最新成交价",
+                type: "line",
+                data: (function () {
+                    var res = [];
+                    var len = 0;
+                    while (len < 10) {
+                        res.push((Math.random() * 10 + 5).toFixed(1) - 0);
+                        len++;
+                    }
+                    return res;
+                })()
+            }
+        ]
     };
-
     var pie = {
-      toolbox: {
         //工具按钮
-        show: true,
-        feature: {
-          dataView: { readOnly: false }, //数据试图
-          restore: {}, //还原
-          saveAsImage: {} //保存图片
-        }
-      },
-      series: [
-        {
-          name: "访问来源",
-          type: "pie",
-          radius: "55%",
+        toolbox: {
 
-          data: [
-            { value: 235, name: "视频广告" },
-            { value: 274, name: "联盟广告" },
-            { value: 310, name: "邮件营销" },
-            { value: 335, name: "直接访问" },
-            { value: 400, name: "搜索引擎" }
-          ]
-        }
-      ]
+            show: true,
+            feature: {
+                dataView: { readOnly: false }, //数据试图
+                restore: {}, //还原
+                saveAsImage: {} //保存图片
+            }
+        },
+        series: [
+            {
+                name: "访问来源",
+                type: "pie",
+                radius: "55%",
+
+                data: [
+                    { value: 235, name: "视频广告" },
+                    { value: 274, name: "联盟广告" },
+                    { value: 310, name: "邮件营销" },
+                    { value: 335, name: "直接访问" },
+                    { value: 400, name: "搜索引擎" }
+                ]
+            }
+        ]
+    };
+    var weatherIcons = {
+        'Sunny': 'https://www.echartsjs.com/gallery/data/asset/img/weather/sunny_128.png',
+        'Cloudy': 'https://www.echartsjs.com/gallery/data/asset/img/weather/cloudy_128.png',
+        'Showers': 'https://www.echartsjs.com/gallery/data/asset/img/weather/showers_128.png'
     };
 
+    var allLearn = {
+        // title————————————————————————————————————————————————————————————————————
+        title: {
+            // id:"",
+            show: true,
+            // text: "正常text",
+            //  在文本中， 可以对部分文本采用 rich 中定义样式。
+            //  这里需要在文本中使用标记符号：
+            // 注意，换行仍是使用 '\n'。
+            // `{styleName|text content text content}` 标记样式名。
+            text: [
+                '{title|title.text}{abg|}',
+                '{weatherHead|天气}{valueHead|天数}{rateHead|占比}',
+                '{hr|}',
+                '{Sunny|}{value|202}{rate|55.3%}',
+                '{Cloudy|}{value|142}{rate|38.9%}',
+                '{Showers|}{value|21}{rate|5.8%}'
+            ].join('\n'), //取用rich 自定义解析
+            link: "https://echarts.baidu.com/option.html#title",
+            target: "blank", //rich模式 失效
+
+            triggerEvent: true,//是否触发事件 
+
+
+            textVerticalAlign: "middle",
+            textAlign: "top",
+            itemGap: "50",  //主副标题之间的间距。
+            textStyle: {
+                color: "#888",
+                fontStyle: 'normal',
+                fontWeight: '800',
+                //富文本自己render ui
+                rich: {
+                    backImage: {
+                        borderColor: '#777',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        color: "black",
+                        backgroundColor: {
+                            image: weatherIcons.Sunny //img.setAttribute('crossOrigin', 'anonymous'); Tainted canvases may not be exported
+                            // 这里可以是图片的 URL，
+                            //l 或者图片的 dataURI，
+                            // 或者 HTMLImageElement 对象，
+                            // 或者 HTMLCanvasElement 对象。
+                        },
+                        fontWeight: "1000",
+                        fontSize: "18",
+                        align: "center"
+                    },
+                    title: {
+                        color: '#eee',
+                        align: 'center'
+                    },
+                    abg: {
+                        backgroundColor: '#333',
+                        width: '100%',
+                        align: 'right',
+                        height: 25,
+                        borderRadius: [4, 4, 0, 0]
+                    },
+                    Sunny: {
+                        height: 30,
+                        align: 'left',
+                        backgroundColor: {
+                            image: weatherIcons.Sunny
+                        }
+                    },
+                    Cloudy: {
+                        height: 30,
+                        align: 'left',
+                        backgroundColor: {
+                            image: weatherIcons.Cloudy
+                        }
+                    },
+                    Showers: {
+                        height: 30,
+                        align: 'left',
+                        backgroundColor: {
+                            image: weatherIcons.Showers
+                        }
+                    },
+                    weatherHead: {
+                        color: '#333',
+                        height: 24,
+                        align: 'left'
+                    },
+                    hr: {
+                        borderColor: '#777',
+                        width: '100%',
+                        borderWidth: 0.5,
+                        height: 0
+                    },
+                    value: {
+                        width: 20,
+                        padding: [0, 20, 0, 30],
+                        align: 'left'
+                    },
+                    valueHead: {
+                        color: '#333',
+                        width: 20,
+                        padding: [0, 20, 0, 30],
+                        align: 'center'
+                    },
+                    rate: {
+                        width: 40,
+                        align: 'right',
+                        padding: [0, 10, 0, 0]
+                    },
+                    rateHead: {
+                        color: '#333',
+                        width: 40,
+                        align: 'center',
+                        padding: [0, 10, 0, 0]
+                    }
+                }
+
+            },
+            subtext: "子标题",
+            sublink: "https://echarts.baidu.com/option.html#title.subtext",
+            // subtextStyle:{ rich:{}}
+        },
+        // 工具按钮
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: { readOnly: false }, //数据试图
+                restore: {}, //还原
+                saveAsImage: {} //保存图片
+            }
+        },
+
+    }
     var list = {
-      option1,
-      option2,
-      pie
+        allLearn,
+        option1,
+        option2,
+        pie
+
     };
+
+
+
+    // init
     // 全局对象echarts https://echarts.baidu.com/api.html#echarts
     // init;
     //  1：dom: HTMLDivElement|HTMLCanvasElement, 实例容器，一般是一个具有高宽的div元素。
@@ -236,45 +381,47 @@
     //     width?: number|string 可显式指定实例宽度，单位为像素。如果传入值为 null/undefined/'auto'，则表示自动取 dom（实例容器）的宽度。
     //     height? number|string 可显式指定实例高度，单位为像素。如果传入值为 null/undefined/'auto'，则表示自动取 dom（实例容器）的高度。
     let eachrts = echarts.init(document.querySelector("#echarts1"));
+    //setOption
+    eachrts.setOption(list.allLearn);
 
-    eachrts.setOption(list.pie);
     let timer = null;
     let sel = document.querySelector("#sel");
     Object.keys(list).forEach(key => {
-      let option = new Option(key, key);
-      sel.append(option);
+        let option = new Option(key, key);
+        sel.append(option);
     });
-    sel.onchange = function(val) {
-      eachrts.showLoading();
-      setTimeout(() => {
-        eachrts.hideLoading();
-        if (this.value == "option2") {
-          let option = list[this.value];
-          let count = 11;
-          timer = setInterval(function() {
-            axisData = new Date().toLocaleTimeString().replace(/^\D*/, "");
+    sel.onchange = function (val) {
+        eachrts.showLoading();
+        setTimeout(() => {
+            eachrts.hideLoading();
+            if (this.value == "option2") {
+                let option = list[this.value];
+                let count = 11;
+                timer = setInterval(function () {
+                    axisData = new Date().toLocaleTimeString().replace(/^\D*/, "");
 
-            var data0 = option.series[0].data;
-            var data1 = option.series[1].data;
-            data0.shift();
-            data0.push(Math.round(Math.random() * 1000));
-            data1.shift();
-            data1.push((Math.random() * 10 + 5).toFixed(1) - 0);
+                    var data0 = option.series[0].data;
+                    var data1 = option.series[1].data;
+                    data0.shift();
+                    data0.push(Math.round(Math.random() * 1000));
+                    data1.shift();
+                    data1.push((Math.random() * 10 + 5).toFixed(1) - 0);
 
-            option.xAxis[0].data.shift();
-            option.xAxis[0].data.push(axisData);
-            option.xAxis[1].data.shift();
-            option.xAxis[1].data.push(count++);
+                    option.xAxis[0].data.shift();
+                    option.xAxis[0].data.push(axisData);
+                    option.xAxis[1].data.shift();
+                    option.xAxis[1].data.push(count++);
 
-            eachrts.setOption(option);
-          }, 2100);
-        } else {
-          clearInterval(timer);
-        }
-        eachrts.setOption(list[this.value], {
-          notMerge: true
-        });
-      }, 1000);
+                    eachrts.setOption(option);
+                }, 2100);
+            } else {
+                clearInterval(timer);
+            }
+            eachrts.setOption(list[this.value], {
+                notMerge: true
+            });
+        }, 1000);
     };
-  </script>
+</script>
+
 </html>
