@@ -1,374 +1,701 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
-</head>
-<style>
+  </head>
+  <style>
     body,
     html {
-        height: 100%;
+      height: 100%;
     }
-</style>
+  </style>
 
-<body>
+  <body>
     <select name="" id="sel"></select>
-    <div style="height:600px;width:600px;border:1px solid">
-        <div id="echarts1" style="width:100%;height:100%"></div>
+    <div style="height:800px;width:100%;border:1px solid">
+      <div id="echarts1" style="width:100%;height:100%"></div>
     </div>
-</body>
-<script>
+
+    <div style="height:600px;width:600px;border:1px solid">
+      <div id="echarts2" style="width:100%;height:100%"></div>
+    </div>
+  </body>
+  <script>
+    let resizeList = [];
+    window.onresize = () => {
+      resizeList.forEach(item => {
+        item.callback();
+      });
+    };
+    var weatherIcons = {
+      Sunny:
+        "https://www.echartsjs.com/gallery/data/asset/img/weather/sunny_128.png",
+      Cloudy:
+        "https://www.echartsjs.com/gallery/data/asset/img/weather/cloudy_128.png",
+      Showers:
+        "https://www.echartsjs.com/gallery/data/asset/img/weather/showers_128.png"
+    };
+
     //   Echarts 设置数据图形的样式可以从三个层级入手，分别是：全局、系列和数据。
     //   绘制南丁格尔图
     let option1 = {
-        backgroundColor: "#2c343c",
-        visualMap: {
-            show: false,
-            min: 80,
-            max: 600,
-            inRange: {
-                colorLightness: [0, 1]
+      backgroundColor: "#2c343c",
+      visualMap: {
+        show: false,
+        min: 80,
+        max: 600,
+        inRange: {
+          colorLightness: [0, 1]
+        }
+      },
+      title: {
+        text: "12312"
+      },
+      series: [
+        {
+          name: "访问来源",
+          type: "pie",
+          radius: "55%",
+          data: [
+            { value: 235, name: "视频广告" },
+            { value: 274, name: "联盟广告" },
+            { value: 310, name: "邮件营销" },
+            { value: 335, name: "直接访问" },
+            { value: 400, name: "搜索引擎" }
+          ],
+          roseType: "angle",
+          label: {
+            //字体title
+            normal: {
+              textStyle: {
+                color: "red"
+              }
             }
-        },
-        title: {
-            text: "12312"
-        },
-        series: [
-            {
-                name: "访问来源",
-                type: "pie",
-                radius: "55%",
-                data: [
-                    { value: 235, name: "视频广告" },
-                    { value: 274, name: "联盟广告" },
-                    { value: 310, name: "邮件营销" },
-                    { value: 335, name: "直接访问" },
-                    { value: 400, name: "搜索引擎" }
-                ],
-                roseType: "angle",
-                label: {
-                    //字体title
-                    normal: {
-                        textStyle: {
-                            color: "red"
-                        }
-                    }
-                },
-                labelLine: {
-                    //连线
-                    normal: {
-                        lineStyle: {
-                            color: "yellow"
-                        }
-                    }
-                },
-                //每一项的颜色 图
-                itemStyle: {
-                    normal: {
-                        color: "blue",
-                        shadowBlur: 200,
-                        shadowColor: "rgba(0, 0, 0, 0.5)"
-                    }
-                },
-                // 高亮样式。
-                emphasis: {
-                    itemStyle: {
-                        // 高亮时点的颜色。
-                        color: "yellow"
-                    },
-                    label: {
-                        show: true,
-                        // 高亮时标签的文字。
-                        formatter: "This is a emphasis label."
-                    }
-                }
+          },
+          labelLine: {
+            //连线
+            normal: {
+              lineStyle: {
+                color: "yellow"
+              }
             }
-        ]
+          },
+          //每一项的颜色 图
+          itemStyle: {
+            normal: {
+              color: "blue",
+              shadowBlur: 200,
+              shadowColor: "rgba(0, 0, 0, 0.5)"
+            }
+          },
+          // 高亮样式。
+          emphasis: {
+            itemStyle: {
+              // 高亮时点的颜色。
+              color: "yellow"
+            },
+            label: {
+              show: true,
+              // 高亮时标签的文字。
+              formatter: "This is a emphasis label."
+            }
+          }
+        }
+      ]
     };
     let option2 = {
-        title: {
-            text: "动态数据",
-            subtext: "纯属虚构"
-        },
-        tooltip: {
-            trigger: "axis",
-            axisPointer: {
-                type: "cross",
-                label: {
-                    backgroundColor: "#283b56"
-                }
+      title: {
+        text: "动态数据",
+        subtext: "纯属虚构"
+      },
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "cross",
+          label: {
+            backgroundColor: "#283b56"
+          }
+        }
+      },
+      legend: {
+        data: ["最新成交价", "预购队列1"]
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          dataView: { readOnly: false },
+          restore: {},
+          saveAsImage: {}
+        }
+      },
+      dataZoom: {
+        show: false,
+        start: 0,
+        end: 100
+      },
+      xAxis: [
+        {
+          type: "category",
+          boundaryGap: true,
+          data: (function() {
+            var now = new Date();
+            var res = [];
+            var len = 10;
+            while (len--) {
+              res.unshift(now.toLocaleTimeString().replace(/^\D*/, ""));
+              now = new Date(now - 2000);
             }
+            return res;
+          })()
         },
-        legend: {
-            data: ["最新成交价", "预购队列1"]
+        {
+          type: "category",
+          boundaryGap: true,
+          data: (function() {
+            var res = [];
+            var len = 10;
+            while (len--) {
+              res.push(10 - len - 1);
+            }
+            return res;
+          })()
+        }
+      ],
+      yAxis: [
+        {
+          type: "value",
+          scale: true,
+          name: "价格",
+          max: 30,
+          min: 0,
+          boundaryGap: [0.2, 0.2]
         },
-        toolbox: {
-            show: true,
-            feature: {
-                dataView: { readOnly: false },
-                restore: {},
-                saveAsImage: {}
+        {
+          type: "value",
+          scale: true,
+          name: "预购量",
+          max: 1200,
+          min: 0,
+          boundaryGap: [0.2, 0.2]
+        }
+      ],
+      series: [
+        {
+          name: "预购队列1",
+          type: "bar",
+          xAxisIndex: 1,
+          yAxisIndex: 1,
+          data: (function() {
+            var res = [];
+            var len = 10;
+            while (len--) {
+              res.push(Math.round(Math.random() * 1000));
             }
+            return res;
+          })()
         },
-        dataZoom: {
-            show: false,
-            start: 0,
-            end: 100
-        },
-        xAxis: [
-            {
-                type: "category",
-                boundaryGap: true,
-                data: (function () {
-                    var now = new Date();
-                    var res = [];
-                    var len = 10;
-                    while (len--) {
-                        res.unshift(now.toLocaleTimeString().replace(/^\D*/, ""));
-                        now = new Date(now - 2000);
-                    }
-                    return res;
-                })()
-            },
-            {
-                type: "category",
-                boundaryGap: true,
-                data: (function () {
-                    var res = [];
-                    var len = 10;
-                    while (len--) {
-                        res.push(10 - len - 1);
-                    }
-                    return res;
-                })()
+        {
+          name: "最新成交价",
+          type: "line",
+          data: (function() {
+            var res = [];
+            var len = 0;
+            while (len < 10) {
+              res.push((Math.random() * 10 + 5).toFixed(1) - 0);
+              len++;
             }
-        ],
-        yAxis: [
-            {
-                type: "value",
-                scale: true,
-                name: "价格",
-                max: 30,
-                min: 0,
-                boundaryGap: [0.2, 0.2]
-            },
-            {
-                type: "value",
-                scale: true,
-                name: "预购量",
-                max: 1200,
-                min: 0,
-                boundaryGap: [0.2, 0.2]
-            }
-        ],
-        series: [
-            {
-                name: "预购队列1",
-                type: "bar",
-                xAxisIndex: 1,
-                yAxisIndex: 1,
-                data: (function () {
-                    var res = [];
-                    var len = 10;
-                    while (len--) {
-                        res.push(Math.round(Math.random() * 1000));
-                    }
-                    return res;
-                })()
-            },
-            {
-                name: "最新成交价",
-                type: "line",
-                data: (function () {
-                    var res = [];
-                    var len = 0;
-                    while (len < 10) {
-                        res.push((Math.random() * 10 + 5).toFixed(1) - 0);
-                        len++;
-                    }
-                    return res;
-                })()
-            }
-        ]
+            return res;
+          })()
+        }
+      ]
     };
     var pie = {
-        //工具按钮
-        toolbox: {
+      //工具按钮
+      toolbox: {
+        show: true,
+        feature: {
+          dataView: { readOnly: false }, //数据试图
+          restore: {}, //还原
+          saveAsImage: {} //保存图片
+        }
+      },
+      series: [
+        {
+          name: "访问来源",
+          type: "pie",
+          radius: "55%",
 
-            show: true,
-            feature: {
-                dataView: { readOnly: false }, //数据试图
-                restore: {}, //还原
-                saveAsImage: {} //保存图片
-            }
-        },
-        series: [
-            {
-                name: "访问来源",
-                type: "pie",
-                radius: "55%",
-
-                data: [
-                    { value: 235, name: "视频广告" },
-                    { value: 274, name: "联盟广告" },
-                    { value: 310, name: "邮件营销" },
-                    { value: 335, name: "直接访问" },
-                    { value: 400, name: "搜索引擎" }
-                ]
-            }
-        ]
+          data: [
+            { value: 235, name: "视频广告" },
+            { value: 274, name: "联盟广告" },
+            { value: 310, name: "邮件营销" },
+            { value: 335, name: "直接访问" },
+            { value: 400, name: "搜索引擎" }
+          ]
+        }
+      ]
     };
-    var weatherIcons = {
-        'Sunny': 'https://www.echartsjs.com/gallery/data/asset/img/weather/sunny_128.png',
-        'Cloudy': 'https://www.echartsjs.com/gallery/data/asset/img/weather/cloudy_128.png',
-        'Showers': 'https://www.echartsjs.com/gallery/data/asset/img/weather/showers_128.png'
+    let map = {
+      title: {
+        text: "World Population (2010)",
+        subtext:
+          "from United Nations, Total population, both sexes combined, as of 1 July (thousands)",
+        sublink: "http://esa.un.org/wpp/Excel-Data/population.htm",
+        left: "center",
+        top: "top"
+      },
+      tooltip: {
+        trigger: "item",
+        formatter: function(params) {
+          var value = (params.value + "").split(".");
+          value =
+            value[0].replace(/(\d{1,3})(?=(?:\d{3})+(?!\d))/g, "$1,") +
+            "." +
+            value[1];
+          return params.seriesName + "<br/>" + params.name + " : " + value;
+        }
+      },
+      toolbox: {
+        show: true,
+        orient: "vertical",
+        left: "right",
+        top: "center",
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      visualMap: {
+        type: "continuous",
+        min: 0,
+        max: 1000000,
+        text: ["High", "Low"],
+        realtime: false,
+        calculable: true,
+        color: ["orangered", "yellow", "lightskyblue"]
+      },
+      series: [
+        {
+          name: "World Population (2010)",
+          type: "map",
+          mapType: "world",
+          roam: true,
+          itemStyle: {
+            emphasis: { label: { show: true } }
+          },
+          data: [
+            { name: "Afghanistan", value: 28397.812 },
+            { name: "Angola", value: 19549.124 },
+            { name: "Albania", value: 3150.143 },
+            { name: "United Arab Emirates", value: 8441.537 },
+            { name: "Argentina", value: 40374.224 },
+            { name: "Armenia", value: 2963.496 },
+            { name: "French Southern and Antarctic Lands", value: 268.065 },
+            { name: "Australia", value: 22404.488 },
+            { name: "Austria", value: 8401.924 },
+            { name: "Azerbaijan", value: 9094.718 },
+            { name: "Burundi", value: 9232.753 },
+            { name: "Belgium", value: 10941.288 },
+            { name: "Benin", value: 9509.798 },
+            { name: "Burkina Faso", value: 15540.284 },
+            { name: "Bangladesh", value: 151125.475 },
+            { name: "Bulgaria", value: 7389.175 },
+            { name: "The Bahamas", value: 66402.316 },
+            { name: "Bosnia and Herzegovina", value: 3845.929 },
+            { name: "Belarus", value: 9491.07 },
+            { name: "Belize", value: 308.595 },
+            { name: "Bermuda", value: 64.951 },
+            { name: "Bolivia", value: 716.939 },
+            { name: "Brazil", value: 195210.154 },
+            { name: "Brunei", value: 27.223 },
+            { name: "Bhutan", value: 716.939 },
+            { name: "Botswana", value: 1969.341 },
+            { name: "Central African Republic", value: 4349.921 },
+            { name: "Canada", value: 34126.24 },
+            { name: "Switzerland", value: 7830.534 },
+            { name: "Chile", value: 17150.76 },
+            { name: "China", value: 1359821.465 },
+            { name: "Ivory Coast", value: 60508.978 },
+            { name: "Cameroon", value: 20624.343 },
+            { name: "Democratic Republic of the Congo", value: 62191.161 },
+            { name: "Republic of the Congo", value: 3573.024 },
+            { name: "Colombia", value: 46444.798 },
+            { name: "Costa Rica", value: 4669.685 },
+            { name: "Cuba", value: 11281.768 },
+            { name: "Northern Cyprus", value: 1.468 },
+            { name: "Cyprus", value: 1103.685 },
+            { name: "Czech Republic", value: 10553.701 },
+            { name: "Germany", value: 83017.404 },
+            { name: "Djibouti", value: 834.036 },
+            { name: "Denmark", value: 5550.959 },
+            { name: "Dominican Republic", value: 10016.797 },
+            { name: "Algeria", value: 37062.82 },
+            { name: "Ecuador", value: 15001.072 },
+            { name: "Egypt", value: 78075.705 },
+            { name: "Eritrea", value: 5741.159 },
+            { name: "Spain", value: 46182.038 },
+            { name: "Estonia", value: 1298.533 },
+            { name: "Ethiopia", value: 87095.281 },
+            { name: "Finland", value: 5367.693 },
+            { name: "Fiji", value: 860.559 },
+            { name: "Falkland Islands", value: 49.581 },
+            { name: "France", value: 63230.866 },
+            { name: "Gabon", value: 1556.222 },
+            { name: "United Kingdom", value: 62066.35 },
+            { name: "Georgia", value: 4388.674 },
+            { name: "Ghana", value: 24262.901 },
+            { name: "Guinea", value: 10876.033 },
+            { name: "Gambia", value: 1680.64 },
+            { name: "Guinea Bissau", value: 10876.033 },
+            { name: "Equatorial Guinea", value: 696.167 },
+            { name: "Greece", value: 11109.999 },
+            { name: "Greenland", value: 56.546 },
+            { name: "Guatemala", value: 14341.576 },
+            { name: "French Guiana", value: 231.169 },
+            { name: "Guyana", value: 786.126 },
+            { name: "Honduras", value: 7621.204 },
+            { name: "Croatia", value: 4338.027 },
+            { name: "Haiti", value: 9896.4 },
+            { name: "Hungary", value: 10014.633 },
+            { name: "Indonesia", value: 240676.485 },
+            { name: "India", value: 1205624.648 },
+            { name: "Ireland", value: 4467.561 },
+            { name: "Iran", value: 240676.485 },
+            { name: "Iraq", value: 30962.38 },
+            { name: "Iceland", value: 318.042 },
+            { name: "Israel", value: 7420.368 },
+            { name: "Italy", value: 60508.978 },
+            { name: "Jamaica", value: 2741.485 },
+            { name: "Jordan", value: 6454.554 },
+            { name: "Japan", value: 127352.833 },
+            { name: "Kazakhstan", value: 15921.127 },
+            { name: "Kenya", value: 40909.194 },
+            { name: "Kyrgyzstan", value: 5334.223 },
+            { name: "Cambodia", value: 14364.931 },
+            { name: "South Korea", value: 51452.352 },
+            { name: "Kosovo", value: 97.743 },
+            { name: "Kuwait", value: 2991.58 },
+            { name: "Laos", value: 6395.713 },
+            { name: "Lebanon", value: 4341.092 },
+            { name: "Liberia", value: 3957.99 },
+            { name: "Libya", value: 6040.612 },
+            { name: "Sri Lanka", value: 20758.779 },
+            { name: "Lesotho", value: 2008.921 },
+            { name: "Lithuania", value: 3068.457 },
+            { name: "Luxembourg", value: 507.885 },
+            { name: "Latvia", value: 2090.519 },
+            { name: "Morocco", value: 31642.36 },
+            { name: "Moldova", value: 103.619 },
+            { name: "Madagascar", value: 21079.532 },
+            { name: "Mexico", value: 117886.404 },
+            { name: "Macedonia", value: 507.885 },
+            { name: "Mali", value: 13985.961 },
+            { name: "Myanmar", value: 51931.231 },
+            { name: "Montenegro", value: 620.078 },
+            { name: "Mongolia", value: 2712.738 },
+            { name: "Mozambique", value: 23967.265 },
+            { name: "Mauritania", value: 3609.42 },
+            { name: "Malawi", value: 15013.694 },
+            { name: "Malaysia", value: 28275.835 },
+            { name: "Namibia", value: 2178.967 },
+            { name: "New Caledonia", value: 246.379 },
+            { name: "Niger", value: 15893.746 },
+            { name: "Nigeria", value: 159707.78 },
+            { name: "Nicaragua", value: 5822.209 },
+            { name: "Netherlands", value: 16615.243 },
+            { name: "Norway", value: 4891.251 },
+            { name: "Nepal", value: 26846.016 },
+            { name: "New Zealand", value: 4368.136 },
+            { name: "Oman", value: 2802.768 },
+            { name: "Pakistan", value: 173149.306 },
+            { name: "Panama", value: 3678.128 },
+            { name: "Peru", value: 29262.83 },
+            { name: "Philippines", value: 93444.322 },
+            { name: "Papua New Guinea", value: 6858.945 },
+            { name: "Poland", value: 38198.754 },
+            { name: "Puerto Rico", value: 3709.671 },
+            { name: "North Korea", value: 1.468 },
+            { name: "Portugal", value: 10589.792 },
+            { name: "Paraguay", value: 6459.721 },
+            { name: "Qatar", value: 1749.713 },
+            { name: "Romania", value: 21861.476 },
+            { name: "Russia", value: 21861.476 },
+            { name: "Rwanda", value: 10836.732 },
+            { name: "Western Sahara", value: 514.648 },
+            { name: "Saudi Arabia", value: 27258.387 },
+            { name: "Sudan", value: 35652.002 },
+            { name: "South Sudan", value: 9940.929 },
+            { name: "Senegal", value: 12950.564 },
+            { name: "Solomon Islands", value: 526.447 },
+            { name: "Sierra Leone", value: 5751.976 },
+            { name: "El Salvador", value: 6218.195 },
+            { name: "Somaliland", value: 9636.173 },
+            { name: "Somalia", value: 9636.173 },
+            { name: "Republic of Serbia", value: 3573.024 },
+            { name: "Suriname", value: 524.96 },
+            { name: "Slovakia", value: 5433.437 },
+            { name: "Slovenia", value: 2054.232 },
+            { name: "Sweden", value: 9382.297 },
+            { name: "Swaziland", value: 1193.148 },
+            { name: "Syria", value: 7830.534 },
+            { name: "Chad", value: 11720.781 },
+            { name: "Togo", value: 6306.014 },
+            { name: "Thailand", value: 66402.316 },
+            { name: "Tajikistan", value: 7627.326 },
+            { name: "Turkmenistan", value: 5041.995 },
+            { name: "East Timor", value: 10016.797 },
+            { name: "Trinidad and Tobago", value: 1328.095 },
+            { name: "Tunisia", value: 10631.83 },
+            { name: "Turkey", value: 72137.546 },
+            { name: "United Republic of Tanzania", value: 44973.33 },
+            { name: "Uganda", value: 33987.213 },
+            { name: "Ukraine", value: 46050.22 },
+            { name: "Uruguay", value: 3371.982 },
+            { name: "United States of America", value: 312247.116 },
+            { name: "Uzbekistan", value: 27769.27 },
+            { name: "Venezuela", value: 236.299 },
+            { name: "Vietnam", value: 89047.397 },
+            { name: "Vanuatu", value: 236.299 },
+            { name: "West Bank", value: 13.565 },
+            { name: "Yemen", value: 22763.008 },
+            { name: "South Africa", value: 51452.352 },
+            { name: "Zambia", value: 13216.985 },
+            { name: "Zimbabwe", value: 13076.978 }
+          ]
+        }
+      ]
     };
 
     var allLearn = {
-        // title————————————————————————————————————————————————————————————————————
-        title: {
-            // id:"",
-            show: true,
-            // text: "正常text",
-            //  在文本中， 可以对部分文本采用 rich 中定义样式。
-            //  这里需要在文本中使用标记符号：
-            // 注意，换行仍是使用 '\n'。
-            // `{styleName|text content text content}` 标记样式名。
-            text: [
-                '{title|title.text}{abg|}',
-                '{weatherHead|天气}{valueHead|天数}{rateHead|占比}',
-                '{hr|}',
-                '{Sunny|}{value|202}{rate|55.3%}',
-                '{Cloudy|}{value|142}{rate|38.9%}',
-                '{Showers|}{value|21}{rate|5.8%}'
-            ].join('\n'), //取用rich 自定义解析
-            link: "https://echarts.baidu.com/option.html#title",
-            target: "blank", //rich模式 失效
+      // 标题组件，包含主标题和副标题
+      // title————————————————————————————————————————————————————————————————————
+      title: {
+        // id:"",
+        show: true,
+        // text: "正常text",
+        //  在文本中， 可以对部分文本采用 rich 中定义样式。
+        //  这里需要在文本中使用标记符号：
+        // 注意，换行仍是使用 '\n'。
+        // `{styleName|text content text content}` 标记样式名。
+        text: [
+          "{title|title.text}{abg|}",
+          "{weatherHead|天气}{valueHead|天数}{rateHead|占比}",
+          "{hr|}",
+          "{Sunny|}{value|202}{rate|55.3%}"
+          //   "{Cloudy|}{value|142}{rate|38.9%}",
+          //   "{Showers|}{value|21}{rate|5.8%}"
+        ].join("\n"), //取用rich 自定义解析
+        link: "https://echarts.baidu.com/option.html#title",
+        target: "blank", //rich模式 失效
 
-            triggerEvent: true,//是否触发事件 
+        triggerEvent: true, //是否触发事件
 
-
-            textVerticalAlign: "middle",
-            textAlign: "top",
-            itemGap: "50",  //主副标题之间的间距。
-            textStyle: {
-                color: "#888",
-                fontStyle: 'normal',
-                fontWeight: '800',
-                //富文本自己render ui
-                rich: {
-                    backImage: {
-                        borderColor: '#777',
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        color: "black",
-                        backgroundColor: {
-                            image: weatherIcons.Sunny //img.setAttribute('crossOrigin', 'anonymous'); Tainted canvases may not be exported
-                            // 这里可以是图片的 URL，
-                            //l 或者图片的 dataURI，
-                            // 或者 HTMLImageElement 对象，
-                            // 或者 HTMLCanvasElement 对象。
-                        },
-                        fontWeight: "1000",
-                        fontSize: "18",
-                        align: "center"
-                    },
-                    title: {
-                        color: '#eee',
-                        align: 'center'
-                    },
-                    abg: {
-                        backgroundColor: '#333',
-                        width: '100%',
-                        align: 'right',
-                        height: 25,
-                        borderRadius: [4, 4, 0, 0]
-                    },
-                    Sunny: {
-                        height: 30,
-                        align: 'left',
-                        backgroundColor: {
-                            image: weatherIcons.Sunny
-                        }
-                    },
-                    Cloudy: {
-                        height: 30,
-                        align: 'left',
-                        backgroundColor: {
-                            image: weatherIcons.Cloudy
-                        }
-                    },
-                    Showers: {
-                        height: 30,
-                        align: 'left',
-                        backgroundColor: {
-                            image: weatherIcons.Showers
-                        }
-                    },
-                    weatherHead: {
-                        color: '#333',
-                        height: 24,
-                        align: 'left'
-                    },
-                    hr: {
-                        borderColor: '#777',
-                        width: '100%',
-                        borderWidth: 0.5,
-                        height: 0
-                    },
-                    value: {
-                        width: 20,
-                        padding: [0, 20, 0, 30],
-                        align: 'left'
-                    },
-                    valueHead: {
-                        color: '#333',
-                        width: 20,
-                        padding: [0, 20, 0, 30],
-                        align: 'center'
-                    },
-                    rate: {
-                        width: 40,
-                        align: 'right',
-                        padding: [0, 10, 0, 0]
-                    },
-                    rateHead: {
-                        color: '#333',
-                        width: 40,
-                        align: 'center',
-                        padding: [0, 10, 0, 0]
-                    }
-                }
-
+        textVerticalAlign: "middle",
+        textAlign: "top",
+        itemGap: "50", //主副标题之间的间距。
+        padding: 10,
+        textStyle: {
+          color: "#888",
+          fontStyle: "normal",
+          fontWeight: "800",
+          //富文本自己render ui
+          rich: {
+            backImage: {
+              borderColor: "#777",
+              borderWidth: 1,
+              borderRadius: 4,
+              color: "black",
+              backgroundColor: {
+                image: weatherIcons.Sunny //img.setAttribute('crossOrigin', 'anonymous'); Tainted canvases may not be exported
+                // 这里可以是图片的 URL，
+                //l 或者图片的 dataURI，
+                // 或者 HTMLImageElement 对象，
+                // 或者 HTMLCanvasElement 对象。
+              },
+              fontWeight: "1000",
+              fontSize: "18",
+              align: "center"
             },
-            subtext: "子标题",
-            sublink: "https://echarts.baidu.com/option.html#title.subtext",
-            // subtextStyle:{ rich:{}}
-        },
-        // 工具按钮
-        toolbox: {
-            show: true,
-            feature: {
-                dataView: { readOnly: false }, //数据试图
-                restore: {}, //还原
-                saveAsImage: {} //保存图片
+            title: {
+              color: "#eee",
+              align: "center"
+            },
+            abg: {
+              backgroundColor: "#333",
+              width: "100%",
+              align: "right",
+              height: 25,
+              borderRadius: [4, 4, 0, 0]
+            },
+            Sunny: {
+              height: 30,
+              align: "left",
+              backgroundColor: {
+                image: weatherIcons.Sunny
+              }
+            },
+            weatherHead: {
+              color: "#333",
+              height: 24,
+              align: "left"
+            },
+            hr: {
+              borderColor: "#777",
+              width: "100%",
+              borderWidth: 0.5,
+              height: 0
+            },
+            value: {
+              width: 20,
+              padding: [0, 20, 0, 30],
+              align: "left"
+            },
+            valueHead: {
+              color: "#333",
+              width: 20,
+              padding: [0, 20, 0, 30],
+              align: "center"
+            },
+            rate: {
+              width: 40,
+              align: "right",
+              padding: [0, 10, 0, 0]
+            },
+            rateHead: {
+              color: "#333",
+              width: 40,
+              align: "center",
+              padding: [0, 10, 0, 0]
             }
+          }
+        },
+        subtext: "子标题",
+        sublink: "https://echarts.baidu.com/option.html#title.subtext"
+        // subtextStyle:{ rich:{}}
+      },
+      // 图例组件。
+      legend: {
+        type: "plain", //scroll'：可滚动翻页的图例。当图例数量较多时可以使用。
+        // zlevel: "",
+        // z: "",
+        orient: "horizontal",
+        selectedMode: "multiple", //图例选择的模式，控制是否可以通过点击图例改变系列的显示状态 single multiple
+        inactiveColor: "#000", //图例关闭时的颜色
+        // selected //图例选中状态表。
+        textStyle: {
+          // rich:{}
         },
 
-    }
-    var list = {
-        allLearn,
-        option1,
-        option2,
-        pie
+        // 图例的数据数组
+        data: [
+          {
+            name: "系列1",
+            // 强制设置图形为圆。
+            icon: "circle",
+            // 设置文本为红色
+            textStyle: {
+              color: "red"
+            }
+          }
+        ]
+      },
+      //   //   直角坐标系内绘图网格，单个 grid 内最多可以放置上下两个 X 轴，左右两个 Y 轴。可以在网格上绘制 折线图，柱状图，散点图（气泡图）。
+      // 提示框组件。   //图例的 tooltip 配置，配置项同 tooltip。默认不显示，可以在 legend 文字很多的时候对文字做裁剪并且开启 tooltip，
+      tooltip: {
+        trigger: "axis",//触发类型。 'item' 'axis' 'none'
+        formatter:  '{b0}: {c0}<br />{b1}: {c1}'
 
+      },
+      grid: {
+        show: true,
+        // containLabel: true,
+        top: 200
+      },
+      //   直角坐标系 grid 中的 x 轴， 况下单个 grid 组件最多只能放上下两个 x 轴，多于两个 x 轴需要通过配置 offset 属性防止同个位置多个 x 轴的重叠。
+      xAxis: [
+        {
+          type: "category",
+          boundaryGap: true,
+          data: (function() {
+            var now = new Date();
+            var res = [];
+            var len = 10;
+            while (len--) {
+              res.unshift(now.toLocaleTimeString().replace(/^\D*/, ""));
+              now = new Date(now - 2000);
+            }
+            return res;
+          })()
+        },
+        {
+          type: "category",
+          boundaryGap: true,
+          data: (function() {
+            var res = [];
+            var len = 10;
+            while (len--) {
+              res.push(10 - len - 1);
+            }
+            return res;
+          })()
+        }
+      ],
+      yAxis: [
+        {
+          type: "value",
+          scale: true,
+          name: "价格",
+          max: 30,
+          min: 0,
+          boundaryGap: [0.2, 0.2]
+        },
+        {
+          type: "value",
+          scale: true,
+          name: "预购量",
+          max: 1200,
+          min: 0,
+          boundaryGap: [0.2, 0.2]
+        }
+      ],
+
+      // 工具按钮
+      toolbox: {
+        show: true,
+        feature: {
+          dataView: { readOnly: false }, //数据试图
+          restore: {}, //还原
+          saveAsImage: {} //保存图片
+        }
+      },
+      //   系列列表。每个系列通过 type F决定自己的图表类型
+      series: [
+        {
+          type: "line",
+          name: "系列1",
+          data: [
+            [3.4, 4.5, 15, 43], // 维度X   维度Y   其他维度 ...
+            [4.2, 2.3, 20, 91],
+            [10.8, 9.5, 30, 18],
+            [7.2, 8.8, 18, 57]
+          ]
+        }
+      ]
     };
 
-
+    var list = {
+      allLearn,
+      option1,
+      option2,
+      pie,
+      map
+    };
 
     // init
     // 全局对象echarts https://echarts.baidu.com/api.html#echarts
@@ -381,47 +708,82 @@
     //     width?: number|string 可显式指定实例宽度，单位为像素。如果传入值为 null/undefined/'auto'，则表示自动取 dom（实例容器）的宽度。
     //     height? number|string 可显式指定实例高度，单位为像素。如果传入值为 null/undefined/'auto'，则表示自动取 dom（实例容器）的高度。
     let eachrts = echarts.init(document.querySelector("#echarts1"));
-    //setOption
+    let eachrts2 = echarts.init(document.querySelector("#echarts2"));
+    resizeList.push({
+      callback: () => {
+        eachrts.resize();
+      }
+    });
+    resizeList.push({
+      callback: () => {
+        eachrts2.resize();
+      }
+    });
+    echarts.connect([eachrts, eachrts2]);
+    //setOptionF
     eachrts.setOption(list.allLearn);
 
     let timer = null;
     let sel = document.querySelector("#sel");
     Object.keys(list).forEach(key => {
-        let option = new Option(key, key);
-        sel.append(option);
+      let option = new Option(key, key);
+      sel.append(option);
     });
-    sel.onchange = function (val) {
-        eachrts.showLoading();
-        setTimeout(() => {
-            eachrts.hideLoading();
-            if (this.value == "option2") {
-                let option = list[this.value];
-                let count = 11;
-                timer = setInterval(function () {
-                    axisData = new Date().toLocaleTimeString().replace(/^\D*/, "");
+    sel.onchange = function(val) {
+      eachrts.showLoading();
+      setTimeout(() => {
+        eachrts.hideLoading();
+        if (this.value == "option2") {
+          let option = list[this.value];
+          let count = 11;
+          timer = setInterval(function() {
+            axisData = new Date().toLocaleTimeString().replace(/^\D*/, "");
 
-                    var data0 = option.series[0].data;
-                    var data1 = option.series[1].data;
-                    data0.shift();
-                    data0.push(Math.round(Math.random() * 1000));
-                    data1.shift();
-                    data1.push((Math.random() * 10 + 5).toFixed(1) - 0);
+            var data0 = option.series[0].data;
+            var data1 = option.series[1].data;
+            data0.shift();
+            data0.push(Math.round(Math.random() * 1000));
+            data1.shift();
+            data1.push((Math.random() * 10 + 5).toFixed(1) - 0);
 
-                    option.xAxis[0].data.shift();
-                    option.xAxis[0].data.push(axisData);
-                    option.xAxis[1].data.shift();
-                    option.xAxis[1].data.push(count++);
+            option.xAxis[0].data.shift();
+            option.xAxis[0].data.push(axisData);
+            option.xAxis[1].data.shift();
+            option.xAxis[1].data.push(count++);
 
-                    eachrts.setOption(option);
-                }, 2100);
-            } else {
-                clearInterval(timer);
-            }
-            eachrts.setOption(list[this.value], {
-                notMerge: true
-            });
-        }, 1000);
+            eachrts.setOption(option);
+          }, 2100);
+        } else {
+          clearInterval(timer);
+        }
+        eachrts.setOption(list[this.value], {
+          notMerge: true
+        });
+      }, 1000);
     };
-</script>
+    let currentIndex = -1;
 
+    // setInterval(function() {
+    //   var dataLen = list[sel.value].series[0].data.length;
+    //   // 取消之前高亮的图形
+    //   eachrts.dispatchAction({
+    //     type: "downplay",
+    //     seriesIndex: 0,
+    //     dataIndex: currentIndex
+    //   });
+    //   currentIndex = (currentIndex + 1) % dataLen;
+    //   // 高亮当前图形
+    //   eachrts.dispatchAction({
+    //     type: "highlight",
+    //     seriesIndex: 0,
+    //     dataIndex: currentIndex
+    //   });
+    //   // 显示 tooltip
+    //   eachrts.dispatchAction({
+    //     type: "showTip",
+    //     seriesIndex: 0,
+    //     dataIndex: currentIndex
+    //   });
+    // }, 1000);
+  </script>
 </html>
