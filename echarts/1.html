@@ -584,7 +584,8 @@
         type: "plain", //scroll'：可滚动翻页的图例。当图例数量较多时可以使用。
         // zlevel: "",
         // z: "",
-        orient: "horizontal",
+        // orient: "horizontal",
+        orient: "vertical",
         selectedMode: "multiple", //图例选择的模式，控制是否可以通过点击图例改变系列的显示状态 single multiple
         inactiveColor: "#000", //图例关闭时的颜色
         // selected //图例选中状态表。
@@ -602,15 +603,32 @@
             textStyle: {
               color: "red"
             }
+          },
+          {
+            name: "系列2",
+            // 强制设置图形为圆。
+            icon: "circle",
+            // 设置文本为红色
+            textStyle: {
+              color: "red"
+            }
+          },
+          {
+            name: "系列3",
+            // 强制设置图形为圆。
+            icon: "circle",
+            // 设置文本为红色
+            textStyle: {
+              color: "red"
+            }
           }
         ]
       },
       //   //   直角坐标系内绘图网格，单个 grid 内最多可以放置上下两个 X 轴，左右两个 Y 轴。可以在网格上绘制 折线图，柱状图，散点图（气泡图）。
       // 提示框组件。   //图例的 tooltip 配置，配置项同 tooltip。默认不显示，可以在 legend 文字很多的时候对文字做裁剪并且开启 tooltip，
       tooltip: {
-        trigger: "axis",//触发类型。 'item' 'axis' 'none'
-        formatter:  '{b0}: {c0}<br />{b1}: {c1}'
-
+        trigger: "axis", //触发类型。 'item' 'axis' 'none'
+        formatter: "{b0}: {c0}<br />{b1}: {c1}"
       },
       grid: {
         show: true,
@@ -679,6 +697,18 @@
         {
           type: "line",
           name: "系列1",
+          data: [3.4, 4.5, 15, 43]
+          // data: [
+          //   [3.4, 4.5, 15, 43], // 维度X   维度Y   其他维度 ...
+          //   [4.2, 2.3, 20, 91],
+          //   [10.8, 9.5, 30, 18],
+          //   [7.2, 8.8, 18, 57]
+          // ]
+        },
+        {
+          type: "line",
+          name: "系列2",
+
           data: [
             [3.4, 4.5, 15, 43], // 维度X   维度Y   其他维度 ...
             [4.2, 2.3, 20, 91],
