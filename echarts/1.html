@@ -749,9 +749,14 @@
         eachrts2.resize();
       }
     });
+    eachrts.setOption(list.allLearn);
+    let data1 = eachrts.getOption();
+    console.log(data1);
+    data1.series[0].type = "pie";
+    data1.series[0].data[0] = 30;
+    eachrts2.setOption(data1);
     echarts.connect([eachrts, eachrts2]);
     //setOptionF
-    eachrts.setOption(list.allLearn);
 
     let timer = null;
     let sel = document.querySelector("#sel");

@@ -34,37 +34,13 @@
     var data = genData(10);
     //  0: {name: "卞邹倪", value: 94220, selected: true}
     // 1: {name: "常卞狄", value: 49065}
-    // 2: {name: "薛倪", value: 90251}
-    // 3: {name: "闵花", value: 63720}
-    // 4: {name: "邵贾卞", value: 75859}
-    // 5: {name: "伏熊狄", value: 10406}
-    // 6: {name: "危贝", value: 2030}
-    // 7: {name: "何冯", value: 40500}
-    // 8: {name: "和廉昌", value: 52}
-    // 9: {name: "柳韩毛·薛周", value: 4657}
     // selected:
     // 伏熊狄: true
     // 何冯: false
-    // 卞邹倪: true
-    // 危贝: false
-    // 和廉昌: false
-    // 常卞狄: true
-    // 柳韩毛·薛周: false
-    // 薛倪: true
-    // 邵贾卞: true
-    // 闵花: true
-    //     legendData: Array(10)
+    // legendData: Array(10)
     // 0: "卞邹倪"
     // 1: "常卞狄"
-    // 2: "薛倪"
-    // 3: "闵花"
-    // 4: "邵贾卞"
-    // 5: "伏熊狄"
-    // 6: "危贝"
-    // 7: "何冯"
-    // 8: "和廉昌"
-    // 9: "柳韩毛·薛周"
-    console.log({ data });
+
     option = {
       title: {
         text: "同名数量统计",
@@ -112,12 +88,12 @@
           data: data.seriesData,
           //   legendHoverLink: false, //是否联动时候高亮
           //   hoverAnimation   是否开启 hover 在扇区上的放大动画效果。
-          //   selectedMode: "multiple",  //是否多选
+          selectedMode: "single", //是否多选
           //   clockwise 饼图的扇区是否是顺时针排布。
           //   startAngle: 180,
           //   minAngle
           //   roseType: "area", //是否展示成南丁格尔图，通过半径区分数据大小。可选择两种模式：
-          stillShowZeroSum: true, //是否在数据和为0（一般情况下所有数据为0） 的时候不显示扇区。
+          // stillShowZeroSum: true, //是否在数据和为0（一般情况下所有数据为0） 的时候不显示扇区。
           itemStyle: {
             //图例高两
             emphasis: {
@@ -334,12 +310,20 @@
       pie: option
     };
     let eachrts = echarts.init(document.querySelector("#echarts1"));
-
-    resizeList.push({
-      callback: () => {
-        eachrts.resize();
+    let eachrts2 = echarts.init(document.querySelector("#echarts2"));
+    resizeList.push(
+      {
+        callback: () => {
+          eachrts.resize();
+        }
+      },
+      {
+        callback: () => {
+          eachrts2.resize();
+        }
       }
-    });
+    );
+    eachrts.setOption(list.pie);
     // https://echarts.baidu.com/api.html#events
     eachrts.on("rendered ", function() {
       console.log(arguments, "rendered ");
@@ -347,10 +331,10 @@
     eachrts.on("finished", function() {
       console.log(arguments, "finished");
     });
-    eachrts.setOption(list.pie);
-    // eachrts.on("click", "series", function() {
-    //   console.log(arguments, "series");
-    // });
+
+    eachrts.on("click", "series", function() {
+      console.log(arguments, "series");
+    });
 
     eachrts.on("legendselectchanged", function() {
       console.log(option.legend);

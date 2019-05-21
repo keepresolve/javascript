@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style>
+    /* https://www.runoob.com/w3cnote/flex-grammar.html */
+    html,
+    body {
+      height: 100%;
+    }
+    .box {
+      display: flex;
+
+      /* flex-direction:  row | row-reverse | column | column-reverse; */
+      /* flex-wrap: nowrap | wrap | wrap-reverse; */
+      /* flex-flow:<flex-direction> <flex-wrap>; */
+
+      /* justify-content: flex-start | flex-end | center | space-between | space-around; */
+      /* align-items: flex-start | flex-end | center | baseline | stretch; */
+      /* align-content: flex-start | flex-end | center | space-between | space-around | stretch; */
+      /* flex-flow */
+
+      /* flex-direction:  row */
+      /* flex-wrap: wrap; */
+      flex-flow: row wrap;
+
+      justify-content: space-around;
+      /* align-items: center; */
+      align-content: center;
+    }
+    ul.box {
+      width: 100%;
+      border: 1px solid;
+      height: 800px;
+    }
+    * {
+      padding: 0px;
+      margin: 0px;
+      list-style: none;
+    }
+    .box li {
+      width: 30%;
+      height: 100px;
+      /* margin: 10px; */
+      /* flex: 1 1; */
+      border: 1px solid rebeccapurple;
+      order: 1;
+      /* flex-grow属性定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大 */
+      flex-grow: 0;
+      /* flex-shrink属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。 */
+      /* flex-shrink: */
+      /* 它可以设为跟width或height属性一样的值（比如350px），则项目将占据固定空间 */
+      /* flex-basis: <length> | auto; default auto */
+      /* flex属性是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto。后两个属性可选 */
+      /* flex: none | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ] */
+      /* align-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch。 */
+      /* align-self属性 */
+      /* align-self: auto | flex-start | flex-end | center | baseline | stretch; */
+    }
+    .box li:nth-of-type(3) {
+      order: 0;
+      flex-basis: 300px;
+    }
+    .box li:nth-of-type(2) {
+      order: 3;
+    }
+  </style>
+  <body>
+    <ul class="box">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+      <li>7</li>
+    </ul>
+  </body>
+</html>
