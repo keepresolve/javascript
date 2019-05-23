@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title>嵌套饼图联动</title>
+  </head>
+  <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+  <body>
+    <div id="_top" style="width:600px;height: 600px;"></div>
+  </body>
+  <script type="text/javascript">
+    var myecharts = echarts.init(document.getElementById("_top"));
+    var option = {
+      legend: {
+        //图例
+        show: false, //是否显示图例
+        orient: "vertical", //布局方向
+        x: "left", //图例相对位置
+        data: ["一班", "二班", "三班"] //图例内容
+      },
+      series: [
+        //内容
+        {
+          name: "班级人数占比", //内容标题
+          type: "pie", //图标样式
+          selectedMode: "single", //选中模式：单选
+          radius: [0, "32%"], //饼图大小，[x,y]:x表示内半径，y表示外半径
+          label: {
+            //标签
+            normal: {
+              position: "inner" //标签位置：内部
+            }
+          },
+          labelLine: {
+            //提示框
+            normal: {
+              show: false //是否显示
+            }
+          },
+          color: ["#0A276D", "#1040AF", "#1F5DEA", ""], //颜色
+          name: ["一班", "二班", "三班"], //内容名称
+          data: [
+            //数据
+            { value: 50, name: "一班", selected: true }, //selected:是否被选中
+            { value: 46, name: "二班" },
+            { value: 54, name: "三班" }
+          ]
+        },
+        {
+          name: "男女占比",
+          type: "pie",
+          radius: ["42%", "55%"],
+          label: {
+            normal: {}
+          },
+          labelLine: {
+            normal: {
+              length: 2
+            }
+          },
+          color: ["#205E3F", "#16DA69", "red"],
+          data: [{ value: 21, name: "男生" }, { value: 29, name: "女生" }],
+          label: {
+            normal: {
+              textStyle: {
+                color: "#aaa" //提示框字体颜色
+              }
+            }
+          }
+        }
+      ],
+      backgroundColor: "#190c12" //背景颜色
+    };
+    myecharts.setOption(option);
+
+    //嵌套饼图联动
+    function eConsole(param) {
+      console.log(param);
+      if (typeof param.seriesIndex != "undefined") {
+        if (param.type == "click") {
+          //判断事件类型：点击
+          //写法一：获取饼图散区个数,按照图例获取
+          var peiLenght = option.legend.data.length;
+          //写法二：获取饼图散区个数,按照series中data获取
+          //var peiLenght= option.series[0].data.length;
+
+          for (var i = 0; i < peiLenght; i++) {
+            //seriesIndex==0：选择内环饼图；param.dataIndex==i：散区
+            if (param.seriesIndex == 0 && param.dataIndex == i) {
+              if (i == 0) {
+                var option_1 = myecharts.getOption();
+                option_1.series[1].name = "一班男女占比";
+                (option_1.series[1].color = ["#205E3F", "#16DA69", "red"]),
+                  (option_1.series[1].data = [
+                    { value: 21, name: "男生" },
+                    { value: 29, name: "女生" }
+                  ]);
+                myecharts.setOption(option_1);
+              } else if (i == 1) {
+                var option_2 = myecharts.getOption();
+                option_2.series[1].name = "二班男女占比";
+                (option_2.series[1].color = ["#16DA69", "#205E3F", "red"]),
+                  (option_2.series[1].data = [
+                    { value: 20, name: "男生" },
+                    { value: 26, name: "女生" }
+                  ]);
+                myecharts.setOption(option_2);
+              } else if (i == 2) {
+                var option_3 = myecharts.getOption();
+                option_3.series[1].name = "三班男女占比";
+                (option_3.series[1].color = ["blue", "pink", "red"]),
+                  (option_3.series[1].data = [
+                    { value: 30, name: "男生" },
+                    { value: 24, name: "女生" }
+                  ]);
+                myecharts.setOption(option_3);
+              }
+            }
+          }
+        }
+      }
+    }
+    myecharts.on("click", eConsole);
+  </script>
+</html>
