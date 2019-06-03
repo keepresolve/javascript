@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<ul>
+		
+		<li>
+			<textarea id="text1">
+				
+			</textarea>
+	    </li>
+		<li>
+			<textarea  id="text2">
+				
+			</textarea>
+		</li>
+		<li id="diffResult">
+		
+		</li>
+	</ul>
+    <script type="text/javascript">
+       let text1=document.querySelector("#text1")
+       let text2=document.querySelector("#text2")
+     
+
+     text1.onchange=function(argument) {
+     	diff(text1.value,text2.value)
+     }
+
+      text2.onchange=function(argument) {
+      	diff(text1.value,text2.value)
+     	
+     }
+      function diff(str,str2){
+      	 let str_1=str.split('\\n')
+         let str2_1=str2.split('\\n')
+         console.log(str_1,str2_1)
+      	 let diffResult=''
+	      for (var i = 0; i <=str_1.length - 1; i++) {
+	      	 var diffString=str_1[i].replace(/ /g,'')
+	      	 var diffString2=str2_1[i].replace(/ /g,'')
+	      	 if(diffString2!=diffString){
+	      	 	
+	              diffResult+=fn(str_1[i],str2_1[i])
+	      	 }else{
+	      	 	 diffResult+=str2_1[i]
+	      	 }
+	      }
+	      document.querySelector("#diffResult").innerHTML=diffResult
+      }
+     
+      function fn(str1,str2) {
+      	   let result=''
+      	   let noSome=false
+      	    for (var i = 0; i <=str2.length - 1; i++) {
+
+      	   	  if(str1[i]!=str2[i]){
+      	   	  	if(noSome){
+                    result+=str2[i]
+      	   	  	}else{
+      	   	  		  result+=`<span style='color:red'>${str2[i]?str2[i]:' '}`
+                 noSome=true
+      	   	  	}
+               
+      	   	  }else{
+      	   	  	if(noSome){
+      	   	  		noSome=false
+                   result+=`</span>${str2[i]}`
+      	   	  	}else{
+      	   	  		 result+=str2[i]
+      	   	  	}
+                
+      	   	  }
+      	   }
+      	   if(noSome)result+='</span>'
+      	   console.log(result)
+      	   return result
+
+      }
+  
+    </script>
+</body>
+</html>
