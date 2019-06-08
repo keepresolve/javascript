@@ -1,8 +1,6 @@
 <template>
   <div class="Input">
     <el-input v-model="value"></el-input>
-    <cTransfer v-model="checklist" :data="data" type='text'></cTransfer>
-    <el-transfer v-model="checklist" :data="data"  :props="{key:'id',label:'value'}"></el-transfer>
   </div>
 </template>
 
@@ -14,9 +12,7 @@ export default {
 
   data() {
     return {
-      checklist: [1],
-      data: [{ id: 1, vlaue: "1选中" }],
-      value: "ss"
+      value: "value"
     };
   }
 };

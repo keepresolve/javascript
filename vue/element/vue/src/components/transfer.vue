@@ -12,7 +12,13 @@
       }"
       ></c-transfer>
     </div>
-    <div draggable="true" ref="dragSource" @dragstart="dragstart" data-ref="dragSource">
+    <div
+      draggable="true"
+      ref="dragSource"
+      style="width:530px"
+      @dragstart="dragstart"
+      data-ref="dragSource"
+    >
       <el-transfer v-model="checklist" :data="data" :props="{key:'id',label:'value'}"></el-transfer>
     </div>
     <el-button @click="defaultChecked">设置默认选中v-model</el-button>
@@ -33,7 +39,8 @@ export default {
         { id: 3, value: "3选中" },
         { id: 4, value: "4选中" },
         { id: 5, value: "5选中" }
-      ]
+      ],
+      move: false 
     };
   },
   methods: {
@@ -75,12 +82,15 @@ export default {
       let ref = dataTransfer.getData("Text");
       dataTransfer.effectAllowed = "move";
       dataTransfer.dropEffect = "move";
-      Object.assign(this.$refs[ref].style, {
-        position: "fixed",
-        // 自己去算吧
-        left: (e.offsetX || e.pageX || e.x || e.clientX) + "px",
-        right: (e.offsetY || e.pageY || e.y || e.clientY) + "px"
-      });
+      if (this.move) {
+        Object.assign(this.$refs[ref].style, {
+          position: "fixed",
+          // 自己去算吧
+          left: (e.pageX - e.offsetX || e.pageX || e.x || e.clientX) + "px",
+          top: (e.offsetY || e.pageY || e.y || e.clientY) + "px"
+        });
+      }
+
       console.log("drop", arguments, dataTransfer.getData("Text"));
     });
   }
@@ -92,6 +102,8 @@ export default {
 #transfer {
   height: 100%;
   width: 100%;
-  border: 1px dotted;
+}
+#transfer > div {
+  margin-bottom: 50px;
 }
 </style>

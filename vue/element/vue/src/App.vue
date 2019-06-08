@@ -6,18 +6,22 @@
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
 
 <style>
-#app,html,body{
-  padding:0xp;
+#app,
+html,
+body {
+  padding: 0px;
   margin: 0px;
   height: 100%;
 }
-#app{
-  padding:20px;
+*{
+  list-style: none;
+}
+#app {
   box-sizing: border-box;
 }
 </style>

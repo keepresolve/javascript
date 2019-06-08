@@ -98,7 +98,7 @@ export default {
       let query = this.query.toLowerCase();
       let list = this.data.filter(
         v =>
-          String(v[this.label])
+          String(v[this.propLabel])
             .toLowerCase()
             .indexOf(query) > -1
       );

@@ -10,20 +10,20 @@
 // import Submenu from '../packages/submenu/index.js';
 // import MenuItem from '../packages/menu-item/index.js';
 // import MenuItemGroup from '../packages/menu-item-group/index.js';
-import Input from '../packages/input/index.js';
+import Input from "../packages/input/index.js";
 // import InputNumber from '../packages/input-number/index.js';
 // import Radio from '../packages/radio/index.js';
 // import RadioGroup from '../packages/radio-group/index.js';
 // import RadioButton from '../packages/radio-button/index.js';
-import Checkbox from '../packages/checkbox/index.js';
-import CheckboxButton from '../packages/checkbox-button/index.js';
-import CheckboxGroup from '../packages/checkbox-group/index.js';
+import Checkbox from "../packages/checkbox/index.js";
+import CheckboxButton from "../packages/checkbox-button/index.js";
+import CheckboxGroup from "../packages/checkbox-group/index.js";
 // import Switch from '../packages/switch/index.js';
 // import Select from '../packages/select/index.js';
 // import Option from '../packages/option/index.js';
 // import OptionGroup from '../packages/option-group/index.js';
-import Button from '../packages/button/index.js';
-import ButtonGroup from '../packages/button-group/index.js';
+import Button from "../packages/button/index.js";
+import ButtonGroup from "../packages/button-group/index.js";
 // import Table from '../packages/table/index.js';
 // import TableColumn from '../packages/table-column/index.js';
 // import DatePicker from '../packages/date-picker/index.js';
@@ -43,7 +43,7 @@ import ButtonGroup from '../packages/button-group/index.js';
 // import Alert from '../packages/alert/index.js';
 // import Notification from '../packages/notification/index.js';
 // import Slider from '../packages/slider/index.js';
-import Loading from '../packages/loading/index.js';
+import Loading from "../packages/loading/index.js";
 // import Icon from '../packages/icon/index.js';
 // import Row from '../packages/row/index.js';
 // import Col from '../packages/col/index.js';
@@ -63,12 +63,12 @@ import Loading from '../packages/loading/index.js';
 // import CollapseItem from '../packages/collapse-item/index.js';
 // import Cascader from '../packages/cascader/index.js';
 // import ColorPicker from '../packages/color-picker/index.js';
-import Transfer from '../packages/transfer/index.js';
-// import Container from '../packages/container/index.js';
-// import Header from '../packages/header/index.js';
-// import Aside from '../packages/aside/index.js';
-// import Main from '../packages/main/index.js';
-// import Footer from '../packages/footer/index.js';
+import Transfer from "../packages/transfer/index.js";
+import Container from "../packages/container/index.js";
+import Header from "../packages/header/index.js";
+import Aside from "../packages/aside/index.js";
+import Main from "../packages/main/index.js";
+import Footer from "../packages/footer/index.js";
 // import Timeline from '../packages/timeline/index.js';
 // import TimelineItem from '../packages/timeline-item/index.js';
 // import Link from '../packages/link/index.js';
@@ -143,11 +143,11 @@ const components = [
   // Cascader,
   // ColorPicker,
   Transfer,
-  // Container,
-  // Header,
-  // Aside,
-  // Main,
-  // Footer,
+  Container,
+  Header,
+  Aside,
+  Main,
+  Footer
   // Timeline,
   // TimelineItem,
   // Link,
@@ -172,7 +172,7 @@ const install = function(Vue, opts = {}) {
   // Vue.use(Loading.directive);
 
   Vue.prototype.$ELEMENT = {
-    size: opts.size || '',
+    size: opts.size || "",
     zIndex: opts.zIndex || 2000
   };
 
@@ -183,16 +183,15 @@ const install = function(Vue, opts = {}) {
   // Vue.prototype.$prompt = MessageBox.prompt;
   // Vue.prototype.$notify = Notification;
   // Vue.prototype.$message = Message;
-
 };
 
 /* istanbul ignore if */
-if (typeof window !== 'undefined' && window.Vue) {
+if (typeof window !== "undefined" && window.Vue) {
   install(window.Vue);
 }
 
 export default {
-  version: '2.9.1',
+  version: "2.9.1",
   // locale: locale.use,
   // i18n: locale.i18n,
   install,
@@ -260,7 +259,7 @@ export default {
   // CollapseItem,
   // Cascader,
   // ColorPicker,
-  Transfer,
+  Transfer
   // Container,
   // Header,
   // Aside,
