@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+       let dictionary= new Array()
+       let dictionary2= new Array()
+       let dictionary3=[1,2,3]
+       dictionary3.name3=123123
+       for (const key in dictionary3) {
+           if (dictionary3.hasOwnProperty(key)) {
+               const element = dictionary3[key];
+               console.log("forin",key,element)
+               
+           }
+       }
+       dictionary3.map(v=>{
+           console.log({v})
+       })
+       dictionary2.push(1)
+       dictionary2.push(2)
+       dictionary["name"]=123
+       console.log(dictionary.length,dictionary,dictionary2,dictionary3)
+       dictionary[0]=456
+       console.log(dictionary.length,dictionary)
+    </script>
+</body>
+</html>

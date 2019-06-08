@@ -31,19 +31,17 @@
       /* border:1px solid;
       width: 100%; */
     }
-    .project{
-       padding: 0px!important;
-      
+    .project {
+      padding: 0px !important;
     }
-    .project .cell{
-      padding:0px;
-
+    .project .cell {
+      padding: 0px;
     }
-    .project .cell li{
-      height:100px; 
-      border-bottom: 1px solid  #EBEEF5;
+    .project .cell li {
+      height: 100px;
+      border-bottom: 1px solid #ebeef5;
     }
-    .project .cell li:last-child{
+    .project .cell li:last-child {
       border-bottom: 1px solid transparent;
     }
   </style>
@@ -59,11 +57,11 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="项目" class-name='project'>
+        <el-table-column label="项目" class-name="project">
           <template slot-scope="scope">
             <div>
               <ul>
-                <li v-for="item in  scope.row.project" >
+                <li v-for="item in  scope.row.project">
                   <el-select v-model="item.value">
                     <!-- <el-button slot="append">阿萨大大</el-button> -->
                   </el-select>
@@ -73,8 +71,8 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="评分因素" class-name='project'>
-          <template slot-scope="scope" >
+        <el-table-column label="评分因素" class-name="project">
+          <template slot-scope="scope">
             <div>
               <ul>
                 <li v-for="item in  scope.row.project">
@@ -84,7 +82,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="打分项目" class-name='project'>
+        <el-table-column label="打分项目" class-name="project">
           <template slot-scope="scope">
             <div>
               <ul>
@@ -95,7 +93,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" class-name='project'>
+        <el-table-column label="操作" class-name="project">
           <template slot-scope="scope">
             <div>
               <el-button @click="add(scope.row,scope.$index)"
@@ -105,6 +103,10 @@
           </template>
         </el-table-column>
       </el-table>
+      <div v-for="item of dic">
+        {{ item }}
+      </div>
+      <button @click="addDic">a's'd</button>
     </div>
 
     <script>
@@ -113,6 +115,7 @@
       new Vue({
         el: "#app",
         data: {
+          dic: ["name"],
           tableData6: [
             {
               kind: {
@@ -146,14 +149,35 @@
         },
         computed: {},
         methods: {
+          addDic() {
+            this.dic.name1 = 1312;
+            this.dic[0] = 123123;
+            this.$forceUpdate();
+            // this.dic.push("name1")
+            var C = function() {
+              this.foo = "bar";
+              this.baz = "bim";
+            };
+            C.prototype.bop = "bip";
+           console.log(this.iterate(new C())) 
+          },
           add(item, index) {
             // this.tableData6[indx]
             item.project.push({
-              value:"aa", //项目
+              value: "aa", //项目
               name: item.kind.name,
-              rate: parseInt(Math.random()*100), //评分因素
+              rate: parseInt(Math.random() * 100), //评分因素
               ischecked: false
             });
+          },
+          iterate(obj) {
+            var arr = [];
+            for (var item in obj) {
+              // if (obj.hasOwnProperty(item)) {
+                arr.push(item + ": " + obj[item]); //注意这里所说的空格
+              // }
+            }
+            return arr;
           }
         },
         mounted() {

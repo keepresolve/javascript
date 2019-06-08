@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <!-- <link
+      href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css "
+      rel="stylesheet"
+    /> -->
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+    <!-- <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script> -->
+    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+  </head>
+  <style>
+    #app,
+    body,
+    html {
+      height: 100%;
+    }
+  </style>
+
+  <body>
+    <div id="app">
+      <div>
+        <cou-input ref='input' v-model="string1" @change='handleChange'></cou-input>
+      </div>
+    </div>
+    <script>
+      let Input = `<input
+      
+          v-bind="$attrs"
+          @input="handleChange"
+          type="text"
+        />`;
+      let InputCom = {
+        template: Input,
+        props: {
+          value: [String, Number],
+          size: String,
+          resize: String,
+          form: String,
+          disabled: Boolean,
+          readonly: Boolean,
+          type: {
+            type: String,
+            default: "text"
+          },
+          autosize: {
+            type: [Boolean, Object],
+            default: false
+          },
+          autocomplete: {
+            type: String,
+            default: "off"
+          },
+          /** @Deprecated in next major version */
+          autoComplete: {
+            type: String,
+            validator(val) {
+              process.env.NODE_ENV !== "production" &&
+                console.warn(
+                  "[Element Warn][Input]'auto-complete' property will be deprecated in next major version. please use 'autocomplete' instead."
+                );
+              return true;
+            }
+          },
+          validateEvent: {
+            type: Boolean,
+            default: true
+          },
+          suffixIcon: String,
+          prefixIcon: String,
+          label: String,
+          clearable: {
+            type: Boolean,
+            default: false
+          },
+          showPassword: {
+            type: Boolean,
+            default: false
+          },
+          showWordLimit: {
+            type: Boolean,
+            default: false
+          },
+          tabindex: String
+        },
+        data() {
+          return {
+            
+          };
+        },
+        methods: {
+          handleChange(event) {
+            console.log({event})
+            this.$emit("change", event.target.value);
+          }
+        }
+      };
+      Mock.mock("/api/menu", "get", {});
+      // console.log({data:data.toJSONSchema()})
+      new Vue({
+        el: "#app",
+        data: {
+          string1: "1213"
+        },
+        computed: {},
+        components: {
+          "cou-input": InputCom
+        },
+        methods: {
+          handleOpen(key, keyPath) {
+            console.log(key, keyPath);
+          },
+          handleClose(key, keyPath) {
+            console.log(key, keyPath);
+          },
+          handleChange(){
+            console.log(this.string1)
+            console.log(arguments)
+          }
+        },
+        mounted() {
+          console.log(this.$refs.input)
+          axios.get("/api/menu").then(data => {});
+        }
+      });
+    </script>
+  </body>
+</html>
