@@ -4,6 +4,7 @@
       <c-transfer
         v-model="checklist"
         :data="data"
+        :loading='loading'
         @change="transferChange"
         :props="{
         key:'id',
@@ -40,7 +41,8 @@ export default {
         { id: 4, value: "4选中" },
         { id: 5, value: "5选中" }
       ],
-      move: false 
+      move: false ,
+      loading:false
     };
   },
   methods: {
@@ -69,6 +71,10 @@ export default {
     }
   },
   mounted() {
+     this.loading=true
+    setTimeout(()=>{
+      this.loading=false
+    },2000)
     document.body.addEventListener("dragover", function(e) {
       let dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
       dataTransfer.effectAllowed = "move";

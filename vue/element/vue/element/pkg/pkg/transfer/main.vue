@@ -15,8 +15,13 @@
       <div>
         <el-checkbox-group v-model="checked">
           <ul>
-            <li v-for="(item,index) in filterData" :key="index">
-              <el-checkbox :label="item[propKey]" :key="item[propKey]">{{item[propLabel]}}</el-checkbox>
+            <li v-for="(item,index) in letterList" :key="index" v-loading="loading">
+              <div style="width:100%;height30px;">{{item.letter}}</div>
+              <ul>
+                <li v-for="(subItem,subIndex) in item.data" :key="subIndex">
+                  <el-checkbox :label="subItem.key" :key="subItem.key">{{subItem.label}}</el-checkbox>
+                </li>
+              </ul>
             </li>
           </ul>
         </el-checkbox-group>
@@ -29,7 +34,7 @@
       <div class="cTransferHeader"></div>
       <ul>
         <li v-for="(item,index) in showcheckedList" :key="index">
-          {{item[propLabel]}}
+          <span>{{item[propLabel]}}</span>
           <span @click="remove(index)">&times;</span>
         </li>
       </ul>
@@ -37,6 +42,7 @@
   </div>
 </template>
 <script>
+import letterSort from "../../src/util/index";
 export default {
   name: "cTransfer",
   componentName: "cTransfer",
@@ -44,6 +50,10 @@ export default {
     value: {
       type: Array, //选中
       default: []
+    },
+    loading: {
+      type: Boolean,
+      default: false
     },
     data: {
       type: Array, //所有
@@ -77,7 +87,7 @@ export default {
       this.checkAll = !Boolean(
         this.data.find(v => n.indexOf(v[this.propKey]) == -1)
       );
-      this.isIndeterminate=this.checkAll?false:n.length>0
+      this.isIndeterminate = this.checkAll ? false : n.length > 0;
       let currentValue = n.slice();
 
       this.$emit("input", currentValue);
@@ -104,8 +114,26 @@ export default {
       );
       return list;
     },
+    letterList() {
+      let query = this.query.toLowerCase();
+      let list = this.data.filter(
+        v =>
+          String(v[this.propLabel])
+            .toLowerCase()
+            .indexOf(query) > -1
+      );
+      let tmp = list.map(v => {
+        return {
+          key: v[this.propKey],
+          label: v[this.propLabel]
+        };
+      });
+      return tmp.length > 0 ? letterSort(tmp) : [];
+    },
     showcheckedList() {
-      let list = this.data.filter(v => this.checked.indexOf(v[this.propKey]) > -1);
+      let list = this.data.filter(
+        v => this.checked.indexOf(v[this.propKey]) > -1
+      );
       return list;
     }
   },
@@ -124,7 +152,7 @@ export default {
     },
     handleCheckAllChange(selected) {
       this.checked = selected ? this.data.map(v => v[this.propKey]) : [];
-      this.isIndeterminate=false
+      this.isIndeterminate = false;
     }
   },
   mounted() {
