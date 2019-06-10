@@ -1,165 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-    <style>
-      * {
-        list-style: none;
-        padding: 0px;
-        margin: 0px;
-      }
-    </style>
-    <link
-      href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css "
-      rel="stylesheet"
-    />
-    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
-    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
-    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
-    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
-  </head>
-  <style>
-    #app,
-    body,
-    html {
-      height: 100%;
-    }
-    li {
-      /* border:1px solid;
-      width: 100%; */
-    }
-    .project{
-       padding: 0px!important;
-      
-    }
-    .project .cell{
-      padding:0px;
 
-    }
-    .project .cell li{
-      height:100px; 
-      border-bottom: 1px solid  #EBEEF5;
-    }
-    .project .cell li:last-child{
-      border-bottom: 1px solid transparent;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <style>
+    * {
+      list-style: none;
+      padding: 0px;
+      margin: 0px;
     }
   </style>
+  <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css " rel="stylesheet" />
+  <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+  <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+  <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
+  <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+</head>
+<style>
+  #app,
+  body,
+  html {
+    height: 100%;
+  }
 
-  <body>
-    <div id="app">
-      <el-table :data="tableData6" border style="width: 100%; margin-top: 20px">
-        <el-table-column label="类别" width="180">
-          <template slot-scope="scope">
-            <div>
-              <el-input v-model="scope.row.kind.value"></el-input>
-              <span>{{ scope.row.kind.name }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="项目" class-name='project'>
-          <template slot-scope="scope">
-            <div>
-              <ul>
-                <li v-for="item in  scope.row.project" >
-                  <el-select v-model="item.value">
-                    <!-- <el-button slot="append">阿萨大大</el-button> -->
-                  </el-select>
-                  <span>{{ item.name }}</span>
-                </li>
-              </ul>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="评分因素" class-name='project'>
-          <template slot-scope="scope" >
-            <div>
-              <ul>
-                <li v-for="item in  scope.row.project">
-                  <span>{{ item.rate }}</span>
-                </li>
-              </ul>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="打分项目" class-name='project'>
-          <template slot-scope="scope">
-            <div>
-              <ul>
-                <li v-for="item in  scope.row.project">
-                  <el-checkbox v-model="item.ischecked"></el-checkbox>
-                </li>
-              </ul>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" class-name='project'>
-          <template slot-scope="scope">
-            <div>
-              <el-button @click="add(scope.row,scope.$index)"
-                >新增打分项</el-button
-              >
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+  li {
+    overflow: auto;
+  }
 
-    <script>
-      Mock.mock("/api/menu", "get", {});
-      // console.log({data:data.toJSONSchema()})
-      new Vue({
-        el: "#app",
-        data: {
-          tableData6: [
-            {
-              kind: {
-                value: "",
-                name: "商务"
-              }, //类别
-              project: [
-                {
-                  value: "11", //项目
-                  name: "商务",
-                  rate: "234", //评分因素
-                  ischecked: false
-                }
-              ]
-            },
-            {
-              kind: {
-                value: "",
-                name: "商务"
-              }, //类别
-              project: [
-                {
-                  value: "11", //项目
-                  name: "商务",
-                  rate: "234", //评分因素
-                  ischecked: false
-                }
-              ]
-            }
-          ]
-        },
-        computed: {},
-        methods: {
-          add(item, index) {
-            // this.tableData6[indx]
-            item.project.push({
-              value:"aa", //项目
-              name: item.kind.name,
-              rate: parseInt(Math.random()*100), //评分因素
-              ischecked: false
-            });
+  .project {
+    padding: 0px !important;
+
+  }
+
+  .project .cell {
+    padding: 0px;
+
+  }
+
+  .project .cell li {
+    height: 100px;
+    border-bottom: 1px solid #EBEEF5;
+  }
+
+  .project .cell li:last-child {
+    border-bottom: 1px solid transparent;
+  }
+</style>
+
+<body>
+  <div id="app">
+    <el-table :data="tableData6" border style="width: 100%; margin-top: 20px">
+      <el-table-column label="类别" width="180">
+        <template slot-scope="scope">
+          <div>
+            <el-input v-model="scope.row.kind.value"></el-input>
+            <span>{{ scope.row.kind.name }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="项目" class-name='project'>
+        <template slot-scope="scope">
+          <div>
+            <ul>
+              <li v-for="item in  scope.row.project">
+                <el-select v-model="item.value">
+                </el-select>
+                <span>{{ item.name }}</span>
+              </li>
+            </ul>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="评分因素" class-name='project'>
+        <template slot-scope="scope">
+          <div>
+            <ul>
+              <li v-for="item in  scope.row.project">
+                <div v-for="subItem in item.rate">
+                  <el-input v-model="subItem.value" style="width: 70%" ></el-input>
+                  
+                </div>
+
+              </li>
+            </ul>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="打分项目" class-name='project'>
+        <template slot-scope="scope">
+          <div>
+            <ul>
+              <li v-for="item in  scope.row.project">
+                <el-checkbox v-model="item.ischecked"></el-checkbox>
+              </li>
+            </ul>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" class-name='project'>
+        <template slot-scope="scope">
+          <div>
+            <el-button @click="add(scope.row,scope.$index)">新增打分项</el-button>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+
+  <script>
+    Mock.mock("/api/menu", "get", {});
+    // console.log({data:data.toJSONSchema()})
+    new Vue({
+      el: "#app",
+      data: {
+        tableData6: [
+          {
+            kind: {
+              value: "",
+              name: "商务"
+            }, //类别
+            project: [
+              {
+                value: "11", //项目
+                name: "商务",
+                rate: [{ value: "aasd" }], //评分因素
+                ischecked: false
+              }
+            ]
           }
+        ]
+      },
+      computed: {},
+      methods: {
+        add(item, index) {
+          // this.tableData6[indx]
+          item.project.push({
+            value: "aa", //项目
+            name: item.kind.name,
+            rate: [{
+              value
+                : ""
+            }], //评分因素
+            ischecked: false
+          });
         },
-        mounted() {
-          axios.get("/api/menu").then(data => {});
+        addRate(rate) {
+          console.log({ rate })
+          rate.push({ value: "aasd" })
         }
-      });
-    </script>
-  </body>
+      },
+      mounted() {
+        axios.get("/api/menu").then(data => { });
+      }
+    });
+  </script>
+</body>
+
 </html>
