@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>v-model指令</title>
+    <script src="https://cdn.bootcss.com/vue/2.3.4/vue.js"></script>
+  </head>
+  <body>
+    <div id="app3">
+      {{ price }}
+      <my-input v-model="price"></my-input
+      ><!-- 下行注释的语法糖 -->
+      <!-- <my-input :value="price" @input="val => {price = val}"></my-input> -->
+    </div>
+    <script>
+      Vue.component("my-input", {
+        template:
+          '<div><div type="text" ref="input" :value="value" @input="doThis"/></div>',
+        props: {
+          value: String
+        },
+        methods: {
+          doThis() {
+            this.$emit("input", this.$refs.input.value);
+          }
+        }
+      });
+      new Vue({
+        el: "#app3",
+        data: {
+          price: "10"
+        }
+      });
+    </script>
+  </body>
+</html>

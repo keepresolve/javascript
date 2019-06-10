@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+</head>
+<body>
+<div id="app">  
+    父组件：  
+    <input v-model="val"><br/>  
+    子组件：  
+    <test :test.sync="val"></test>  
+</div>  
+</body>
+</html>
+<script>  
+    var vm = new Vue({  
+        el: '#app',  
+        data: {  
+            val: 1  
+        },  
+        components: {  
+            "test": {  
+                props: ['test'],  
+                template: '<div @click="increment">{{test}}</div>',
+                methods: {
+                  increment: function() {
+                    ++this.test
+                    this.$emit('update:test', ++this.test);
+                  }
+                }
+            }  
+        }  
+    });  
+</script>   
