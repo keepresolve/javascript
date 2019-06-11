@@ -3,7 +3,7 @@
     <!-- 左边 -->
     <div class="cTransferSlide">
       <div class="cTransferHeader">
-        <el-input v-model="query" placeholder="请输入搜索内容">
+        <el-input v-model="query" :placeholder="placeholder">
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
         </el-input>
         <el-checkbox
@@ -60,18 +60,18 @@ export default {
       default: []
     },
     props: {
-      key: {
-        type: String,
-        default: "key"
-      },
-      label: {
-        type: String,
-        default: "label"
-      },
-      disabled: {
-        type: String,
-        default: "disabled"
+      type: Object,
+      default() {
+        return {
+          label: "label",
+          key: "key",
+          disabled: "disabled"
+        };
       }
+    },
+    placeholder: {
+      type: String,
+      default: "请输入内容"
     }
   },
   watch: {
@@ -96,23 +96,13 @@ export default {
   },
   computed: {
     propKey() {
-      return this.props.key;
+      return this.props.key || 'key';
     },
     propLabel() {
-      return this.props.label;
+      return this.props.label || 'label';
     },
     propDisabled() {
-      return this.props.disabled;
-    },
-    filterData() {
-      let query = this.query.toLowerCase();
-      let list = this.data.filter(
-        v =>
-          String(v[this.propLabel])
-            .toLowerCase()
-            .indexOf(query) > -1
-      );
-      return list;
+      return this.props.disabled || 'disabled' ;
     },
     letterList() {
       let query = this.query.toLowerCase();
