@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>微博</title>
+    <script src="https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js"></script>
+</head>
+<style>
+    body {
+        font-size: 0.875rem;
+    }
+
+    h2 {
+        text-align: center
+    }
+
+    input {
+        width: 100%;
+        height: 30px;
+    }
+
+    p {
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+
+    .example {
+        color: #777;
+        font-size: 12px;
+    }
+
+    .result {
+        color: red;
+        font-size: 0.75rem;
+        line-height: 1rem;
+        padding: 0 1.5rem 0;
+    }
+
+    .btn {
+        display: inline-block;
+        border: #e86b0f solid 1px;
+        margin: 0 0 0 5px;
+        padding: 0 10px;
+        line-height: 25px;
+        font-size: .75rem;
+        vertical-align: middle;
+        color: #FFF;
+        border-radius: 3px;
+        background-color: #ff8200;
+    }
+</style>
+<body>
+<a href="sinaweibo://gotohome">scheme 链接测试</a>
+<h2>呼起客户端测试</h2>
+<h4>请输入scheme,示例如下: </h4>
+<p class="example">
+    sinaweibo://factoryredpacket?key=client_changshanggift_conf_NR_12.follow&wm2=3333_1001&featurecode=wifi&wm=90057_90002</p>
+<input id="scheme" type="text" value="sinaweibo://gotohome" placeholder="输入scheme"/>
+<h4>呼起方式:</h4>
+<div class="result" style="color: #777">UA: <span id="ua"></span></div>
+<div id="log" class="result"></div>
+<ul>
+    <li>
+        <p>1. 只呼起,不跳下载页:</p>
+        <div class="btn" id="openapp1">点击呼起客户端</div>
+    </li>
+    <li>
+        <p>2. 呼起客户端,并跳下载页:</p>
+        <div class="btn" id="openapp2">点击呼起客户端</div>
+    </li>
+    <li>
+        <p>3. 测试获取unilink</p>
+        <div class="btn" id="unilink1">unilink呼起客户端</div>
+    </li>
+</ul>
+<script type="text/javascript" src="https://h5.sinaimg.cn/m/open-app/v1.2.10/js/app.js"></script>
+</body>
+<script>
+    var log = document.getElementById('log');
+    var scheme = document.getElementById('scheme');
+    document.getElementById('ua').innerHTML = window.navigator.userAgent;
+    if (scheme) {
+        document.getElementById("openapp1").onclick = function () {
+            openApp.start({
+                scheme: scheme.value || 'sinaweibo://gotohome',
+                // closeUnilink设置成true,isDownload设置成false呼起失败不跳下载页才能生效
+                closeUnilink: true,
+                isDownload: false,
+                log: log,
+            });
+        }
+        document.getElementById("openapp2").onclick = function () {
+            openApp.start({
+                scheme: scheme.value || 'sinaweibo://gotohome',
+                url: 'https://weibo.cn/client/download',
+                isDownload: true,
+                opentime: 3000,
+                log: log,
+            });
+        }
+        document.getElementById("unilink1").onclick = function () {
+            var url = openApp.getUnilink(scheme.value || 'sinaweibo://gotohome');
+            console.log('unilink方式呼起, url: ' + url);
+            window.location.href = url;
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.1/jspdf.debug.js"
+        integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs"
+        crossorigin="anonymous"></script> -->
+    <!-- <script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script> -->
+    <script src="./jspdf.min.js">
+
+    </script>
+    <style>
+        .container {
+            display: flex;
+        }
+
+        .container>textarea,
+        .container>div {
+            flex: 1;
+            border: 1px solid #035540;
+        }
+
+        .container>div {
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <textarea name="" id="code" cols="30" rows="10">
+                var doc = new jsPDF();
+                doc.setFontSize(40);
+                doc.text("Hello world!", 35, 25);
+                <!-- doc.addImage('genrator.jpg', 'JPEG', 15, 40, 180, 180); -->
+        </textarea>
+        <div>
+            <img src="genrator.jpg" alt="">
+        </div>
+    </div>
+    <button id='save'>download</button>
+    <!-- ctrl + p ,利用浏览器的，组件的话先网页转canvas,再canvas 转pdf     用组件jsPdf -->
+    <script>
+        let doc = null
+        let savebtn = document.querySelector("#save")
+        let code = document.querySelector("#code")
+        function init(){
+            let result= eval('try{' + code.value + '} catch(e) { console.error(e.message,e.stack,e); }')
+            console.log({result,value:code.value})
+            // code.value
+        }
+        init()
+        savebtn.onclick=function(){
+          
+            if(doc){
+                   doc.save('genrator.pdf')
+            }
+        }
+        // var doc = new jsPDF()
+
+        // doc.text('Hello world!', 10, 10)
+        // doc.save('a4.pdf')
+
+    </script>
+</body>
+
+</html>

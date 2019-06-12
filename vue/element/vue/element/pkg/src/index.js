@@ -14,7 +14,12 @@ if (typeof window !== "undefined" && window.Vue) {
   install(window.Vue);
 }
 
+export {
+  cTransfer,
+ 
+}
 export default {
+  version:"1.0",
   install,
   cTransfer
 };

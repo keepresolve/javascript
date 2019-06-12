@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/vConsole/3.3.0/vconsole.min.js"></script>
+</head>
+
+<body>
+        <a href="intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;S.browser_fallback_url=http%3A%2F%2Fzxing.org;end"> Take a QR code </a>
+        <button id="openApp">微博</button>
+</body>
+<script>
+    var vConsole = new VConsole();
+    let openApp = document.querySelector("#openApp")
+    openApp.onclick=function(){
+        jump("sinaweibo://gotohome")
+    }
+    function GetMobelType() {
+        var browser = {
+            versions: function () {
+                var u = window.navigator.userAgent;
+                return {
+                    trident: u.indexOf('Trident') > -1, //IE内核
+                    presto: u.indexOf('Presto') > -1, //opera内核
+                    Alipay: u.indexOf('Alipay') > -1, //支付宝
+                    webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                    gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                    mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                    ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                    android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                    iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+                    //iPhone: u.match(/iphone|ipod|ipad/),//
+                    iPad: u.indexOf('iPad') > -1, //是否为iPad
+                    webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+                    weixin: u.indexOf('MicroMessenger') > -1, //是否为微信浏览器
+                    qq: u.match(/\sQQ/i) !== null, //是否QQ
+                    Safari: u.indexOf('Safari') > -1,
+                    ///Safari浏览器,
+                };
+            }()
+        };
+        return browser.versions;
+    }
+    var version= GetMobelType()
+    console.log({version})
+    function jump(myurl) {
+ 
+
+        var timeout = 2300, timer = null;
+        if (version.weixin) {
+            $("#bgCoverOPen").show();
+        } else {
+            var startTime = Date.now();
+            if (version.android) {
+                var ifr = document.createElement('iframe');
+                ifr.src = myurl;//这里是唤起App的协议，有Android可爱的同事提供
+                ifr.style.display = 'none';
+                document.body.appendChild(ifr);
+                timer = setTimeout(function () {
+                    var endTime = Date.now();
+                    if (!startTime || endTime - startTime < timeout + 300) {
+                        document.body.removeChild(ifr);
+                        window.open("唤起失败跳转的链接");
+                    }
+                }, timeout);
+            }
+            if (version.ios || version.iPhone || version.iPad) {
+                if (version.qq) {
+                    $("#bgCoverOPen").show(); //提示在浏览器打开的蒙板
+                } else {
+                /*var ifr = document.createElement("iframe");
+                ifr.src = myurl;
+                ifr.style.display = "none";*/ 
+                //iOS9 + 不支持iframe唤起app
+                    window.location.href = myurl; //唤起协议，由iOS小哥哥提供
+                    //document.body.appendChild(ifr);
+                    timer = setTimeout(function () {
+                        window.location.href = "ios下载的链接";
+                    }, timeout);
+                };
+            }
+        }
+    }
+
+    $(document).on('visibilitychange webkitvisibilitychange', function () {
+        var tag = document.hidden || document.webkitHidden;
+        if (tag) {
+            clearTimeout(timer);
+        }
+    })
+    $(window).on('pagehide', function () {
+        clearTimeout(timer);
+    })
+</script>
+
+</html>

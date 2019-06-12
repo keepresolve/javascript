@@ -2,6 +2,7 @@
   <div id="transfer" ref="transfer">
     <div>
       <c-transfer
+      style="height:280px;"
         v-model="checklist"
         :data="data"
         :loading='loading'
@@ -34,12 +35,12 @@ export default {
     return {
       checklist: [1, 5],
       data: [
-        { id: 0, value: "0选中" },
-        { id: 1, value: "1选中" },
-        { id: 2, value: "2选中" },
-        { id: 3, value: "3选中" },
-        { id: 4, value: "4选中" },
-        { id: 5, value: "5选中" }
+        { id: '0', value: "啊选中0" },
+        { id: '1', value: "不选中1" },
+        { id: '2', value: "从选中2" },
+        { id: '3', value: "的选中3" },
+        { id: '4', value: "阿选中4" },
+        { id: '5', value: "发选中5" }
       ],
       move: false ,
       loading:false
@@ -54,7 +55,7 @@ export default {
       let arr = new Set();
       while (length) {
         length--;
-        arr.add(num());
+        arr.add(String(num()));
       }
       this.checklist = Array.from(arr);
       // this.checklist = [0,1,2,3,4,5,6];
