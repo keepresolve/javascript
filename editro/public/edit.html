@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
+    <script src="https://cdn.bootcss.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
     <script src="./js/element.js"></script>
     <link rel="stylesheet" href="./css/index.css" />
   </head>
@@ -16,131 +19,196 @@
   </style>
   <body>
     <div id="editor"></div>
-    <script>
-      let doc = document;
-      let toolbarbox_UI = {
-        B: {
-          title: "加粗",
-          type: "bold",
-          isShow: true,
-          icon: "",
-          event: [
-            {
-              type: "click",
-              fns: [
-                function() {
-                  doc.execCommand("bold", false, null);
-                }
-              ]
-            }
-          ]
-        },
-        // I: {
-        //   title: "斜体",
-        //   type: "blod",
-        //   isShow: true,
-        //   icon: "",
-        //   event: [
-        //     {
-        //       click: [
-        //         function(doc) {
-        //           doc.execCommand("blod", false, null);
-        //         }
-        //       ]
-        //     }
-        //   ]
-        // },
-        REMOVE: {
-          title: "清空格式",
-          type: "removeformat",
-          isShow: true,
-          icon: "",
-          event: [
-            {
-              type: "click",
-              fns: [
-                function() {
-                  doc.execCommand("removeformat", false, null);
-                }
-              ]
-            }
-          ]
-        }
-      };
-      function generator_DOM(toolbarbox_UI) {
-        if (!this.$el)
-          return console.error("cannot find dom for reder this toolbar");
-        let toolbarItems = [];
-        for (const ui in toolbarbox_UI) {
-          toolbarItems.push(
-            Element(
-              "li",
-              {
-                "data-type": toolbarbox_UI[ui].type,
-                type: toolbarbox_UI[ui].type,
-                event: toolbarbox_UI[ui].event
-              },
-              [toolbarbox_UI[ui].title]
-            )
-          );
-        }
-        let content = Element(
-          "iframe",
-          {
-            class: "c-editor-content",
-            frameborder: "0",
-            name: "c-editor-content",
-            width: "100%",
-            height: "100%",
-            border: "2px solid #ddd"
-          },
-          []
-        );
-
-        let toolbarDom = Element(
-          "div",
-          {
-            class: "c-editor"
-          },
-          [
-            //toolbox
-            Element(
-              "div",
-              {
-                class: "c-editor-toolbarbox"
-              },
-              [Element("ul", {}, toolbarItems)]
-            ),
-            Element(
-              "div",
-              {
-                class: "c-editor-body"
-              },
-              [content]
-            )
-          ]
-        ).render();
-        return toolbarDom;
-      }
-
-      class Editor {
-        constructor(option) {
-          this.$el = option.el || document.querySelector("body");
-          this.init();
-        }
-        init() {
-          this.render();
-        }
-        render() {
-          let DOM = generator_DOM.call(this, toolbarbox_UI);
-          this.$el.appendChild(DOM);
-          doc = frames["c-editor-content"].document;
-          doc.designMode = "on";
-        }
-      }
-      new Editor({
-        el: document.querySelector("#editor")
-      });
-    </script>
   </body>
 </html>
+<script type="text/babel">
+  var doc = document;
+  var toolbarbox_UI = {
+    B: {
+      title: "加粗",
+      type: "bold",
+      isShow: true,
+      icon: "",
+      event: [
+        {
+          type: "click",
+          fns: [
+            function() {
+              doc.execCommand("bold", false, null);
+            }
+          ]
+        }
+      ]
+    },
+    I: {
+      title: "斜体",
+      type: "italic",
+      isShow: true,
+      icon: "",
+      event: [
+        {
+          type: "click",
+          fns: [
+            function() {
+              doc.execCommand("italic", false, null);
+            }
+          ]
+        }
+      ]
+    },
+    FONTCOLOR: {
+      title: "颜色",
+      type: "forecolor",
+      isShow: true,
+      icon: "",
+      event: [
+        {
+          type: "click",
+          fns: [
+            function(ev) {
+           
+              let type = ev.target.dataset.type;
+              console.log({ ev, thiss: this,type });
+              let color='#000'
+              switch (type) {
+                case "forecolor":
+                  break;
+                default:
+                color=type
+                  break;
+              }
+              doc.execCommand("forecolor", false,color);
+            }
+          ]
+        }
+      ],
+      subItem: [
+        { title: "红色", type: "red" },
+        { title: "黄色", type: "yellow" },
+        { title: "蓝色", type: "blue" }
+      ]
+    },
+    REMOVE: {
+      title: "清空格式",
+      type: "removeformat",
+      isShow: true,
+      icon: "",
+      event: [
+        {
+          type: "click",
+          fns: [
+            function() {
+              doc.execCommand("removeformat", false, null);
+            }
+          ]
+        }
+      ]
+    }
+  };
+  function generator_DOM(toolbarbox_UI) {
+    if (!this.$el)
+      return console.error("cannot find dom for reder this toolbar");
+    var toolbarItems = [];
+    for (var ui in toolbarbox_UI) {
+      let children = [toolbarbox_UI[ui].title];
+      if (toolbarbox_UI[ui].subItem) {
+        var items = toolbarbox_UI[ui].subItem.map(v =>
+          Element(
+            "li",
+            {
+              class:"group",
+              "data-type": v.type
+            },
+            [v.title]
+          )
+        );
+        children.push(Element("ul", {
+            class:"group-item"
+        }, items));
+      }
+
+      var dom = Element(
+        "li",
+        {
+          "data-type": toolbarbox_UI[ui].type,
+          type: toolbarbox_UI[ui].type,
+          event: toolbarbox_UI[ui].event
+        },
+        children
+      );
+      toolbarItems.push(dom);
+    }
+    // var content = Element(
+    //   "iframe",
+    //   {
+    //     class: "c-editor-content",
+    //     frameborder: "0",
+    //     name: "c-editor-content",
+    //     width: "100%",
+    //     height: "100%",
+    //     border: "2px solid #ddd"
+    //   },
+    //   []
+    // );
+    var content = Element(
+      "div",
+      {
+        class: "c-editor-content",
+        frameborder: "0",
+        name: "c-editor-content",
+        width: "100%",
+        height: "100%",
+        border: "2px solid #ddd",
+        contenteditable: true
+      },
+      []
+    );
+
+    var toolbarDom = Element(
+      "div",
+      {
+        class: "c-editor"
+      },
+      [
+        //toolbox
+        Element(
+          "div",
+          {
+            class: "c-editor-toolbarbox",
+            draggable: true
+          },
+          [Element("ul", {
+              style:'height:50px'
+          }, toolbarItems)]
+        ),
+        Element(
+          "div",
+          {
+            class: "c-editor-body"
+          },
+          [content]
+        )
+      ]
+    ).render();
+    return toolbarDom;
+  }
+
+  class Editor {
+    constructor(option) {
+      this.$el = option.el || document.querySelector("body");
+      this.init();
+    }
+    init() {
+      this.render();
+    }
+    render() {
+      var DOM = generator_DOM.call(this, toolbarbox_UI);
+      this.$el.appendChild(DOM);
+      //   doc = frames["c-editor-content"].document;
+      //   doc.designMode = "on";
+    }
+  }
+  new Editor({
+    el: document.querySelector("#editor")
+  });
+</script>
