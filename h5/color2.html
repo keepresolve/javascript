@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style>
+        div {
+          float: left;
+          width: 4px;
+          height: 5px;
+          line-height: 0px;
+          font-size: 0px;
+          cursor: pointer;
+        }
+
+    span {
+        display: block;
+        float: left;
+        width: 34px;
+        height: 20px;
+        cursor: pointer;
+    }
+    /* .clear{
+        clear:both
+    } */
+  </style>
+  <body>
+    <div>
+      <input id="txtColor" />
+    </div>
+    <div style="clear:both"></div>
+    <div class="colorWrpper">
+
+    </div>
+    <script type="text/javascript">
+      // <![CDATA[
+      function selectColor(o) {
+        o.style.backgroundColor = "#FFF";
+        o.style.border = "solid 10px " + (o.value == "" ? "black" : o.value);
+      }
+      function showColor(color) {
+        document.getElementById("txtColor").style.border =
+          "solid 10px " + color;
+      }
+      function setColor(color) {
+        var txtColor = document.getElementById("txtColor");
+        txtColor.value = color;
+        txtColor.style.backgroundColor = color;
+        txtColor.select();
+        txtColor.focus();
+      }
+      var c = "0123456789ABCDEF";
+      for (var r = 0; r < c.length; r++) {
+        var color = "#" + c.charAt(r) + c.charAt(r) + c.charAt(r);
+        document.write(
+          "<span onclick=\"setColor('" +
+            color +
+            "');\" onmouseover=\"showColor('" +
+            color +
+            '\');" style="background:' +
+            color +
+            ';display: inline-block;width:10px;height:10px;"></span>'
+        );
+      }
+      document.writeln('<div style="clear:both; "></div>');
+      var begin = 0;
+      for (var i = 0; i < 10; i++) {
+        begin = i * 8;
+        for (var r = 0; r < c.length; r++) {
+          document.writeln('<div class="clear">');
+          for (var g = begin; g < begin + 8; g++) {
+            for (var b = 0; b < c.length; b++) {
+              var color = "#" + c.charAt(r) + c.charAt(g) + c.charAt(b);
+              document.write(
+                "<div onclick=\"setColor('" +
+                  color +
+                  "');\" onmouseover=\"showColor('" +
+                  color +
+                  '\');" style="background:' +
+                  color +
+                  ';width:20px;height: 20px;display: inline-block"></div>'
+              );
+            }
+          }
+          document.writeln("</div>");
+        }
+      }
+      // ]]>
+    </script>
+  </body>
+</html>

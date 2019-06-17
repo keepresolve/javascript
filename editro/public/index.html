@@ -6,6 +6,7 @@
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
     <title>Document</title>
+    <script src="https://cdn.bootcss.com/jscolor/2.0.4/jscolor.js"></script>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
 </head>
 <style>
@@ -143,7 +144,7 @@
     // $.post("http://localhost:3000/users/login", { email: "codesircao@126.com", userName: "emicnet" }, function (res) {
     // console.log(res)
     // })
-    $.post("http://localhost:3000/users/login", { email: "codesircao@126.com", userName: "emicnet" }, function (res) {
+    $.post("http://localhost:8000/users/login", { email: "codesircao@126.com", userName: "emicnet" }, function (res) {
 
         var jwtStr = res.data.jwtStr;
         var invokeKey = res.data.invokeKey;
