@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <textarea name="" id="str" cols="30" rows="10"></textarea>
+    <button data-type='0'>转base64</button>
+    <button data-type='1'>解base64</button>
+    <div id="show">
+
+    </div>
+    <script>
+        let str = document.querySelector("#str")
+        let show = document.querySelector("#show")
+        let btn = document.querySelectorAll("button")
+
+        Array.from(btn).forEach(el => {
+            el.onclick = function () {
+                console.log(this.dataset.type,str.value)
+                show.innerText = transfer(this.dataset.type, str.value)
+            }
+        })
+        function transfer(type, str) {
+            // type = type == '0' ? 'btoa' : 'atob'
+            if(type=='0'){
+                return window.btoa(encodeURIComponent(str))
+            }else{
+                return window.decodeURIComponent(window.atob(str))
+            }
+            
+        }
+
+    </script>
+</body>
+
+</html>

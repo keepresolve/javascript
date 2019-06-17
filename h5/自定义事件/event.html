@@ -12,7 +12,7 @@
     <script>
       function read(cb) {
         let request = new XMLHttpRequest();
-        console.log(request);
+        console.log({request});
         request.onreadystatechange = function(status) {
           if (request.readyState == 4 && request.status == 200) {
             cb(request.responseText);
@@ -52,7 +52,6 @@
         0,
         null
       );
-      console.log(event);
       btn.dispatchEvent(event);
       //   NodeIterator
       // NodeFilter

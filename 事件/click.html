@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">aaas</button>
+    <script>
+        let btn = document.querySelector("#btn")
+        let begin =0 
+        let start =  0
+        let end = 0
+        btn.addEventListener("dblclick",function(){
+            console.log('dblclick',Date.now()-start)
+            console.log('dblclick',Date.now()-begin)
+        })
+        btn.addEventListener("click",function(ev){
+            begin=Date.now()
+            console.log('click',begin-start)
+            start=Date.now()
+            
+        })
+     
+        btn.click()
+    </script>
+</body>
+</html>

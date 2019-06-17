@@ -16,8 +16,10 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "babel-polyfill": "^6.26.0",
+    "cropperjs": "^1.5.1",
     "element-ui": "^2.9.1",
     "vue": "^2.5.2",
+    "vue-cropper": "^0.4.9",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
