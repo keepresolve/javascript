@@ -16,13 +16,17 @@
   <body>
     <canvas id="cxt" width="600px" height="400px"></canvas>
     <button id="btn">生成</button>
+    <button id="btn1">生成BLOB file</button>
     <img src="./1.jpg" alt="" />
     <input type="file" id="file" />
     <script>
       let ctx = document.querySelector("#cxt");
       let img = document.querySelector("img");
       let btn = document.querySelector("#btn");
+      let btn1 = document.querySelector("#btn1");
       let contxt = ctx.getContext("2d");
+
+      // img - cavans - base64 - blob - blobURL
       btn.onclick = function() {
         console.log({ img, w: img.width, h: img.height });
         contxt.drawImage(img, 0, 0, img.width, img.height);
@@ -34,23 +38,37 @@
         while (n--) {
           u8arr[n] = bstr.charCodeAt(n);
         }
-        let blob = new Blob([u8arr], {type:"image/jpeg"});
-       
-        img.src =  URL.createObjectURL(blob);
-        console.log({ data, bstr,u8arr,blob });
+        let blob = new Blob([u8arr], { type: "image/jpeg" });
+
+        img.src = URL.createObjectURL(blob);
+        console.log({ data, bstr, u8arr, blob, img });
       };
 
-      // function dataURLtoBlob(dataUrl, filetype) {
-      //   var arr = dataUrl.split(","),
-      //     mime = arr[0].match(/:(.*?);/)[1],
-      //     bstr = atob(arr[1]),
-      //     n = bstr.length,
-      //     u8arr = new Uint8Array(n);
-      //   while (n--) {
-      //     u8arr[n] = bstr.charCodeAt(n);
-      //   }
-      //   return new Blob([u8arr], { type: mime });
-      // }
+      btn1.onclick = function() {
+        let clipW = 34,
+          clipH = 34,
+          type = "image/jpeg";
+        ctx.style.width = clipW + "px";
+        ctx.style.height = clipH + "px";
+        contxt.drawImage(img, 0, 0, clipW, clipH, 0, 0, clipW, clipH);
+
+        let data = ctx.toDataURL(type);
+        let blob = dataURLtoBlob(data);
+        let file = new File([blob], "自定义");
+        console.log({ blob, file });
+      };
+      function dataURLtoBlob(dataUrl, filetype) {
+        console.log({ dataUrl });
+        var arr = dataUrl.split(","),
+          mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]),
+          n = bstr.length,
+          u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
+      }
       // function dataURLtoBlobTxt(dataUrl) {
       //   var file = "";
       //   //去掉url的头，并转换为byte
