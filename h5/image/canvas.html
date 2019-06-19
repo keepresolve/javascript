@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style>
+    canvas {
+      /* width: 600px;
+      height: 600px; */
+      border: 1px solid;
+    }
+  </style>
+  <body>
+    <canvas id="cxt" width="600px" height="400px"></canvas>
+    <button id="btn">生成</button>
+    <img src="./1.jpg" alt="" />
+    <input type="file" id="file" />
+    <script>
+      let ctx = document.querySelector("#cxt");
+      let img = document.querySelector("img");
+      let btn = document.querySelector("#btn");
+      let contxt = ctx.getContext("2d");
+      btn.onclick = function() {
+        console.log({ img, w: img.width, h: img.height });
+        contxt.drawImage(img, 0, 0, img.width, img.height);
+
+        let data = ctx.toDataURL("image/jpeg");
+        let bstr = atob(data.split(",")[1]);
+        let n = bstr.length;
+        let u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        let blob = new Blob([u8arr], {type:"image/jpeg"});
+       
+        img.src =  URL.createObjectURL(blob);
+        console.log({ data, bstr,u8arr,blob });
+      };
+
+      // function dataURLtoBlob(dataUrl, filetype) {
+      //   var arr = dataUrl.split(","),
+      //     mime = arr[0].match(/:(.*?);/)[1],
+      //     bstr = atob(arr[1]),
+      //     n = bstr.length,
+      //     u8arr = new Uint8Array(n);
+      //   while (n--) {
+      //     u8arr[n] = bstr.charCodeAt(n);
+      //   }
+      //   return new Blob([u8arr], { type: mime });
+      // }
+      // function dataURLtoBlobTxt(dataUrl) {
+      //   var file = "";
+      //   //去掉url的头，并转换为byte
+      //   console.log(dataUrl);
+      //   var urlData = b64(dataUrl);
+      //   var bytes = window.atob(urlData);
+      //   //处理异常,将ascii码小于0的转换为大于0
+      //   var ab = new ArrayBuffer(bytes.length);
+      //   var ia = new Uint8Array(ab);
+      //   for (var i = 0; i < bytes.length; i++) {
+      //     ia[i] = bytes.charCodeAt(i);
+      //   }
+      //   //替换掉原先的file
+      //   if (file == "" || file == undefined) {
+      //     file = new Blob([ab], {
+      //       type: "text/plain"
+      //     });
+      //   }
+      //   return file;
+      // }
+
+      // 上传文件
+      file.onchange = function() {
+        let file = this.files[0];
+        getBase64(URL.createObjectURL(file), function(data) {
+          console.log("cb", data);
+        });
+      };
+      function getBase64(url, callback) {
+        console.log("getBase64", arguments);
+        //通过构造函数来创建的 img 实例，在赋予 src 值后就会立刻下载图片，相比 createElement() 创建 <img> 省去了 append()，也就避免了文档冗余和污染
+        var Img = new Image(),
+          dataURL = "";
+        Img.src = url;
+        Img.onload = function() {
+          console.log("onload", arguments);
+          //要先确保图片完整获取到，这是个异步事件
+          var canvas = document.createElement("canvas"), //创建canvas元素
+            width = Img.width, //确保canvas的尺寸和图片一样
+            height = Img.height;
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext("2d").drawImage(Img, 0, 0, width, height); //将图片绘制到canvas中
+          dataURL = canvas.toDataURL("image/jpeg"); //转换图片为dataURL
+          callback ? callback(dataURL) : null; //调用回调函数
+        };
+      }
+    </script>
+  </body>
+</html>
