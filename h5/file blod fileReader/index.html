@@ -22,13 +22,19 @@
     <input type="file" multiple />
     <pre draggable="true" id="data"></pre>
     <div class="paste"></div>
+    <a href=""  id='a' download="blob.text">blob</a>
     <script>
-      document.querySelector("input").onchange = function() {
-        console.log(this.files);
-      };
+      // https://www.cnblogs.com/stoneniqiu/p/5957356.html //图片压缩
 
+      var a=document.querySelector("#a") //blob- file - download
       var ipt = document.querySelector("#data");
-      ipt.ondragover = function() {
+      document.querySelector("input").onchange = function() {
+        console.log("onchange获取文件:",this.files);
+      };
+  
+    
+      ipt.ondragover = function(e) {
+        e.preventDefault();
         return false;
       };
 
@@ -41,7 +47,7 @@
         console.log(files);
         this.innerText = JSON.stringify(files);
       };
-  console.log(Blob.arguments)
+      console.log(Blob)
       //   http://www.cnblogs.com/wangfajing/p/7202139.html?utm_source=itdadao&utm_medium=referral
       //   BLOB (binary large object)，二进制大对象，是一个可以存储二进制文件的容器。
       //   在计算机中，BLOB常常是数据库中用来存储二进制文件的字段类型。
@@ -49,9 +55,12 @@
       //   根据Eric Raymond的说法，处理BLOB的主要思想就是让文件处理器（如数据库管理器）不去理会文件是什么，而是关心如何去处理它。
       //   http://www.cnblogs.com/wangfajing/p/7202139.html?utm_source=itdadao&utm_medium=referral
       //   第一个参数为一个数据序列，可以是任意格式的值。 第二个参数是一个包含两个属性的对象{ type: MIME的类型, endings: 决定第一个参数的数据格式，可以取值为 "transparent" 或者 "native"（transparent的话不变，是默认值，native 的话按操作系统转换） 。 }
+      // var testBlob = new Blob([1], { type: "application/json" });
       var testBlob = new Blob([1], { type: "application/json" });
       console.log(testBlob);
       var file = new File([testBlob], "text.txt");
+      // a.href=URL.createObjectURL(file)
+      a.href=URL.createObjectURL(testBlob)
       console.log(file);
     //   var file = new File(["123","456"], "123.txt", { type: "text/plain;charset=utf-8" });
     </script>
