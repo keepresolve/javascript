@@ -9,7 +9,9 @@
     <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css " rel="stylesheet" />
     <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
     <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+
     <script src="https://cdn.jsdelivr.net/npm/vue-cropper@0.4.9/dist/index.min.js"></script>
+
 </head>
 
 <body>
@@ -33,7 +35,7 @@
 
         </div>
         <el-dialog title="提示" :visible.sync="centerDialogVisible" width="500px" center>
-            <div style="width:100%; height: 500px;" @click='startCrop'>
+            <div style="width:100%; height: 500px;" @dblclick='startCrop'>
                 <vue-cropper ref="cropper" :img="option.img" :output-size="option.size" :output-type="option.outputType"
                     :info="true" :full="option.full" :can-move="option.canMove" :can-move-box="option.canMoveBox"
                     :fixed-box="option.fixedBox" :original="option.original" :auto-crop="option.autoCrop"
@@ -52,9 +54,17 @@
 
             <span slot="footer" class="dialog-footer">
                 <el-button @click="centerDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="confirm()">确 定</el-button>
             </span>
         </el-dialog>
+
+        <el-upload class="upload-demo" ref='upload' action="https://jsonplaceholder.typicode.com/posts/"
+            :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false"
+            :before-upload="voice_handleBefore" :on-change="voice_handlePreview" :on-error="file_upload_error"
+            :on-success="file_upload_success">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
     </div>
 </body>
 
@@ -84,6 +94,7 @@
     const app = new Vue({
         el: '#app',
         data: {
+            fileList: [],
             previews: {},
             lists: [
 
@@ -110,6 +121,36 @@
         components: {
         },
         methods: {
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(handlePreview, ile);
+            },
+            voice_handlePreview(file) {
+                this.fileList.push(file)
+                console.log("voice_handlePreview", arguments)
+            },
+            voice_handleBefore() {
+                console.log("voice_handleBefore", arguments)
+            },
+            file_upload_success() {
+                console.log("file_upload_success", arguments)
+            },
+            file_upload_error() {
+                console.log("file_upload_error", arguments)
+            },
+            confirm() {
+                this.$refs.cropper.getCropBlob((data) => {
+                    console.log({ data })
+                    this.fileList.push(data)
+
+                   
+                    this.$refs.upload.submit()
+                    this.centerDialogVisible = false;
+                })
+
+            },
             realTime(data) {
                 this.previews = data
                 console.log(data)
