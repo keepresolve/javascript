@@ -8,12 +8,6 @@ cTransfer.install = function(Vue) {
 
 export default cTransfer;
 
-    
-// import ElInput from './src/input';
-
-// /* istanbul ignore next */
-// ElInput.install = function(Vue) {
-//   Vue.component(ElInput.name, ElInput);
-// };
-
-// export default ElInput;
+//el-checkbox-group
+// el-checkbox
+// el-scrollbar

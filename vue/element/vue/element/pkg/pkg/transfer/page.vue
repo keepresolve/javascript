@@ -26,7 +26,7 @@
           class="cTransfer-slide-body"
           :style="{height:hiddenSelect?'calc(100% - 80px)':'calc(100% - 105px)'}"
         >
-          <c-scrollbar style="height: 100%">
+          <el-scrollbar style="height: 100%">
             <el-checkbox-group v-model="checked" v-if="!hiddenSort">
               <div v-for="(item, index) in letterList" :key="index">
                 <div class="capital">{{item.letter}}</div>
@@ -50,7 +50,7 @@
                 >{{item.label}}</el-checkbox>
               </div>
             </el-checkbox-group>
-          </c-scrollbar>
+          </el-scrollbar>
         </div>
       </div>
       <div class="cTransfer-middle"></div>
@@ -61,7 +61,7 @@
           <span v-html="rightHeaderString"></span>
         </div>
         <div class="cTransfer-slide-body">
-          <c-scrollbar style="height: 100%">
+          <el-scrollbar style="height: 100%">
             <ul>
               <li class="checked-item" v-for="(item,index) in showcheckedList" :key="index">
                 <span
@@ -77,99 +77,18 @@
                 </span>
               </li>
             </ul>
-          </c-scrollbar>
+          </el-scrollbar>
         </div>
       </div>
     </div>
   </div>
 </template>
-<style >
-.cTransfer .el-checkbox {
-  display: inline-block;
-  vertical-align: middle;
-  width: calc(100% - 25px);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.cTransfer .el-scrollbar__wrap {
-  overflow-x: hidden;
-}
-</style>
-<style scoped>
-.cTransfer,
-.cTransfer-wrapper {
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-}
-.cTransfer-wrapper {
-  border: 1px solid #dddddd;
-  border-radius: 2px 0 2px 2px 2px;
-  display: flex;
-}
-.cTransfer-slide {
-  height: 100%;
-  flex: 1;
-  width: 50%;
-  box-sizing: border-box;
-}
-.cTransfer-middle {
-  align-self: stretch;
-  border-left: 1px solid #ebeef5;
-  width: 1px;
-}
-.cTransfer-slide-header {
-  padding: 14px 16px 0px 16px;
-  font-size: 12px;
-  color: #91a1a9;
-}
-.cTransfer-slide:first-child .cTransfer-slide-body {
-  /* height: calc(100% - 96px); */
-  line-height: 28px;
-  width: calc(100% - 5px);
-}
 
-.cTransfer-slide:last-child .cTransfer-slide-body {
-  height: calc(100% - 55px);
-  line-height: 30px;
-}
-
-.capital {
-  line-height: 24px;
-  background: #f5f5f5;
-  font-size: 12px;
-  color: #616161;
-  padding-left: 16px;
-}
-.cTransfer-slide-body .el-checkbox {
-  padding-left: 15px;
-}
-.checked-item {
-  display: flex;
-  padding: 0px 15px;
-  color: #606266;
-}
-.checked-item > span:first-child {
-  flex: 6;
-}
-.checked-item > span:last-child {
-  flex: 1;
-  text-align: right;
-}
-
-/* common */
-.disableColor {
-  color: #9faeb6;
-}
-</style>
 <script>
-import cScrollbar from "../scrollbar/index";
 import initialSort from "../../src/util";
 export default {
-  name: "cTransfer",
-  componentName: "cTransfer",
-  components: { cScrollbar },
+  name: "cTransferPage",
+  componentName: "cTransferPage",
   props: {
     value: {
       type: Array, //选中
@@ -298,9 +217,7 @@ export default {
     },
     showcheckedList() {
       let checkeList = this.checked;
-      // let list = this.data.filter(
-      //     v => checkeList.indexOf(String(v[this.propKey])) != -1
-      // )
+
       //可能存在被删除的情况
       let list = checkeList.map(key => {
         let item = this.data.find(v => v[this.propKey] == key);
@@ -341,3 +258,83 @@ export default {
   }
 };
 </script>
+<style >
+.cTransfer .el-checkbox {
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(100% - 25px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cTransfer .el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+</style>
+<style scoped>
+.cTransfer,
+.cTransfer-wrapper {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+.cTransfer-wrapper {
+  border: 1px solid #dddddd;
+  border-radius: 2px 0 2px 2px 2px;
+  display: flex;
+}
+.cTransfer-slide {
+  height: 100%;
+  flex: 1;
+  width: 50%;
+  box-sizing: border-box;
+}
+.cTransfer-middle {
+  align-self: stretch;
+  border-left: 1px solid #ebeef5;
+  width: 1px;
+}
+.cTransfer-slide-header {
+  padding: 14px 16px 0px 16px;
+  font-size: 12px;
+  color: #91a1a9;
+}
+.cTransfer-slide:first-child .cTransfer-slide-body {
+  /* height: calc(100% - 96px); */
+  line-height: 28px;
+  width: calc(100% - 5px);
+}
+
+.cTransfer-slide:last-child .cTransfer-slide-body {
+  height: calc(100% - 55px);
+  line-height: 30px;
+}
+
+.capital {
+  line-height: 24px;
+  background: #f5f5f5;
+  font-size: 12px;
+  color: #616161;
+  padding-left: 16px;
+}
+.cTransfer-slide-body .el-checkbox {
+  padding-left: 15px;
+}
+.checked-item {
+  display: flex;
+  padding: 0px 15px;
+  color: #606266;
+}
+.checked-item > span:first-child {
+  flex: 6;
+}
+.checked-item > span:last-child {
+  flex: 1;
+  text-align: right;
+}
+
+/* common */
+.disableColor {
+  color: #9faeb6;
+}
+</style>

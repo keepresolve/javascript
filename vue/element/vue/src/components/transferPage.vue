@@ -1,30 +1,18 @@
 <template>
   <div id="transfer" ref="transfer">
-    <div>
-      <!-- 自定义排序 -->
-      <!--  :hiddenList="['letterSort']"    ["selectAll",'sortLetter'] -->
-      <c-transfer
-        style="height:280px;"
-        v-model="checklist"
-        :data="data"
-        :loading="loading"
-        @change="transferChange"
-        :format="{right:'已选择 ${checked} 个'}"
-        :hiddenList="hiddenList"
-        :props="{
+    <c-transfer-page
+      style="height:280px;"
+      v-model="checklist"
+      :data="data"
+      :loading="loading"
+      @change="transferChange"
+      :props="{
         key:'id',
         label:'value',
         disabled:'disabled'
       }"
-      ></c-transfer>
-    </div>
+    ></c-transfer-page>
 
-    <!--element-ui -->
-    <div draggable="true" style="width:530px">
-      <el-transfer v-model="checklist" :data="data" :props="{key:'id',label:'value'}"></el-transfer>
-    </div>
-    <el-button @click="close('sortLetter')">排序</el-button>
-    <el-button @click="close('selectAll')">全选</el-button>
     <el-button @click="defaultChecked">设置默认选中v-model</el-button>
   </div>
 </template>
@@ -44,7 +32,7 @@ export default {
         { id: "4", value: "阿选中4" },
         { id: "5", value: "发选中5" }
       ],
-      hiddenList: [],
+      move: false,
       loading: false
     };
   },
@@ -63,19 +51,6 @@ export default {
     },
     transferChange() {
       console.log("transferChange", arguments);
-    },
-    close(type) {
-      let index = 0;
-      let isHas = this.hiddenList.find((v, i) => {
-        let isTure = v == type;
-        if (isTure) index = i;
-        return isTure;
-      });
-      if (isHas) {
-        this.hiddenList.splice(index, 1);
-      } else {
-        this.hiddenList.push(type);
-      }
     }
   },
   mounted() {
