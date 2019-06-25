@@ -14,13 +14,14 @@
         height: 40px;
 
     }
-    .face{
+
+    .face {
         float: left;
-    width: 20px;
-    height: 20px;
-    margin-right: 6px;
-    margin-top: 6px;
-    cursor: pointer;
+        width: 20px;
+        height: 20px;
+        margin-right: 6px;
+        margin-top: 6px;
+        cursor: pointer;
     }
 </style>
 
@@ -38,6 +39,7 @@
             <input type="text" id="server">
             <!-- 直接写地址 -->
             <img id="serverCode" src="/users/authCode"></img>
+            buffer<img src="" id="base64" alt="base64">
             <button>验证</button>
         </div>
 
@@ -52,16 +54,28 @@
 </body>
 <script>
     $(function () {
-       $("#serverCode").click(function(){
-           $(this).attr('src',"/users/authCode?"+Date.now())
-       })
-       $(".server>button").click(function(){
-            $.get("/users/authCode",{code:$("#server").val()},function(res,err){
-                       if(!err){
-                           console.log(res)
-                       }
-            }) 
-       })
+      
+        $.get("/users/authCode", { code: $("#server").val(), type: 'base64' }, function (res, err) {
+            $("#base64").attr("src", res.base64)
+        })
+        $("#serverCode").click(function () {
+            $(this).attr('src', "/users/authCode?" + Date.now())
+        })
+        $(".server>button").click(function () {
+            $.get("/users/authCode", { code: $("#server").val(), type: 'auth' }, function (res, err) {
+                console.log(res)
+
+            })
+            $.get("/users/authCode", { code: $("#server").val(), type: 'base64' }, function (res, err) {
+                console.log({ res })
+                // let blob= new Blob([data],{type: 'image/png'})
+                // let url = URL.createObjectURL(blob)
+                // console.log({data,url,blob})
+                $("#base64").attr("src", res.base64)
+
+
+            })
+        })
     })
 </script>
 
