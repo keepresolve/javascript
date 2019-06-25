@@ -15,10 +15,10 @@ function MackImg(){
 }
 MackImg.prototype.mackImg2=function(){
     var img = new BMP24(300,140);       
-    img.drawString('helloworld', 20,10, font.font8x16, 0xff0000);
-    img.drawString('helloworld', 20,25, font.font12x24, 0x00ff00);
-    img.drawString('helloworld', 20,50, font.font16x32, 0x0000ff);
-    img.drawString('中国', 20,85, this.cnfonts, 0xffffff);
+    // img.drawString('helloworld', 20,10, font.font8x16, 0xff0000);
+    // img.drawString('helloworld', 20,25, font.font12x24, 0x00ff00);
+    // img.drawString('helloworld', 20,50, font.font16x32, 0x0000ff);
+    // img.drawString('中国', 20,85, this.cnfonts, 0xffffff);
     return img;
 }
 MackImg.prototype.makeCapcha=function() {
