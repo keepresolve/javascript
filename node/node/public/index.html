@@ -68,10 +68,18 @@
             })
             $.get("/users/authCode", { code: $("#server").val(), type: 'base64' }, function (res, err) {
                 console.log({ res })
-                // let blob= new Blob([data],{type: 'image/png'})
-                // let url = URL.createObjectURL(blob)
+                let { buffer,base64 }= res
+                 //buffer处理  https://www.cnblogs.com/brainworld/p/8662128.html
+                //  图片
+            //     let uint8Array = new Uint8Array(buffer.data);
+            // 　　　for (var i = 0; i < buffer.length; ++i) {
+            // 　　　　　uint8Array[i] = buffer[i];
+            // 　　　}
+            //     console.log({uint8Array})
+            //     let blob= new Blob([uint8Array],{type: 'image/png'})
+            //     let url = URL.createObjectURL(blob)
                 // console.log({data,url,blob})
-                $("#base64").attr("src", res.base64)
+                $("#base64").attr("src", base64)
 
 
             })
