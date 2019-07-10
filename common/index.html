@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    #move {
+        background: #cfcfcc;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        opacity: 0
+    }
+
+    #insertText {
+        width: 300px;
+        height: 400px;
+        border: 1px solid;
+
+    }
+</style>
+<script src="常用函数.js"></script>
+<div id='move'></div>
+<div id='insertText' contenteditable="true"></div>
+<button id='insert'>插入</button>
+
+<body>
+    <script>
+        move(document.querySelector("div"), {
+            opacity: 100,
+            top: 500
+        }, function () {
+            console.log(this)
+        })
+        document.querySelector("#insert").onclick = function () {
+            insertText(this, "asdasdasd")
+        } 
+    </script>
+</body>
+
+</html>

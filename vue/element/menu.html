@@ -11,6 +11,7 @@
     <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
     <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
     <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+    <script src="https://cdn.bootcss.com/vue-router/3.0.0/vue-router.js"></script>
 </head>
 <style>
     #app,
@@ -22,107 +23,114 @@
 
 <body>
     <div id="app">
-        <el-row class="tac">
+        <el-row>
             <el-col :span="12">
-                <el-menu default-active="2" @open="handleOpen" @close="handleClose" :default-openeds="defaultOpeneds">
-                    <el-submenu index="1">
-                        <template slot="title">
-                            <i class="el-icon-location"></i>
-                            <span>导航一</span>
-                        </template>
-                        <el-menu-item-group>
-                            <template slot="title">分组一</template>
-                            <el-menu-item index="1-1">选项1</el-menu-item>
-                            <el-menu-item index="1-2">选项2</el-menu-item>
-                        </el-menu-item-group>
-                        <el-menu-item-group title="分组2">
-                            <el-menu-item index="1-3">选项3</el-menu-item>
-                        </el-menu-item-group>
-                        <el-submenu index="1-4">
-                            <template slot="title">选项4</template>
-                            <el-menu-item index="1-4-1">选项1</el-menu-item>
-                        </el-submenu>
-                    </el-submenu>
-                    <el-menu-item index="2">
-                        <i class="el-icon-menu"></i>
-                        <span slot="title">导航二</span>
-                    </el-menu-item>
-                    <el-menu-item index="3" disabled>
-                        <i class="el-icon-document"></i>
-                        <span slot="title">导航三</span>
-                    </el-menu-item>
-                    <el-menu-item index="4">
-                        <i class="el-icon-setting"></i>
-                        <span slot="title">导航四</span>
-                    </el-menu-item>
-                </el-menu>
-            </el-col>
-            <el-col :span="12">
-                <h5>自定义颜色</h5>
-                <el-menu default-active="2"  @open="handleOpen" @close="handleClose"
-                    background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-                    <el-submenu index="1">
-                        <template slot="title">
-                            <i class="el-icon-location"></i>
-                            <span>导航一</span>
-                        </template>
-                        <el-menu-item-group>
-                            <template slot="title">分组一</template>
-                            <el-menu-item index="1-1">选项1</el-menu-item>
-                            <el-menu-item index="1-2">选项2</el-menu-item>
-                        </el-menu-item-group>
-                        <el-menu-item-group title="分组2">
-                            <el-menu-item index="1-3">选项3</el-menu-item>
-                        </el-menu-item-group>
-                        <el-submenu index="1-4">
-                            <template slot="title">选项4</template>
-                            <el-menu-item index="1-4-1">选项1</el-menu-item>
-                        </el-submenu>
-                    </el-submenu>
-                    <el-menu-item index="2">
-                        <i class="el-icon-menu"></i>
-                        <span slot="title">导航二</span>
-                    </el-menu-item>
-                    <el-menu-item index="3" disabled>
-                        <i class="el-icon-document"></i>
-                        <span slot="title">导航三</span>
-                    </el-menu-item>
-                    <el-menu-item index="4">
-                        <i class="el-icon-setting"></i>
-                        <span slot="title">导航四</span>
-                    </el-menu-item>
-                </el-menu>
-            </el-col>
+                <el-col :span="12">
+                    <h5>自定义颜色</h5>
+                    <el-button @click='isCollapse=!isCollapse'>isCollapse</el-button>
+                    <el-menu default-active="0" :collapse="isCollapse" class="el-menu-vertical-demo" @open="handleOpen"
+                        @close="handleClose" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+                        <div v-for="(item, index) in meunList" :key="index">
+
+                            <el-submenu :index="''+index" v-if="item.children.length >1">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>
+                                        <router-link :to="item.path">{{item.name}}</router-link>
+                                    </span>
+                                </template>
+                                <el-menu-item-group>
+                                    <el-menu-item :index="index+''+subIndex"
+                                        v-for="(subItem, subIndex) in item.children" :key="subIndex">
+                                        <template slot="title">
+                                            <i class="el-icon-location"></i>
+                                            <span>
+                                                <router-link :to="subItem.path">{{subItem.name}}</router-link>
+                                            </span>
+                                        </template>
+                                    </el-menu-item>
+                                </el-menu-item-group>
+
+                            </el-submenu>
+                            <el-menu-item v-if="item.children.length == 1" :index="`/${item.children[0].path}`"
+                                :key="item.children[0].path" class="el-submenu__title">
+                                <i class="el-icon-location"></i>
+                                <span slot="title">
+                                    <a :href="`#/${item.children[0].path}`">{{item.children[0].name}}</a>
+                                </span>
+                            </el-menu-item>
+                        </div>
+
+
+
+                    </el-menu>
+                </el-col>
+                <el-col :span='12'>
+                    <router-view></router-view>
+                </el-col>
         </el-row>
     </div>
     <script>
-        Mock.mock("/api/menu", "get", {
-
-        });
-        // console.log({data:data.toJSONSchema()})
-        new Vue({
-            el: "#app",
-            data: {
-                defaultOpeneds:["1-1"]
-            },
-            computed: {
-
-            },
-            methods: {
-                handleOpen(key, keyPath) {
-                    console.log(key, keyPath);
-                },
-                handleClose(key, keyPath) {
-                    console.log(key, keyPath);
+        function getrouterTemplate(arr, map) {
+            let routerMap = map || {}
+            console.log({ arr })
+            arr.map(child => {
+                if (child.path != '/') {
+                    routerMap['/' + child.path] = { template: `<div>${child.path}<h1>${child.name}</h1></div>` }
                 }
-            },
-            mounted() {
-                axios.get("/api/menu").then(data => {
+                if (child.children && child.children.length > 1) getrouterTemplate(child.children, routerMap)
 
-
-                });
+            });
+            return routerMap
+        }
+        let routerList = [{ "path": "epHome", "name": "首页", "iconCls": "icon-shouye-", "children": [{ "path": "epHome", "name": "首页" }] }, { "path": "/", "name": "权限管理", "iconCls": "icon-zhanghuziliao", "children": [{ "path": "epAdminMgt", "name": "企业管理员管理" }, { "path": "customRoleUserMgt", "name": "角色用户管理" }] }, { "path": "/", "name": "坐席与技能组", "iconCls": "icon-qunzuduoren", "children": [{ "path": "seatAsg", "name": "坐席分配" }, { "path": "seatMgt", "name": "坐席管理" }, { "path": "groupMgt", "name": "技能组管理" }, { "path": "seatState", "name": "忙碌状态管理" }] }, { "path": "/", "name": "通话记录", "iconCls": "icon-tonghuajilu-", "children": [{ "path": "callRecord", "name": "客户通话" }, { "path": "callInside", "name": " 内部通话" }] }, { "path": "/", "name": "统计中心", "iconCls": "icon-tongji", "children": [{ "path": "integratedReport", "name": "整体统计" }, { "path": "groupReport", "name": "技能组统计" }, { "path": "seatReport", "name": "坐席统计" }, { "path": "concurrentReport", "name": "并发统计" }, { "path": "callResultReport", "name": "话后处理统计" }, { "path": "statisticsConfig", "name": "统计配置" }] }, { "path": "ivrMgt", "name": "IVR流程", "iconCls": "icon-IVRguanlidianji", "children": [{ "path": "ivrMgt", "name": "IVR流程" }] }, { "path": "/", "name": "总机号码管理", "iconCls": "icon-caozuorizhi", "children": [{ "path": "switchNumberMgt", "name": "总机号码管理" }, { "path": "directNumberMgt", "name": "直线号码管理" }, { "path": "outcallModeConfig", "name": "外呼模式配置" }] }, { "path": "/", "name": "预测式外呼管理", "iconCls": "icon-dianhua4", "children": [{ "path": "taskList", "name": "预测式外呼列表" }, { "path": "resultStatic", "name": "外呼结果统计" }] }, { "path": "/", "name": "话机管理", "iconCls": "icon1-huajiguanli", "children": [{ "path": "terminalMgt", "name": "回拨话机管理" }, { "path": "sipTelMgt", "name": "SIP话机管理" }] }, { "path": "/", "name": "黑白名单管理", "iconCls": "icon1-heibaimingdan", "children": [{ "path": "blackListMgt", "name": "黑名单管理" }, { "path": "whiteListMgt", "name": "白名单管理" }, { "path": "listConfig", "name": "黑白名单配置" }] }, { "path": "/", "name": "配置中心", "iconCls": "icon1-peizhizhongxin", "children": [{ "path": "workTimeConfig", "name": "工作时间配置" }, { "path": "satisfactionConfig", "name": "满意度配置" }, { "path": "harassmentConfig", "name": "防骚扰配置" }, { "path": "concealConfig", "name": "号码隐藏配置" }, { "path": "numBroadcastConfig", "name": "工号播报配置" }, { "path": "remFrequentConfig", "name": "熟客记忆配置" }, { "path": "callResultConfig", "name": "话后处理配置" }, { "path": "transferConfig", "name": "客户端转接配置" }, { "path": "voiceFileConfig", "name": "语音文件配置" }, { "path": "recordFileConfig", "name": "录音文件名配置" }] }]
+        Mock.mock("/api/menu", "get",
+            {
+                routerList,
+                routerTemplate: getrouterTemplate(routerList)
             }
+        );
+
+
+        axios.get("/api/menu").then(data => {
+            let meunList = data.data.routerList
+            let templates = data.data.routerTemplate
+            const routes = []
+            for (item in templates) {
+                routes.push({ path: item, component: templates[item] })
+            }
+
+            const router = new VueRouter({
+                routes // (缩写) 相当于 routes: routes
+            })
+            console.log({ routes })
+            new Vue({
+                el: "#app",
+                router,
+                data: {
+                    meunList,
+                    isCollapse: false
+                },
+                computed: {
+
+                },
+                methods: {
+                    handleOpen(key, keyPath) {
+                        console.log(key, keyPath);
+                    },
+                    handleClose(key, keyPath) {
+                        console.log(key, keyPath);
+                    }
+
+
+                },
+                mounted() {
+
+                }
+            });
+
         });
+
     </script>
 </body>
 
