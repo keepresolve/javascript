@@ -110,10 +110,10 @@
           this.value = 123;
         }
         alert() {
-          console.log({props:this.props});
-		 
+          console.log({ props: this.props });
+
           setInterval(() => {
-			state.setBegin()
+            state.setBegin();
             this.setState({ value: this.value++ });
           }, 1000);
         }
