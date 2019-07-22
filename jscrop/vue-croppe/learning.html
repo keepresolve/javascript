@@ -1,242 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link
-      href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css "
-      rel="stylesheet"
-    />
+    <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css " rel="stylesheet" />
     <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
     <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
 
     <script src="https://cdn.jsdelivr.net/npm/vue-cropper@0.4.9/dist/index.min.js"></script>
-  </head>
 
-  <body>
+</head>
+
+<body>
     <div id="app">
-      <!-- <div class="preview"
+        <!-- <div class="preview"
             :style="{'width': previews.w + 'px', 'height': previews.h + 'px',  'overflow': 'hidden', 'margin': '5px'}">
             <div :style="previews.div">
                 <img :src="previews.url" :style="previews.img">
             </div>
         </div> -->
-      <div class="preview">
-        <div v-html="previews.html"></div>
-      </div>
-      <div>
-        <label for="uploads">
-          <el-button @click="$refs.uploads.click()">上传</el-button>
-          <input
-            type="file"
-            ref="uploads"
-            style="position:absolute; clip:rect(0 0 0 0);"
-            accept="image/png, image/jpeg, image/gif, image/jpg"
-            @change="uploadImg($event, 1)"
-          />
-        </label>
-      </div>
-      <el-dialog
-        title="提示"
-        :visible.sync="centerDialogVisible"
-        width="500px"
-        center
-      >
-        <div style="width:100%; height: 500px;" @dblclick="startCrop">
-          <vue-cropper
-            ref="cropper"
-            :img="option.img"
-            :output-size="option.size"
-            :output-type="option.outputType"
-            :info="true"
-            :full="option.full"
-            :can-move="option.canMove"
-            :can-move-box="option.canMoveBox"
-            :fixed-box="option.fixedBox"
-            :original="option.original"
-            :auto-crop="option.autoCrop"
-            :auto-crop-width="option.autoCropWidth"
-            :auto-crop-height="option.autoCropHeight"
-            :center-box="option.centerBox"
-            @real-time="realTime"
-            :high="option.high"
-            @img-load="imgLoad"
-          >
-          </vue-cropper>
+        <div class="preview">
+            <div v-html="previews.html"></div>
         </div>
-        <el-radio-group v-model="option.outputType">
-          <el-radio label="jpeg">jpg</el-radio>
-          <el-radio label="png">png</el-radio>
-          <el-radio label="webp">webp</el-radio>
-        </el-radio-group>
-        <div></div>
-        <el-button @click='down("blob")'>blob下载</el-button>
-        <el-button @click='down("base64")'>base64</el-button>
+        <div>
 
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="centerDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm()">确 定</el-button>
-        </span>
-      </el-dialog>
+            <label for="uploads">
+                <el-button @click='$refs.uploads.click()'>上传</el-button>
+                <input type="file" ref="uploads" style="position:absolute; clip:rect(0 0 0 0);"
+                    accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event, 1)">
+            </label>
 
-      <el-upload
-        class="upload-demo"
-        ref="upload"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :file-list="fileList"
-        :auto-upload="false"
-        :before-upload="voice_handleBefore"
-        :on-change="voice_handlePreview"
-        :on-error="file_upload_error"
-        :on-success="file_upload_success"
-        :auto-upload='false'
-      >
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">
-          只能上传jpg/png文件，且不超过500kb
         </div>
-      </el-upload>
+        <el-dialog title="提示" :visible.sync="centerDialogVisible" width="500px" center>
+            <div style="width:100%; height: 500px;" @dblclick='startCrop'>
+                <vue-cropper ref="cropper" :img="option.img" :output-size="option.size" :output-type="option.outputType"
+                    :info="true" :full="option.full" :can-move="option.canMove" :can-move-box="option.canMoveBox"
+                    :fixed-box="option.fixedBox" :original="option.original" :auto-crop="option.autoCrop"
+                    :auto-crop-width="option.autoCropWidth" :auto-crop-height="option.autoCropHeight"
+                    :center-box="option.centerBox" @real-time="realTime" :high="option.high" @img-load="imgLoad">
+                </vue-cropper>
+            </div>
+            <el-radio-group v-model="option.outputType">
+                <el-radio label="jpeg">jpg</el-radio>
+                <el-radio label="png">png</el-radio>
+                <el-radio label="webp">webp</el-radio>
+            </el-radio-group>
+            <div></div>
+            <el-button @click='down("blob")'>blob下载</el-button>
+            <el-button @click='down("base64")'>base64</el-button>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="centerDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="confirm()">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- <el-upload class="upload-demo" ref='upload' action="https://jsonplaceholder.typicode.com/posts/"
+            :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false"
+            :before-upload="voice_handleBefore" :on-change="voice_handlePreview" :on-error="file_upload_error"
+            :on-success="file_upload_success">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload> -->
+        <el-upload ref='upload' class="upload-demo" action="http://localhost:3000/upload" :on-preview="handlePreview"
+            :on-remove="handleRemove" :file-list="fileList"  list-type="picture" multiple :before-upload="handlePreview"
+            :on-success="file_upload_success" :auto-upload="false">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+
     </div>
-  </body>
+</body>
+
 </html>
 
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-  }
+    * {
+        margin: 0;
+        padding: 0;
+    }
 
-  html,
-  #app {
-    width: 100%;
-    height: 100%;
-  }
+    html,
+    #app {
+        width: 100%;
+        height: 100%;
 
-  .preview {
-    margin: 0 auto;
-  }
+    }
+
+    .preview {
+        margin: 0 auto;
+
+    }
 </style>
 
 <script>
-  Vue.use(window["vue-cropper"]);
-  const app = new Vue({
-    el: "#app",
-    data: {
-      fileList: [],
-      previews: {},
-      lists: [],
-      option: {
-        img: "https://qn-qn-kibey-static-cdn.app-echo.com/goodboy-weixin.PNG",
-        size: 1,
-        full: true, //是否输出原图比例的截图
-        outputType: "png",
-        canMove: true, //能否拖动图片
-        fixedBox: false, //截图框固定大小
-        original: false, //上传图片是否显示原始宽高 (针对大图 可以铺满)
-        canMoveBox: true, //能否拖动图片
-        autoCrop: false, //是否自动生成截图框
-        // 只有自动截图开启 宽度高度才生效
-        autoCropWidth: 34,
-        autoCropHeight: 34,
-        nfoTrue: true, //true 为展示真实输出图片宽高 false 展示看到的截图框宽高
-        centerBox: false, //截图框是否限制在图片里(只有在自动生成截图框时才能生效
-        high: true //是否根据dpr生成适合屏幕的高清图片
-      },
-      centerDialogVisible: false
-    },
-    components: {},
-    methods: {
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(handlePreview, ile);
-      },
-      voice_handlePreview(file) {
-        this.fileList.push(file);
-        console.log("voice_handlePreview", arguments);
-      },
-      voice_handleBefore() {
-        console.log("voice_handleBefore", arguments);
-      },
-      file_upload_success() {
-        console.log("file_upload_success", arguments);
-      },
-      file_upload_error() {
-        console.log("file_upload_error", arguments);
-      },
-      confirm() {
-        this.$refs.cropper.getCropBlob(data => {
-          console.log({ data });
-          this.fileList.push(data);
+    Vue.use(window['vue-cropper'])
+    const app = new Vue({
+        el: '#app',
+        data: {
+            dialogImageUrl: '',
+            dialogVisible: false,
+            fileList: [],
+            previews: {},
+            option: {
+                img: 'https://qn-qn-kibey-static-cdn.app-echo.com/goodboy-weixin.PNG',
+                size: 1,
+                full: true, //是否输出原图比例的截图
+                outputType: 'png',
+                canMove: true, //能否拖动图片
+                fixedBox: false, //截图框固定大小
+                original: false, //上传图片是否显示原始宽高 (针对大图 可以铺满)
+                canMoveBox: true, //能否拖动图片
+                autoCrop: false,//是否自动生成截图框
+                // 只有自动截图开启 宽度高度才生效
+                autoCropWidth: 34,
+                autoCropHeight: 34,
+                nfoTrue: true,//true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+                centerBox: false,//截图框是否限制在图片里(只有在自动生成截图框时才能生效
+                high: true //是否根据dpr生成适合屏幕的高清图片
+            },
+            centerDialogVisible: false
+        },
+        components: {
+        },
+        methods: {
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file, fileList) {
+                this.fileList.push(file)
+                console.log("voice_handlePreview", arguments)
+            },
 
-          setTimeout(() => {
-            this.$refs.upload.submit();
-            this.centerDialogVisible = false;
-          });
-        });
-      },
-      realTime(data) {
-        this.previews = data;
-        console.log(data);
-      },
-      imgLoad(msg) {
-        console.log(msg);
-      },
-      startCrop() {
-        this.$refs.cropper.startCrop();
-      },
-      uploadImg(e, num) {
-        //上传图片
-        // this.option.img
-        var file = e.target.files[0];
-        if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
-          alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
-          return false;
+            file_upload_success(fileList) {
+                console.log("file_upload_success", arguments)
+            },
+            file_upload_error() {
+                console.log("file_upload_error", arguments)
+            },
+            confirm() {
+                this.$refs.cropper.getCropBlob((data) => {
+                    this.fileList.push({
+    
+                        percentage: 0,
+                        // raw: data,
+                        raw: new File([data], "11.png"),
+                        size: 5711540,
+                        status: "ready",
+                        uid: 156134772481
+                    })
+                   setTimeout(() => {
+                    this.$refs.upload.submit()
+                    this.centerDialogVisible = false;
+                   }, 1000);
+
+                 
+                })
+
+            },
+            realTime(data) {
+                this.previews = data
+                console.log(data)
+            },
+            imgLoad(msg) {
+                console.log(msg)
+            },
+            startCrop() {
+                this.$refs.cropper.startCrop()
+            },
+            uploadImg(e, num) {
+                //上传图片
+                // this.option.img
+                var file = e.target.files[0]
+                if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
+                    alert('图片类型必须是.gif,jpeg,jpg,png,bmp中的一种')
+                    return false
+                }
+                var reader = new FileReader()
+                reader.onload = (e) => {
+                    let data
+                    if (typeof e.target.result === 'object') {
+                        // 把Array Buffer转化为blob 如果是base64不需要
+                        data = window.URL.createObjectURL(new Blob([e.target.result]))
+                    } else {
+                        data = e.target.result
+                    }
+                    this.option.img = data
+                    this.centerDialogVisible = true
+                }
+                // 转化为base64
+                // reader.readAsDataURL(file)
+                // 转化为blob
+                reader.readAsArrayBuffer(file)
+            },
+            generatorImg() {
+
+            },
+            down(type) {
+                // event.preventDefault()
+                var aLink = document.createElement('a')
+                aLink.download = 'demo'
+                // 输出
+                if (type === 'blob') {
+                    this.$refs.cropper.getCropBlob((data) => {
+                        console.log({ data })
+                        this.downImg = window.URL.createObjectURL(data)
+                        aLink.href = window.URL.createObjectURL(data)
+                        aLink.click()
+                    })
+                } else {
+                    this.$refs.cropper.getCropData((data) => {
+                        console.log({ data })
+                        this.downImg = data
+                        aLink.href = data
+                        aLink.click()
+                    })
+                }
+            },
+
         }
-        var reader = new FileReader();
-        reader.onload = e => {
-          let data;
-          if (typeof e.target.result === "object") {
-            // 把Array Buffer转化为blob 如果是base64不需要
-            data = window.URL.createObjectURL(new Blob([e.target.result]));
-          } else {
-            data = e.target.result;
-          }
-          this.option.img = data;
-          this.centerDialogVisible = true;
-        };
-        // 转化为base64
-        // reader.readAsDataURL(file)
-        // 转化为blob
-        reader.readAsArrayBuffer(file);
-      },
-      generatorImg() {},
-      down(type) {
-        // event.preventDefault()
-        var aLink = document.createElement("a");
-        aLink.download = "demo";
-        // 输出
-        if (type === "blob") {
-          this.$refs.cropper.getCropBlob(data => {
-            console.log({ data });
-            this.downImg = window.URL.createObjectURL(data);
-            aLink.href = window.URL.createObjectURL(data);
-            aLink.click();
-          });
-        } else {
-          this.$refs.cropper.getCropData(data => {
-            console.log({ data });
-            this.downImg = data;
-            aLink.href = data;
-            aLink.click();
-          });
-        }
-      }
-    }
-  });
+
+    })
 </script>

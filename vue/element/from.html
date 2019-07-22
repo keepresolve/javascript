@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+        * {
+            list-style: none;
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
+    <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css " rel="stylesheet" />
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+    <script src="./rulefu.js"></script>
+</head>
+<style>
+    #app,
+    body,
+    html {
+        height: 100%;
+    }
+
+    li {
+        overflow: auto;
+    }
+
+    .project {
+        padding: 0px !important;
+
+    }
+
+    .project .cell {
+        padding: 0px;
+
+    }
+
+    .project .cell li {
+        height: 100px;
+        border-bottom: 1px solid #EBEEF5;
+    }
+
+    .project .cell li:last-child {
+        border-bottom: 1px solid transparent;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" :rules="rules" label-width=" 100px"
+            class="demo-dynamic">
+            <el-form-item prop="email" label="邮箱">
+                <el-input v-model="dynamicValidateForm.email"></el-input>
+            </el-form-item>
+            <el-form-item v-for="(domain, index) in dynamicValidateForm.domains" :label="'域名' + index" :key="domain.key"
+                :prop="'domains.' + index + '.value'">
+                <el-input v-model="domain.value"></el-input>
+                <el-button @click.prevent="removeDomain(domain)">删除</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>
+                <el-button @click="addDomain">新增域名</el-button>
+                <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+
+    <script>
+
+
+
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    dynamicValidateForm: {
+                        domains: [{
+                            value: ''
+                        }],
+                        email: ''
+                    },
+                    rules: {
+                        email: [
+                            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+                            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }],
+
+                        "domains.0.value": [{ required: true, validator: validatePass }]
+
+                    }
+                };
+            },
+            methods: {
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            alert('submit!');
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                removeDomain(item) {
+                    var index = this.dynamicValidateForm.domains.indexOf(item)
+                    if (index !== -1) {
+                        this.dynamicValidateForm.domains.splice(index, 1)
+                    }
+                },
+                addDomain() {
+
+                    this.rules[`domains.${this.dynamicValidateForm.domains.length}.value`] = rules
+                    this.dynamicValidateForm.domains.push({
+                        value: '',
+                        key: Date.now()
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

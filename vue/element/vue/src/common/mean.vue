@@ -17,6 +17,9 @@ export default {
       return this.$router.options.routes[0].children;
     }
   },
-  props: {}
+  props: {},
+  mounted(){
+    console.log(this)
+  }
 };
 </script>

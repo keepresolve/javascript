@@ -21,6 +21,19 @@
       "request": "launch",
       "name": "函数执行栈",
       "program": "${workspaceFolder}\\stack heap\\functionStack.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "eventLoop",
+      "program": "${workspaceFolder}\\stack heap\\functionStack2.js"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "stach html",
+      "url": "http://localhost:8080/index.html",
+      "webRoot": "${workspaceFolder}/index.html"
     }
   ]
 }

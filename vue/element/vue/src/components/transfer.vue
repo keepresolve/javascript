@@ -1,12 +1,16 @@
 <template>
   <div id="transfer" ref="transfer">
     <div>
+      <!-- 自定义排序 -->
+      <!--  :hiddenList="['letterSort']"    ["selectAll",'sortLetter'] -->
       <c-transfer
-      style="height:280px;"
+        style="height:280px;"
         v-model="checklist"
         :data="data"
-        :loading='loading'
+        :loading="loading"
         @change="transferChange"
+        :format="{right:'已选择 ${checked} 个'}"
+        :hiddenList="hiddenList"
         :props="{
         key:'id',
         label:'value',
@@ -14,15 +18,13 @@
       }"
       ></c-transfer>
     </div>
-    <div
-      draggable="true"
-      ref="dragSource"
-      style="width:530px"
-      @dragstart="dragstart"
-      data-ref="dragSource"
-    >
+
+    <!--element-ui -->
+    <div draggable="true" style="width:530px">
       <el-transfer v-model="checklist" :data="data" :props="{key:'id',label:'value'}"></el-transfer>
     </div>
+    <el-button @click="close('sortLetter')">排序</el-button>
+    <el-button @click="close('selectAll')">全选</el-button>
     <el-button @click="defaultChecked">设置默认选中v-model</el-button>
   </div>
 </template>
@@ -35,15 +37,15 @@ export default {
     return {
       checklist: [1, 5],
       data: [
-        { id: '0', value: "啊选中0" },
-        { id: '1', value: "不选中1" },
-        { id: '2', value: "从选中2" },
-        { id: '3', value: "的选中3" },
-        { id: '4', value: "阿选中4" },
-        { id: '5', value: "发选中5" }
+        { id: "0", value: "啊选中0" },
+        { id: "1", value: "不选中1" },
+        { id: "2", value: "从选中2" },
+        { id: "3", value: "的选中3" },
+        { id: "4", value: "阿选中4" },
+        { id: "5", value: "发选中5" }
       ],
-      move: false ,
-      loading:false
+      hiddenList: [],
+      loading: false
     };
   },
   methods: {
@@ -58,48 +60,29 @@ export default {
         arr.add(String(num()));
       }
       this.checklist = Array.from(arr);
-      // this.checklist = [0,1,2,3,4,5,6];
     },
     transferChange() {
       console.log("transferChange", arguments);
     },
-    dragstart(e) {
-      let dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
-      dataTransfer.effectAllowed = "copyMove";
-      dataTransfer.dropEffect = "copyMove";
-      dataTransfer.setData("Text", e.target.dataset.ref);
-      console.log("dragstart", arguments);
+    close(type) {
+      let index = 0;
+      let isHas = this.hiddenList.find((v, i) => {
+        let isTure = v == type;
+        if (isTure) index = i;
+        return isTure;
+      });
+      if (isHas) {
+        this.hiddenList.splice(index, 1);
+      } else {
+        this.hiddenList.push(type);
+      }
     }
   },
   mounted() {
-     this.loading=true
-    setTimeout(()=>{
-      this.loading=false
-    },2000)
-    document.body.addEventListener("dragover", function(e) {
-      let dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
-      dataTransfer.effectAllowed = "move";
-      dataTransfer.dropEffect = "move";
-      dataTransfer.dropEffect = "meove";
-      console.log("dragover", arguments, dataTransfer.getData("Text"));
-      e.preventDefault();
-    });
-    document.body.addEventListener("drop", e => {
-      let dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
-      let ref = dataTransfer.getData("Text");
-      dataTransfer.effectAllowed = "move";
-      dataTransfer.dropEffect = "move";
-      if (this.move) {
-        Object.assign(this.$refs[ref].style, {
-          position: "fixed",
-          // 自己去算吧
-          left: (e.pageX - e.offsetX || e.pageX || e.x || e.clientX) + "px",
-          top: (e.offsetY || e.pageY || e.y || e.clientY) + "px"
-        });
-      }
-
-      console.log("drop", arguments, dataTransfer.getData("Text"));
-    });
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 2000);
   }
 };
 </script>

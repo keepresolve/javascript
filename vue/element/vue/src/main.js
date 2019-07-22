@@ -4,13 +4,14 @@ import Vue from "vue";
 import App from "./App";
 import router from "./router";
 Vue.config.productionTip = false;
-import el from "../element/src/index.js";
+// import el from "../element/src/index.js";
+import el from "element-ui";
 Vue.use(el);
 import "element-ui/lib/theme-chalk/index.css";
 
 import customEL from "../element/pkg/src/index.js";
 Vue.use(customEL);
-console.log({ customEL,el });
+console.log({ customEL, el });
 /* eslint-disable no-new */
 let root = new Vue({
   el: "#app",
@@ -18,4 +19,4 @@ let root = new Vue({
   components: { App },
   template: "<App/>"
 });
-console.log({root})
+console.log({ root });

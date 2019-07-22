@@ -1,100 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-    <link
-      href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css "
-      rel="stylesheet"
-    />
-    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
-    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
-  </head>
-  <style>
-    #app,
-    body,
-    html {
-      height: 100%;
-    }
-    .selected {
-      background: #888;
-    }
-    * {
-      padding: 0;
-      margin: 0;
-      list-style: none;
-    }
-    li {
-      width: 200px;
-      height: 50px;
-      line-height: 50px;
-      text-align: center;
-    }
-  </style>
 
-  <body>
-    <div id="app">
-      <ul>
-        <li
-          v-for="(item,index) in list"
-          :class="{selected:item.isSelected}"
-          @click="selected(item)"
-        >
-          {{ item.value }}
-        </li>
-      </ul>
-      <button @click="orderBy(0)">上</button>
-      <button @click="orderBy(1)">下</button>
-    </div>
-    <script>
-      new Vue({
-        el: "#app",
-        data: {
-          list: [
-            {
-              value: 1,
-              isSelected: false
-            },
-            {
-              value: 2,
-              isSelected: false
-            },
-            {
-              value: 3,
-              isSelected: false
-            },
-            {
-              value: 4,
-              isSelected: false
-            }
-          ]
-        },
-        computed: {},
-        methods: {
-          selected(item) {
-            this.list.map(v => (v.isSelected = false));
-            item.isSelected = true;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css " rel="stylesheet" />
+  <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+  <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+</head>
+<style>
+  #app,
+  body,
+  html {
+    height: 100%;
+  }
+
+  .selected {
+    background: #888;
+  }
+
+  * {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  li {
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+  }
+</style>
+
+<body>
+  <div id="app">
+    <ul>
+      <li v-for="(item,index) in list" :class="{selected:item.isSelected}" @click="selected(item)">
+        {{ item.value }}
+      </li>
+    </ul>
+    <button @click="orderBy(0)">下</button>
+    <button @click="orderBy(1)">上</button>
+
+    <div class="append"></div>
+  </div>
+  <script>
+    new Vue({
+      el: "#app",
+      data: {
+        list: [
+          {
+            value: 1,
+            isSelected: true
           },
-          orderBy(isTop) {
-            let orderItemIndex = 0;
-            let orderItem = this.list.find((v, index) => {
-              orderItemIndex = index;
-              return v.isSelected;
-            });
-            let topIndex = 0;
-            if (orderItemIndex == 0 && isTop||orderItemIndex == this.list.length - 1&&!isTop) {
-              topIndex = orderItemIndex;
-            } else{
-                topIndex = isTop?orderItemIndex-1:orderItemIndex+1;
-            }
-             this.list.splice(orderItemIndex, 1);
-            this.list.splice(topIndex, 0, orderItem);
+          {
+            value: 2,
+            isSelected: false
+          },
+          {
+            value: 3,
+            isSelected: false
+          },
+          {
+            value: 4,
+            isSelected: false
           }
+        ]
+      },
+      computed: {},
+      methods: {
+        selected(item) {
+          this.list.map(v => {
+            v.isSelected = false
+          });
+          item.isSelected = true;
         },
-        mounted() {}
-      });
-    </script>
-  </body>
+        test() {
+          alert(1)
+        },
+        orderBy(isTop) {
+
+          let orderItemIndex = 0;
+          let orderItem = this.list.find((v, index) => {
+            orderItemIndex = index;
+            console.log({ v })
+            return v.isSelected;
+          });
+          let topIndex = 0;
+          if (orderItemIndex == 0 && isTop || orderItemIndex == this.list.length - 1 && !isTop) {
+            topIndex = orderItemIndex;
+          } else {
+            topIndex = isTop ? orderItemIndex - 1 : orderItemIndex + 1;
+          }
+          this.list.splice(orderItemIndex, 1);
+          this.list.splice(topIndex, 0, orderItem);
+        }
+      },
+      mounted() {
+        var str = $(`<div>asdasdasdasdsad<input id='btn' type='text'></div>`)
+        let that = this
+        str.find("#btn").click(function () {
+          that.test()
+        })
+
+        $(".append").append(str)
+
+      }
+    });
+  </script>
+</body>
+
 </html>

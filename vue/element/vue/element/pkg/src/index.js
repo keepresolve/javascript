@@ -1,6 +1,6 @@
 import cTransfer from "../pkg/transfer/index";
-
-let components = [cTransfer];
+import cTransferPage from "../pkg/transfer/page";
+let components = [cTransfer,cTransferPage];
 
 const install = function(Vue, opts = {}) {
   console.log({ Vue });
@@ -21,5 +21,6 @@ export {
 export default {
   version:"1.0",
   install,
-  cTransfer
+  cTransfer,
+  cTransferPage
 };

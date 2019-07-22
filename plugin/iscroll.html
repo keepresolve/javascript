@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .topnav {
+            margin: 0 auto;
+            width: 100px;
+            height: 300px;
+            overflow: auto;
+            border: 1px solid #d3d3d3;
+        }
+
+        .topnav ul {
+            width: 100px;
+        }
+
+        .topnav ul li {
+            width: 100px;
+            height: 50px;
+            list-style: none;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        .topnav ul li a {
+            text-decoration: none;
+            color: #666;
+            display: block;
+            width: 100%;
+        }
+
+        .topnav ul li+li {
+            border-top: 1px dashed #d3d3d3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topnav">
+        <ul>
+            <li><a href="#">衣服1</a></li>
+            <li><a href="#">衣服2</a></li>
+            <li><a href="#">衣服3</a></li>
+            <li><a href="#">衣服4</a></li>
+            <li><a href="#">衣服5</a></li>
+            <li><a href="#">衣服6</a></li>
+            <li><a href="#">衣服7</a></li>
+            <li><a href="#">衣服8</a></li>
+            <li><a href="#">衣服9</a></li>
+            <li><a href="#">衣服10</a></li>
+            <li><a href="#">衣服11</a></li>
+            <li><a href="#">衣服12</a></li>
+        </ul>
+    </div>
+    <script src="./isrcoll.js"></script>
+    <script>
+        window.onload = function (ev) {
+            new IScroll(document.querySelector('.topnav'), {
+                scrollX: false,
+                scrollY: true,
+                click: true
+            });
+        }
+    </script>
+</body>
+
+</html>
