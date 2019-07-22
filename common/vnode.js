@@ -23,23 +23,13 @@
     });
     this.count = count;
   }
-  vNode.prototype.render = function() {
-    let dom = document.createElement(this.tagName);
-    let children = this.children;
-    console.log({ children });
-    children.forEach(child => {
-      var el =
-        child instanceof vNode
-          ? child.render()
-          : document.createTextNode(child);
-      dom.append(el);
-    });
-    return dom;
-  };
+
   function setAttr(node, key, value) {
+    console.log({ node, key, value });
     switch (key) {
       case "style":
-        node.style.cssText = value;
+        node.style = value;
+        // node.style.cssText = value;
         break;
       case "value":
         let tagName = node.tagName;
@@ -62,6 +52,9 @@
   vNode.prototype.render = function() {
     let dom = document.createElement(this.tagName);
     let children = this.children;
+    for (let key in this.props) {
+      setAttr(dom, key, this.props[key]);
+    }
     children.forEach(child => {
       var el =
         child instanceof vNode
@@ -71,28 +64,7 @@
     });
     return dom;
   };
-  function setAttr(node, key, value) {
-    switch (key) {
-      case "style":
-        node.style.cssText = value;
-        break;
-      case "value":
-        let tagName = node.tagName;
-        if (
-          tagName == "input" ||
-          tagName == "textarea" ||
-          tagName == "button"
-        ) {
-          node.value = value;
-        } else {
-          node.setAttribute(key, value);
-        }
-        break;
-      default:
-        node.setAttribute(key, value);
-        break;
-    }
-  }
+  if (!window.vNode) window.vNode = vNode;
   return {
     vNode: vNode
   };
