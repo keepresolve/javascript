@@ -40,12 +40,15 @@
       const props = this.props;
       const event = props.event || [];
       event.forEach(ev => {
+        let type = ev.type;
         ev.fns.map(fn => {
-          el.addEventListener(ev.type, fn);
+          el.addEventListener(type, fn);
         });
       });
       for (const propName in props) {
-        this.setAttr(el, propName, props[propName]);
+        if (propName != "event") {
+          this.setAttr(el, propName, props[propName]);
+        }
       }
 
       this.children.forEach(child => {
