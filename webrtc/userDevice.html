@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+<style >
+    #windowKeys{
+      
+        height: 300px;
+        padding: 5px;
+        overflow: auto;
+        width: 280px;
+        position: absolute;
+        top:300px;
+        left: 50%;
+        margin-left: -150px;
+
+    }
+</style>
+<body>
+    <video src=""></video>
+    <ul></ul>   
+    <div>
+            <h1>WINDOW</h1>
+            <div id="windowKeys"></div>
+    </div>
+    
+
+</body>
+</html>
+<script> 
+let  windowDOM= document.querySelector("#windowKeys")
+   let KEYS={
+    windowKeys2:Object.keys(window),
+    windowKeys:[],
+    windowPropertyKeys:Object.keys(window.__proto__)
+   }
+  
+   let  fragment= document.createDocumentFragment()
+   for (const key in window) {
+    let div= document.createElement("div")
+    div.textContent= key
+    fragment.appendChild(div)
+    KEYS.windowKeys.push(key)
+   }
+   windowDOM.appendChild(fragment)
+   windowDOM.onmousedown=function(e){
+        let x =this.offsetWidth-e. x+e.offsetX
+        // let y = e.offsetY
+        let that = this
+        document.onmousemove=function(ev){
+            // console.log({x1:ev.x,y1:ev.y,x,y})
+            let cx=ev.x - x +"px" 
+            // let cy=ev.y-  y +"px"
+ 
+            that.style.left= cx
+            // that.style.top= cy
+       } 
+       document.onmouseup=function(){
+        document.onmousemove=document.onmouseup=null
+       }
+    
+   }
+   
+   console.log({KEYS,window})
+
+    let   getDevice= navigator.mediaDevices.enumerateDevices()
+    getDevice.then(list=>{
+        let ul =  document.querySelector("ul")
+       let title=  document.createElement("h1")
+       title.innerText='media'
+        ul.appendChild(title)
+        list.map(item=>{
+            let li = document.createElement("li")
+            li.innerText= JSON.stringify(item)
+            ul.appendChild(li)
+        })
+    })
+
+</script>
