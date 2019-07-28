@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button id="terminate">terminate</button>
+    <button id="start">start</button>
+    开启线程数量
+    <span id="num"></span>
+    worker 测试
+    <select name="" id="selectiton"></select>
+    <script>
+        var id= 0
+        var workers=[]
+        var start = document.querySelector("#start")
+        var terminate = document.querySelector("#terminate")
+        var num = document.querySelector("#num")
+        var selectiton =document.querySelector("#selectiton")
+        start.onclick=function(){
+           var worker = new Worker('./worker.js');
+           id+=1
+           worker.id=id
+           workers.push(worker)
+           worker.onmessage= function (event) {
+               let data= event.data
+                switch(data.type){
+                    case "start" :
+                    alert(data.info)
+                    break;
+                    case "end" :
+                    alert(data.info)
+                    break;
+                    case "error" :
+                    alert(data.info)
+                    break;
+                }
+                
+            }
+         
+         worker.onerror=function (event) {
+                    console.log([
+                    'ERROR: Line ', e.lineno, ' in ', e.filename, ': ', e.message
+                ].join(''));
+         }
+         worker.postMessage({type: 'start',id})
+         num.textContent= workers.length
+         let option = document.createElement("option")
+         option.value=worker.id
+         option.textContent=worker.id
+         selectiton.append(option)
+        }
+        terminate.onclick=function(){
+           let el= selectiton.selectedOptions[0]
+        
+           let index=0
+           let worker= workers.find((v,i)=>{
+                index=i
+               return v.id==el.value
+           })
+           console.log({worker})
+            // let workerid= selectiton.selectedIndex
+            worker.terminate();
+            workers.splice(index,1)
+            selectiton.removeChild(el)
+        }
+  
+
+   
+
+       
+                
+     
+
+        // var worker = new Worker("worker.js");
+        //       worker.postMessage({cmd: 'start',msg:"sadasd"})
+
+        // worker.onmessage = function (e) {
+        //     console.log(e.data)
+        // };
+        </script>
+</body>
+</html>

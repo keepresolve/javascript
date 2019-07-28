@@ -8,6 +8,10 @@
 
 </head>
 <style >
+    html,body{
+        width: 100%;
+        
+    }
     #windowKeys{
       
         height: 300px;
@@ -15,19 +19,20 @@
         overflow: auto;
         width: 280px;
         position: absolute;
-        top:300px;
-        left: 50%;
-        margin-left: -150px;
+        top:10px;
+        background: aliceblue;
+        /* left: 50%; */
+        /* margin-left: -150px; */
 
+    }
+    ul{
+        overflow: auto;
     }
 </style>
 <body>
     <video src=""></video>
     <ul></ul>   
-    <div>
-            <h1>WINDOW</h1>
-            <div id="windowKeys"></div>
-    </div>
+    <div id="windowKeys"></div>
     
 
 </body>
@@ -41,6 +46,9 @@ let  windowDOM= document.querySelector("#windowKeys")
    }
   
    let  fragment= document.createDocumentFragment()
+   let h2= document.createElement("h2")
+   h2.textContent='window'
+   fragment.appendChild(h2)
    for (const key in window) {
     let div= document.createElement("div")
     div.textContent= key
@@ -48,24 +56,45 @@ let  windowDOM= document.querySelector("#windowKeys")
     KEYS.windowKeys.push(key)
    }
    windowDOM.appendChild(fragment)
-   windowDOM.onmousedown=function(e){
-        let x =this.offsetWidth-e. x+e.offsetX
-        // let y = e.offsetY
-        let that = this
-        document.onmousemove=function(ev){
-            // console.log({x1:ev.x,y1:ev.y,x,y})
-            let cx=ev.x - x +"px" 
-            // let cy=ev.y-  y +"px"
- 
-            that.style.left= cx
-            // that.style.top= cy
-       } 
-       document.onmouseup=function(){
-        document.onmousemove=document.onmouseup=null
-       }
+  
     
-   }
-   
+   windowDOM.onmousedown = function(event){
+               var event = event || window.event;  //兼容IE浏览器
+            //    鼠标点击物体那一刻相对于物体左侧边框的距离=点击时的位置相对于浏览器最左边的距离-物体左边框相对于浏览器最左边的距离
+               var diffX = event.clientX - this.offsetLeft;
+               var diffY = event.clientY - this.offsetTop;
+               if(typeof windowDOM.setCapture !== 'undefined'){
+                this.setCapture(); 
+               }
+               let that=this
+            document.onmousemove = function(event){
+                var event = event || window.event;
+                var moveX = event.clientX - diffX;
+                var moveY = event.clientY - diffY;
+                if(moveX < 0){
+                    moveX = 0
+                }else if(moveX > window.innerWidth - that.offsetWidth){
+                    moveX = window.innerWidth - that.offsetWidth
+                }
+                if(moveY < 0){
+                    moveY = 0
+                }else if(moveY > window.innerHeight - that.offsetHeight){
+                    moveY =  window.innerHeight - that.offsetHeight
+                }
+                that.style.left = moveX + 'px';
+                that.style.top = moveY + 'px'
+            }
+            document.onmouseup = function(event){
+                this.onmousemove = null;
+                this.onmouseup = null;
+                 //修复低版本ie bug  
+                if(typeof that.releaseCapture!='undefined'){  
+                    that.releaseCapture();  
+                }  
+            }
+        }
+
+
    console.log({KEYS,window})
 
     let   getDevice= navigator.mediaDevices.enumerateDevices()
@@ -81,4 +110,9 @@ let  windowDOM= document.querySelector("#windowKeys")
         })
     })
 
+
+    //获取媒体
+    // navigator.getUserMedia({audio:true,video:true},function(stream){
+    //     console.log({stream})
+    // })
 </script>
