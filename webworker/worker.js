@@ -37,20 +37,20 @@ let timer=null
 let time=0
 self.addEventListener('message', function (e) {
     var data = e.data;
-    console.log({data,self})
+    console.log('worker'+data.id+'线程message',{data,self})
     switch (data.type) {
       case 'start':
-        data.info='启动成功worker'+ data.id 
+        data.info='worker'+ data.id+'启动'
         id=data.id
         timer=setInterval(()=>{
-            time+=1
-            console.log('worker'+ data.id+"进行了"+time+"秒")
+          time+=1
+          self.postMessage(Object.assign(data,{type:"seconds",time}));
         },1000)
         break;
       case 'end':
-        self.close(); // Terminates the worker.
-        clearInterval(timer)
-        data.info='关闭成功'+data.id
+          data.info='worker'+ data.id +'关闭' 
+          self.close(); // Terminates the worker.
+          clearInterval(timer)
         break;
       default:
     };
