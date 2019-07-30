@@ -6,7 +6,7 @@
 // this.addEventListener('message', function (e) {
 //     this.postMessage('You said: ' + e.data);
 //   }, false);
-  
+
 //   // 写法二
 //   addEventListener('message', function (e) {
 //     postMessage('You said: ' + e.data);
@@ -29,34 +29,48 @@
 //     };
 //   }, false);
 
-
 //加载外部脚本
 // importScripts('script1.js', 'script2.js');
-let id= 0
-let timer=null
-let time=0
-self.addEventListener('message', function (e) {
+
+let worker = {
+  timer: null,
+  createdTime: 0,
+  id: 0
+};
+
+self.addEventListener(
+  "message",
+  function(e) {
     var data = e.data;
-    console.log('worker'+data.id+'线程message',{data,self})
+    console.log("子线程worker message", data);
     switch (data.type) {
-      case 'start':
-        data.info='worker'+ data.id+'启动'
-        id=data.id
-        timer=setInterval(()=>{
-          time+=1
-          self.postMessage(Object.assign(data,{type:"seconds",time}));
-        },1000)
+      case "start":
+        Object.assign(worker, data.worker);
+        data.info = "worker" + worker.id + "启动";
+        worker.timer = setInterval(() => {
+          worker.createdTime = parseInt((Date.now() - worker.id) / 1000);
+          self.postMessage(
+            Object.assign(data, {
+              type: "seconds",
+              createdTime: worker.createdTime
+            })
+          );
+        }, worker.delay);
+        console.log({ worker });
         break;
-      case 'end':
-          data.info='worker'+ data.id +'关闭' 
-          self.close(); // Terminates the worker.
-          clearInterval(timer)
+      case "end":
+        data.info = "worker" + worker.id + "关闭";
+        self.close(); // Terminates the worker.
+        clearInterval(worker.timer);
         break;
       default:
-    };
+        break;
+    }
     self.postMessage(data);
-  }, false);
+  },
+  false
+);
 
-  self.addEventListener("error",function(e){
-      self.postMessage({info:"error",e,id});
-  })
+self.addEventListener("error", function(e) {
+  self.postMessage({ info: "error", e, id: worker.id });
+});
