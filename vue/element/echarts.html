@@ -114,11 +114,11 @@
                 this.myChart = echarts.init(document.getElementById('echarts'))
                 resizeList.push({
                     callback: () => this.myChart.resize(),
-                    isExec:true
+                    isExec: true
                 })
                 window.addEventListener("resize", () => {
                     if (resizeList.length > 0) {
-                        resizeList.map(event =>event.isExec&&event.callback())
+                        resizeList.map(event => event.isExec && event.callback())
                     }
                 })
             }

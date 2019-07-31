@@ -1,0 +1,364 @@
+version: "3"
+services:
+  dba:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    restart: always
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - IS_NEW_MODE=$isNewMode
+    command: /usr/local/EmicallCR/bin/EmicallDbAccess
+  scm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    command:
+      - /usr/local/EmicallCR/bin/EmicallSeatControlManager
+  ccm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    #    deploy:
+    #      replicas: 2
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    command:
+      - /usr/local/EmicallCR/bin/EmicallCallControlManager
+  gcm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    command: /usr/local/EmicallCR/bin/EmicallGroupControlManager
+  bcm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - BATCH_CALL_STATUS_UPLOAD_URL=$batchUploadUrl
+    command: /usr/local/EmicallCR/bin/EmicallBatchCallManager
+  csm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    command: /usr/local/EmicallCR/bin/EmicallCcStatisticsManager
+  cru:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command: /usr/local/EmicallCR/bin/EmicallRecordUpLoad
+  ssu:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command: /usr/local/EmicallCR/bin/EmicallSeatStateUploadManager
+  csp:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - CALL_STATE_PUSH_UDP_PORT=1505
+      - CALL_STATE_PUSH_TIMER_INTERVAL=5
+      - CALL_STATE_PUSH_THRESHOLD=20
+      - CALL_STATE_PUSH_GET_DATA_LIMIT=100
+      - CALL_STATE_PUSH_SCAN_INTERVAL=20
+      - CALL_STATE_PUSH_MAX_THREADS=64
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command: /usr/local/EmicallCR/bin/EmicallCCallStatePush
+  ccs:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command: /usr/local/EmicallCR/bin/EmicallCallConStatis
+  spu:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command: /usr/local/EmicallCR/bin/EmicallSipPhoneStateUploadManager
+  csh:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command: /usr/local/EmicallCR/bin/EmicallCCallStatePushExpHandler
+  crh:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:latest"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "/usr/local/EmicallCR/comm:/usr/local/EmicallCR/comm"
+      - "/usr/local/EmicallCR/var/log:/usr/local/EmicallCR/var/log"
+    restart: always
+    hostname: "{{.Service.Name}}-{{.Task.Slot}}"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command: /usr/local/EmicallCR/bin/EmicallRecordUpLoadExpHandler

@@ -1,0 +1,4 @@
+docker-compose -f docker-compose-CR-local.yml pull
+docker stack rm emiccr
+
+env $(cat .env.cr) docker stack deploy -c docker-compose-CR-local.yml emiccr

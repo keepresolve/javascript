@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css " rel="stylesheet" />
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+    <!-- <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script> -->
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+    <script src="https://cdn.bootcss.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+
+<body>
+
+    <div id="app">
+        <el-form v-if='islogin'>
+            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px"
+                class="demo-ruleForm">
+                <el-form-item label="密码" prop="pass">
+                    <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" prop="checkPass">
+                    <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名" prop="accoutName">
+                    <el-input v-model.number="ruleForm.accoutName"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm(0)">注册</el-button>
+                    <el-button type="primary" @click="submitForm(1)">登陆</el-button>
+                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </el-form>
+        <div v-if='!islogin'>
+            <a href="./mysql.html">mysql query</a>
+            <a :href="uploadURL">uplaod 分片上传</a>
+        </div>
+    </div>
+
+</body>
+<script>
+
+    new Vue({
+
+        el: '#app',
+        data() {
+            var checkAge = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('用户名不能为空'));
+                }
+                callback()
+            };
+            var validatePass = (rule, value, callback) => {
+                console.log({ that: this })
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    if (this.ruleForm.checkPass !== '') {
+                        this.$refs.ruleForm.validateField('checkPass');
+                    }
+                    callback();
+                }
+            };
+            var validatePass2 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.ruleForm.pass) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                islogin: true,
+                ruleForm: {
+                    pass: '',
+                    checkPass: '',
+                    accoutName: '',
+
+                },
+                uploadURL: "./upload.html",
+                rules: {
+                    pass: [
+                        { validator: validatePass, trigger: 'blur' }
+                    ],
+                    checkPass: [
+                        { validator: validatePass2, trigger: 'blur' }
+                    ],
+                    accoutName: [
+                        { validator: checkAge, trigger: 'blur' }
+                    ]
+
+                }
+            }
+        },
+        methods: {
+            submitForm(type) {
+                this.$refs.ruleForm.validate(async (valid) => {
+                    if (valid) {
+                        let data = {
+                            accoutName: this.ruleForm.accoutName,
+                            password: this.ruleForm.pass
+                        }
+                        console.log({ data })
+                        let result = await fetch(`http://localhost:3000/${type == 0 ? 'register' : 'login'}`, {
+                            method: 'POST',
+                            body: JSON.stringify(data),
+                            headers: {
+                                'Content-Type': 'application/json',
+                                // 'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+
+                        })
+                        console.log({ result })
+                        result = await result.json()
+                        console.log({ result })
+
+                        if (result.code == 200 && type != 0) {
+                            this.uploadURL = `./upload.html?id=${result.data.id}&accountName=${result.data.accoutName}`
+                            this.islogin = false
+                        }
+                    } else {
+
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            }
+        },
+        mounted() {
+
+        },
+    })
+
+
+</script>
+
+</html>
