@@ -1,118 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-
-</head>
-<style >
-    html,body{
-        width: 100%;
-        
+  </head>
+  <style>
+    html,
+    body {
+      width: 100%;
     }
-    #windowKeys{
-      
-        height: 300px;
-        padding: 5px;
-        overflow: auto;
-        width: 280px;
-        position: absolute;
-        top:10px;
-        background: aliceblue;
-        /* left: 50%; */
-        /* margin-left: -150px; */
-
+    #windowKeys {
+      height: 300px;
+      padding: 5px;
+      overflow: auto;
+      width: 280px;
+      position: absolute;
+      top: 10px;
+      background: aliceblue;
+      /* left: 50%; */
+      /* margin-left: -150px; */
     }
-    ul{
-        overflow: auto;
+    ul {
+      overflow: auto;
     }
-</style>
-<body>
+  </style>
+  <body>
     <video src=""></video>
-    <ul></ul>   
+    <ul></ul>
     <div id="windowKeys"></div>
-    
-
-</body>
+  </body>
 </html>
-<script> 
-let  windowDOM= document.querySelector("#windowKeys")
-   let KEYS={
-    windowKeys2:Object.keys(window),
-    windowKeys:[],
-    windowPropertyKeys:Object.keys(window.__proto__)
-   }
-  
-   let  fragment= document.createDocumentFragment()
-   let h2= document.createElement("h2")
-   h2.textContent='window'
-   fragment.appendChild(h2)
-   for (const key in window) {
-    let div= document.createElement("div")
-    div.textContent= key
-    fragment.appendChild(div)
-    KEYS.windowKeys.push(key)
-   }
-   windowDOM.appendChild(fragment)
-  
-    
-   windowDOM.onmousedown = function(event){
-               var event = event || window.event;  //兼容IE浏览器
-            //    鼠标点击物体那一刻相对于物体左侧边框的距离=点击时的位置相对于浏览器最左边的距离-物体左边框相对于浏览器最左边的距离
-               var diffX = event.clientX - this.offsetLeft;
-               var diffY = event.clientY - this.offsetTop;
-               if(typeof windowDOM.setCapture !== 'undefined'){
-                this.setCapture(); 
-               }
-               let that=this
-            document.onmousemove = function(event){
-                var event = event || window.event;
-                var moveX = event.clientX - diffX;
-                var moveY = event.clientY - diffY;
-                if(moveX < 0){
-                    moveX = 0
-                }else if(moveX > window.innerWidth - that.offsetWidth){
-                    moveX = window.innerWidth - that.offsetWidth
-                }
-                if(moveY < 0){
-                    moveY = 0
-                }else if(moveY > window.innerHeight - that.offsetHeight){
-                    moveY =  window.innerHeight - that.offsetHeight
-                }
-                that.style.left = moveX + 'px';
-                that.style.top = moveY + 'px'
-            }
-            document.onmouseup = function(event){
-                this.onmousemove = null;
-                this.onmouseup = null;
-                 //修复低版本ie bug  
-                if(typeof that.releaseCapture!='undefined'){  
-                    that.releaseCapture();  
-                }  
-            }
-        }
+<script>
+  let windowDOM = document.querySelector("#windowKeys");
+  let KEYS = {
+    windowKeys2: Object.keys(window),
+    windowKeys: [],
+    windowPropertyKeys: Object.keys(window.__proto__)
+  };
 
+  let fragment = document.createDocumentFragment();
+  let h2 = document.createElement("h2");
+  h2.textContent = "window";
+  fragment.appendChild(h2);
+  for (const key in window) {
+    let div = document.createElement("div");
+    div.textContent = key;
+    fragment.appendChild(div);
+    KEYS.windowKeys.push(key);
+  }
+  windowDOM.appendChild(fragment);
 
-   console.log({KEYS,window})
+  windowDOM.onmousedown = function(event) {
+    var event = event || window.event; //兼容IE浏览器
+    //    鼠标点击物体那一刻相对于物体左侧边框的距离=点击时的位置相对于浏览器最左边的距离-物体左边框相对于浏览器最左边的距离
+    var diffX = event.clientX - this.offsetLeft;
+    var diffY = event.clientY - this.offsetTop;
+    if (typeof windowDOM.setCapture !== "undefined") {
+      this.setCapture();
+    }
+    let that = this;
+    document.onmousemove = function(event) {
+      var event = event || window.event;
+      var moveX = event.clientX - diffX;
+      var moveY = event.clientY - diffY;
+      if (moveX < 0) {
+        moveX = 0;
+      } else if (moveX > window.innerWidth - that.offsetWidth) {
+        moveX = window.innerWidth - that.offsetWidth;
+      }
+      if (moveY < 0) {
+        moveY = 0;
+      } else if (moveY > window.innerHeight - that.offsetHeight) {
+        moveY = window.innerHeight - that.offsetHeight;
+      }
+      that.style.left = moveX + "px";
+      that.style.top = moveY + "px";
+    };
+    document.onmouseup = function(event) {
+      this.onmousemove = null;
+      this.onmouseup = null;
+      //修复低版本ie bug
+      if (typeof that.releaseCapture != "undefined") {
+        that.releaseCapture();
+      }
+    };
+  };
 
-    let   getDevice= navigator.mediaDevices.enumerateDevices()
-    getDevice.then(list=>{
-        let ul =  document.querySelector("ul")
-       let title=  document.createElement("h1")
-       title.innerText='media'
-        ul.appendChild(title)
-        list.map(item=>{
-            let li = document.createElement("li")
-            li.innerText= JSON.stringify(item)
-            ul.appendChild(li)
-        })
-    })
+  console.log({ KEYS, window });
 
+  let getDevice = navigator.mediaDevices.enumerateDevices();
+  getDevice.then(list => {
+    let ul = document.querySelector("ul");
+    let title = document.createElement("h1");
+    title.innerText = "media";
+    ul.appendChild(title);
+    list.map(item => {
+      let li = document.createElement("li");
+      li.innerText = JSON.stringify(item);
+      ul.appendChild(li);
+    });
+  });
 
-    //获取媒体
-    // navigator.getUserMedia({audio:true,video:true},function(stream){
-    //     console.log({stream})
-    // })
+  //获取媒体
+  // navigator.getUserMedia({audio:true,video:true},function(stream){
+  //     console.log({stream})
+  // })
 </script>

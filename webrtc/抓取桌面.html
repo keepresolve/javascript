@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <video
+      autoplay
+      controls
+      style="width:300px;height:300px"
+      id="deskVideo"
+    ></video>
+    <video
+      autoplay
+      controls
+      style="width:300px;height:300px"
+      id="recordVideo"
+    ></video>
+    <button id="shareDesk">shareDesktop</button>
+    <button id="record">Start Record</button>
+    <button id="play">play</button>
+    <script>
+      window.onload = function() {
+        let localStream = null;
+        let buffer = null;
+        var deskVideo = document.querySelector("#deskVideo");
+        var recordVideo = document.querySelector("#recordVideo");
+        var shareBtn = document.querySelector("#shareDesk");
+        var recordBtn = document.querySelector("#record");
+        var playBtn = document.querySelector("#play");
+        shareBtn.onclick = function() {
+          shareDesktop();
+        };
+        recordBtn.onclick = function() {
+          startRecord();
+        };
+        playBtn.onclick = function() {
+          console.log({ buffer });
+          let blob = new Blob(buffer);
+          let file = new File(buffer, "aa.mp4", { type: "video/mp4" });
+          console.log({ file, blob });
+
+          recordVideo.src = window.URL.createObjectURL(blob);
+        };
+        // 得到桌面数据流
+
+        // 抓取桌面
+        function shareDesktop() {
+          // 只有在 PC 下才能抓取桌面
+          if (true) {
+            // 开始捕获桌面数据
+            navigator.mediaDevices
+              .getDisplayMedia({ video: true })
+              .then(function getDeskStream(stream) {
+                localStream = stream;
+                deskVideo.srcObject = stream;
+              })
+              .catch(function handleError(error) {
+                console.log({ error });
+              });
+
+            return true;
+          }
+
+          return false;
+        }
+
+        function startRecord() {
+          // 定义一个数组，用于缓存桌面数据，最终将数据存储到文件中
+          buffer = [];
+
+          var options = {
+            mimeType: "video/webm;codecs=vp8"
+          };
+
+          if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            console.error(`${options.mimeType} is not supported!`);
+            return;
+          }
+
+          try {
+            // 创建录制对象，用于将桌面数据录制下来
+            mediaRecorder = new MediaRecorder(localStream, options);
+          } catch (e) {
+            console.error("Failed to create MediaRecorder:", e);
+            return;
+          }
+
+          // 当捕获到桌面数据后，该事件触发
+          mediaRecorder.ondataavailable = function handleDataAvailable(e) {
+            if (e && e.data && e.data.size > 0) {
+              buffer.push(e.data);
+            }
+          };
+          mediaRecorder.start(10);
+        }
+      };
+    </script>
+  </body>
+</html>

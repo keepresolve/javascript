@@ -205,7 +205,6 @@
     },
     render: function (data, vNode) {
       let rootid = getRootID(data.treeData[4], data.treeData)
-      console.log({ rootid })
       let rootNode = transformTree(rootid, data.treeData)
       let vNodeTree = vTree(rootNode)
       let DOM = vNodeTree.render()
