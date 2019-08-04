@@ -53,9 +53,14 @@
           if (true) {
             // 开始捕获桌面数据
             navigator.mediaDevices
-              .getDisplayMedia({ video: true })
+              .getDisplayMedia({ video: true, audio: true })
               .then(function getDeskStream(stream) {
                 localStream = stream;
+                console.log({
+                  localStream,
+                  trackS: localStream.getTracks(),
+                  audio: localStream.getAudioTracks()
+                });
                 deskVideo.srcObject = stream;
               })
               .catch(function handleError(error) {
