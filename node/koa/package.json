@@ -1,0 +1,89 @@
+{
+  "name": "emic_koa2_template",
+  "version": "0.0.1",
+  "description": "our team's koa generator",
+  "main": "src/app.js",
+  "files": [
+    "src",
+    "bin",
+    "test"
+  ],
+  "scripts": {
+    "predebug": "node src/util/beforeInit.js",
+    "debug": "node --inspect-brk src/app.js",
+    "prestart": "node src/util/beforeInit.js",
+    "start": "node --inspect src/app.js",
+    "predev": "node src/util/beforeInit.js",
+    "dev": "nodemon -V --inspect src/app.js",
+    "preprod": "node src/util/beforeInit.js",
+    "prod": "NODE_ENV=production pm2 start src/app.js -f -i 1",
+    "wprod": "set NODE_ENV=production pm2 start src/app.js ",
+    "lint": "eslint src --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src/"
+    ],
+    "delay": "2500"
+  },
+  "keywords": [
+    "koa"
+  ],
+  "author": {
+    "name": "emicnet onlinecs team",
+    "email": "cs@emicnet.com"
+  },
+  "contributors": [
+    "fengchunyan",
+    "songguangnuan",
+    "caosiyuan",
+    "guanlulu",
+    "qiulang",
+    "wangshaofeng"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.2",
+    "debug": "^4.0.1",
+    "dotenv": "^6.0.0",
+    "dotenv-flow": "^0.2.0",
+    "fs-extra": "^7.0.0",
+    "koa": "^2.2.0",
+    "koa-body": "^4.0.4",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "mysql": "^2.17.1",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.10.1",
+    "sqlite3": "^4.0.9",
+    "superagent": "^4.0.0",
+    "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.11.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "koa-logger": "^3.2.0",
+    "nodemon": "^1.18.5",
+    "prettier": "^1.15.3"
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": true
+  },
+  "//": [
+    "关于 dependencies 几个说明:",
+    "关于 scripts 几个说明:",
+    "1. --inspect-brk必须是在vscode启动，--inspect可以在shell",
+    "2. NODE_ENV=production只在linux环境下,其他情况都缺省=development,这样避免引入cross-env",
+    "3. eslint高亮 vscode 可下载eslint扩展显示高亮"
+  ],
+  "engines": {
+    "node": "10.x"
+  },
+  "private": true
+}

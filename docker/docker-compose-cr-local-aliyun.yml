@@ -1,0 +1,496 @@
+version: "2"
+services:
+  dba:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    hostname: dba
+    restart: always
+    labels:
+      aliyun.global: true
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - IS_NEW_MODE=$isNewMode
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_dba.log
+      - /usr/local/EmicallCR/bin/EmicallDbAccess
+  scm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    links: null
+    restart: always
+    labels:
+      aliyun.log_ttl_cr-dev: "7"
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.depends: dba
+      aliyun.scale: "2"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_scm.log
+      - /usr/local/EmicallCR/bin/EmicallSeatControlManager
+    kernel_memory: 0
+    memswap_reservation: 0
+    shm_size: 0
+    memswap_limit: 0
+  ccm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+      - "/etc/hostname:/etc/hostconfig/hostname"
+    restart: always
+    privileged: true
+    labels:
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+      aliyun.depends: dba
+      aliyun.scale: "2"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - WORK_MAX_CALL_NUM=$maxCallNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - CHARGEXFER_URL=$chargXferUrl
+      - CHARGEXFER_USRNAME=$chargXferUsrName
+      - CHARGEXFER_PWD=$chargXferPwd
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_ccm.log
+      - /usr/local/EmicallCR/bin/EmicallCallControlManager
+    memswap_limit: 0
+    shm_size: 0
+    memswap_reservation: 0
+    kernel_memory: 0
+    name: ccm
+  gcm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    labels:
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+      aliyun.depends: dba
+      aliyun.scale: "2"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    restart: always
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_gcm.log
+      - /usr/local/EmicallCR/bin/EmicallGroupControlManager
+  bcm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    restart: always
+    labels:
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+      aliyun.depends: dba
+      aliyun.scale: "2"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_bcm.log
+      - /usr/local/EmicallCR/bin/EmicallBatchCallManager
+  csm:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    restart: always
+    labels:
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+      aliyun.depends: dba
+      aliyun.scale: "2"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - RMQ_HOST=$rabbitHost
+      - RMQ_PORT=$rabbitPort
+      - RMQ_USER=$rabbitUser
+      - RMQ_PASS=$rabbitPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - GLOBA_MQ_READ_MAX_THREAD_NUM=$readGlobaMqThreadMaxNum
+      - SEPC_MQ_READ_MAX_THREAD_NUM=$readSepcMqThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_csm.log
+      - /usr/local/EmicallCR/bin/EmicallCcStatisticsManager
+  cru:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    restart: always
+    labels:
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+      aliyun.depends: dba
+      aliyun.scale: "2"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_cru.log
+      - /usr/local/EmicallCR/bin/EmicallRecordUpLoad
+  ssu:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    restart: always
+    labels:
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+      aliyun.depends: dba
+      aliyun.scale: "2"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_ssu.log
+      - /usr/local/EmicallCR/bin/EmicallSeatStateUploadManager
+  csp:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    restart: always
+    labels:
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+      aliyun.depends: dba
+      aliyun.scale: "2"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - CALL_STATE_PUSH_UDP_PORT=1505
+      - CALL_STATE_PUSH_TIMER_INTERVAL=5
+      - CALL_STATE_PUSH_THRESHOLD=20
+      - CALL_STATE_PUSH_GET_DATA_LIMIT=100
+      - CALL_STATE_PUSH_SCAN_INTERVAL=20
+      - CALL_STATE_PUSH_MAX_THREADS=64
+    command:
+      - /usr/local/EmicallCR/bin/EmicallCCallStatePush
+  ccs:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    restart: always
+    labels:
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+      aliyun.depends: dba
+      aliyun.scale: "2"
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_ccs.log
+      - /usr/local/EmicallCR/bin/EmicallCallConStatis
+  spu:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    restart: always
+    labels:
+      aliyun.depends: dba
+      aliyun.scale: "2"
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+      - RECORD_UPLOAD_URL=$recordUploadUrl
+      - SIGNKEY_URL=$signkeyUrl
+      - SEAT_STATE_UPLOAD_URL=$seatStateUploadUrl
+      - CON_STATIS_UPLOAD_URL=$conStatisUploadUrl
+      - SIP_PHONE_UPLOAD_URL=$sipPhoneUploadUrl
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_spu.log
+      - /usr/local/EmicallCR/bin/EmicallSipPhoneStateUploadManager
+  csh:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    restart: always
+    labels:
+      aliyun.depends: dba
+      aliyun.scale: "1"
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_csh.log
+      - /usr/local/EmicallCR/bin/EmicallCCallStatePushExpHandler
+  crh:
+    image: "registry.cn-beijing.aliyuncs.com/new_cc/emiccr:r5532"
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/corefile:/corefile"
+      - "${crServiceIdPath}:${crServiceIdPath}"
+    restart: always
+    labels:
+      aliyun.depends: dba
+      aliyun.scale: "1"
+      aliyun.log_store_cr-dev: /usr/local/EmicallCR/var/log/sys.debug.log
+      aliyun.log_ttl_cr-dev: 7
+    environment:
+      - LOG_LEVEL=$logLevel
+      - CR_SERVER_ID_PATH=$crServiceIdPath
+      - DB_HOST=$dbHost
+      - DB_PORT=$dbPort
+      - DB_USER=$dbUser
+      - DB_PASS=$dbPass
+      - REDIS_HOST=$redisHost
+      - REDIS_PORT=$redisPort
+      - REDIS_USER=$redisUser
+      - REDIS_PASS=$redisPass
+      - WORK_MAX_THREAD_NUM=$workThreadMaxNum
+      - IS_NEW_MODE=$isNewMode
+      - GROUP_TYPE=$groupType
+    command:
+      - valgrind
+      - --tool=memcheck
+      - -v
+      - --trace-children=yes
+      - --vgdb=full
+      - --leak-check=full
+      - --log-file=/corefile/test_mem_crh.log
+      - /usr/local/EmicallCR/bin/EmicallRecordUpLoadExpHandler

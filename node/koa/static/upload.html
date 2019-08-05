@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>分片上传</title>
+    <script src="https://cdn.bootcss.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7/babel.min.js"></script>
+
+</head>
+<script src="./js/vnode.js"></script>
+
+<body>
+    <input type="file" id="file">
+    <progress value="0" max="100" id="progress"></progress>
+    <div id="uploadTime"></div>
+</body>
+<script type="text/babel">
+    let queue = []
+    function $(el) {
+        return document.querySelector(el)
+    }
+    $("#file").onchange = async function () {
+        var file = this.files[0],
+            total = file.size,
+            fileName = file.name,
+            shardSize = 1 * 200 * 1024,//200kb
+            shardCount = Math.ceil(total / shardSize),
+            successedIndex = 0,
+            startTime = Date.now(),
+            uploadTime = 0,
+            timer = null,
+            isFinaly = false,
+            uploadTimeEl = document.querySelector("#uploadTime")
+        timer = setInterval(() => {
+            if (isFinaly) clearInterval(timer)
+            uploadTime = Date.now() - startTime / 1000
+            uploadTimeEl.textContent = uploadTime + "秒"
+        }, 300)
+        for (let times of new Array(shardCount)) {
+            let formData = new FormData();
+            let start = successedIndex * shardSize //开始下标
+            let end = Math.min(total, start + shardSize); //结束下标
+            console.log({start,end,shardSize,successedIndex,shardCount})
+            formData.append("userId", location.href.split("?")[1].split("&")[0].split("=")[1]);
+            formData.append("shardSize", shardSize);
+            formData.append("name", fileName);
+            formData.append("index", successedIndex + 1)
+            formData.append("data", file.slice(start, end));
+            formData.append("total", shardCount); //总片数
+            let result = await fetch('http://localhost:3000/sliceUpload', {
+                method: 'POST',
+                body: formData
+            })
+            console.log({ result })
+            successedIndex++
+            let progress = Math.round(successedIndex / shardCount * 100);
+            $("#progress").value=progress
+        }
+        isFinaly = true
+        // for (let i = 0; i < shardCount; i++) {
+        //     var formData = new FormData();
+        //     var fileField = document.querySelector('input[type="file"]');
+
+        //     formData.append('username', 'abc123');
+        //     formData.append('avatar', fileField.files[0]);
+
+        //     fetch('https://example.com/profile/avatar', {
+        //         method: 'PUT',
+        //         body: formData
+        //     })
+        //         .then(response => response.json())
+        //         .catch(error => console.error('Error:', error))
+        //         .then(response => console.log('Success:', JSON.stringify(response)));
+        // }
+    }
+</script>
+
+</html>

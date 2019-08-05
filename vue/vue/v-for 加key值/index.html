@@ -10,39 +10,44 @@
     <script src="vuex.js"></script>
 </head>
 <style>
-    *{
+    * {
         padding: 0px;
-        margin:0px;
+        margin: 0px;
         list-style: none;
     }
-    body{
-        padding-left:30px;
-        padding-top:30px;
-        color:pink
+
+    body {
+        padding-left: 30px;
+        padding-top: 30px;
+        color: pink
     }
-    .example{
-        width:100px;
-        background:-webkit-linear-gradient(left,black,grey);
-        margin:50px 0px;
-        animation:test 3s infinite;
+
+    .example {
+        width: 100px;
+        background: -webkit-linear-gradient(left, black, grey);
+        margin: 50px 0px;
+        animation: test 3s infinite;
     }
+
     @keyframes test {
-       from{
-        width:100px;
-      }
-      to{
-          width: 300px;
-      }
+        from {
+            width: 100px;
+        }
+
+        to {
+            width: 300px;
+        }
     }
 </style>
+
 <body>
     <div id='app'>
         <div class="example">对照组</div>
         <ul>
-            <li class="example" v-for="(item, key, index) in items" :key="item.id">{{item.id}}</li>
+            <li class="example" v-for="(item, index) in items" :key="item.id">{{item.id}}</li>
         </ul>
-           <button @click="first">渲染第一个</button>
-           <button @click="sort">sort</button>
+        <button @click="first">渲染第一个</button>
+        <button @click="sort">sort</button>
     </div>
 
 </body>
@@ -66,12 +71,12 @@
             ]
         },
         methods: {
-            first(){
-                this.items[0].id+=(Math.floor((Math.random()*100)))
+            first() {
+                this.items[0].id += (Math.floor((Math.random() * 100)))
             },
-            sort(){
-               this.items.sort(function(item1,item2){
-                    return item1.id-item2.id
+            sort() {
+                this.items.sort(function (item1, item2) {
+                    return item1.id - item2.id
 
                 })
             }
