@@ -1,13 +1,17 @@
 <template>
-  <div class="hello"></div>
+    <div class="hello"></div>
 </template>
 
 <script>
+import { Phone } from "jssip-emicnet";
 export default {
-  name: "HelloWorld",
-  props: {
-    msg: String
-  }
+    name: "HelloWorld",
+    props: {
+        msg: String
+    },
+    mounted() {
+        console.log({ Phone });
+    }
 };
 </script>
 

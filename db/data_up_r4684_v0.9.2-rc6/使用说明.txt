@@ -1,0 +1,29 @@
+此目录脚本功能：1. 对目标RDS数据库进行CM、CR库初始化  2. 对目标RDS数据库进行CM、CR库升级
+
+功能脚本使用：
+1. 对目标RDS数据库进行CM、CR库初始化
+执行脚本bash RDS_CM_CR_initialize.sh
+请根据提示信息输入内容
+脚本执行后会在脚本目录产生RDS_CM_CR_initialize_log日志文件，脚本执行结果会输出至会话及日志文件
+备注：CM若初始化至mysql5.5中请vim emicall_cc_man_rds.sql 第33 json 修改为 varchar(255)，以保证CM能够初始化成功(mysql5.5不支持json数据类型)，有条件的话请直接安装mysql5.7
+
+2. 对目标RDS数据库进行CM、CR库升级
+执行脚本bash data_update_emicall_rds.sh
+请根据提示信息输入内容
+脚本执行后会在/opt/目录产生"upgrade_RDS_$时间" 执行日志、"upgrade_error_RDS_$时间" 错误日志
+判断升级是否成功：1) "upgrade_RDS_$时间" 执行日志 有"emicall_cc_man 升级完成"信息。 2)"upgrade_error_RDS_$时间" 错误日志无数据
+若脚本执行失败请根据"upgrade_error_RDS_$时间" 错误日志及输出至 会话 的信息排错(或联系DBA协助升级)，排错完成后请再次执行升级脚本
+该脚本有时间触发机制，夜间23点至第二天07点外时间将触发暂停脚本。时间触发后脚本将保持sleep的执行状态。夜间23点后脚本将自动继续工作。
+为支持测试研发自用CM、CR数据库升级，脚本设有"时间触发暂停脚本开关" ---- 设置为1白天也能升级RDS 。请将data_update_emicall_rds.sh 脚本第三行"kill_time_status=0"修改为"kill_time_status=1"
+脚本执行后会在数据库中进行：临时库、临时表、触发器等工作，请不要强制kill数据库升级进程以免造成脏数据
+
+
+升级脚本备注：
+呼叫中心新架构升级脚本正式上线
+升级脚本data_update_emicall_rds.sh使用前提：
+     升级脚本基于 data_up_r3256_v1.0-RC3.tar.gz	数据库初始化版本
+     若目标RDS为 data_up_r3256_v1.0-RC3.tar.gz 数据库初始化版本，请直接执行升级脚本
+     若目标RDS非 data_up_r3256_v1.0-RC3.tar.gz 数据库初始化版本且无重要数据，请执行 bash RDS_CM_CR_initialize.sh 初始化脚本直接将目标RDS初始化为最新数据库版本
+     若目标RDS非 data_up_r3256_v1.0-RC3.tar.gz 数据库初始化版本但是有重要数据，请联系DBA升级
+
+

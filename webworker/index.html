@@ -1,176 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <script src="./js/workers.js"></script>
 </head>
+<style>
+    .item {
+        border: 1px solid;
+        padding: 10px;
+        display: flex;
+        /* justify-content: center; */
+        justify-content: space-around
+    }
+</style>
+
 <body>
-    <button id="terminate">terminate</button>
-    <button id="start">start</button>
-    开启线程数量
-    <span id="num"></span>
-    worker 测试
-    <select name="" id="selectiton"></select>
-    <script>
-    
-        var start = document.querySelector("#start")
-        var terminate = document.querySelector("#terminate")
-        var num = document.querySelector("#num")
-       
+    delay<input id="delay" type="range" min='1' value="1" max="100"></progress><span id="range">1</span>
+    <div class="item">
+        <button id="terminate">terminate</button>
+        <button id="start">start</button>
+        开启线程数量 <span id="num"></span>
+        <select name="" id="selectiton"></select>
+    </div>
+    <div class="item">
+        name <input type="text" id="custName">
+        http url<input type="url" id="url">
+        <button id="startCust">自定义任务线程启动</button>
+    </div>
 
 
 
 
-        function createWorker(id,name,eventCb){
-           var worker = new Worker('./worker.js');
-           worker.onmessage= function (event) {
-               let data= event.data
-               console.log(`主线程收到：worker${data.id} message`,data)
-                switch(data.type){
-                    case "start" :
-                    alert(data.info)
-                    break;
-                    case "end" :
-                    alert(data.info)
-                    break;
-                    case "error" :
-                    alert(data.info)
-                    break;
-                } 
-                eventCb(event.data)
-            }
-         worker.onerror=function (event) {  console.log([ 'ERROR: Line ', e.lineno, ' in ', e.filename, ': ', e.message  ].join('')); }
-         worker.postMessage({type: 'start',id})
-         worker.id=id
-         worker.name=name||`worker${id}`
-         worker.createTime=0
-         return worker
-        }
-        function Workers(option){
-            if(!(this instanceof Workers) )  return new Workers()
-            this.pool =[]
-            this.id= 0
-            this._option={
-                change:function(){
-                    console.log("workers pool changed")
-                },
-                message:function(){
-                    console.log("messageEvent",arguments)
-                }
-            }
-            Object.assign(this._option,option||{})   
-            this._option.message=this._option.message.bind(this)
-        }
-        Workers.prototype={
-            create(name){
-                let worker= createWorker(this.id++,name,this._option.message)
-                this.pool.push(worker)
-                this.change(worker,"create")
-                return worker
-            },
-            terminate(id){
-                let index = this.findIndex(id)
-                if(index==-1) return null
-                let worker = this.pool[index]
-
-                worker.postMessage({type: 'end',id:worker.id})
-                this.pool.splice(index,1)
-                this.change(worker,"remove")
-                return worker
-            },
-            find(id){
-                let worker= this.pool.find((v,i)=>
-                  v.id==id
-                )
-                return  worker 
-            },
-            findIndex(id){
-                let index= this.pool.findIndex((v,i)=>
-                  v.id==id
-                )
-                return  index 
-            },
-            change(item,method){
-                this._option.change.call(this,this.pool,item,method)
-            },
-            get length(){
-                return this.pool.length
-            },
-            get list(){
-                return this.pool
-            }
-        
-        }
-        
-      
-        var workers=new Workers({
-            change:function(workerList,item,type){
-                console.log("change",arguments)
-                var selectiton =document.querySelector("#selectiton")
-                num.textContent= workers.length
-                selectiton.innerHTML=''
-                for (let index = 0; index < workerList.length; index++) {
-                    const worker = workerList[index];
-                    let option = document.createElement("option")
-                    option.value=worker.id
-                    option.textContent=worker.name
-                    selectiton.append(option)
-                }
-               
-            },
-            message(data){
-                console.log("workersmessage",data)
-                let {type,id,time} = data
-                let worker = this.find(id)
-                let keys= ['id','createTime',"name"]
-                console.log({worker})
-                if(!worker)  throw `The worker's id is not defined` 
-                switch(type){
-                    case "seconds":
-                    let otable = document.querySelector("#workersList")
-                    otable&&document.body.removeChild(otable)
-                    worker.createTime=time
-                    let table = document.createElement("table")
-                    let thead = document.createElement("thead")
-                    let tbody = document.createElement("tbody")
-                    let list = this.pool
-                    table.id='workersList'
-                    keys.map(v=>{
-                        let th=document.createElement("th")
-                        th.textContent=v
-                        thead.appendChild(th)
-                     })
-                    
-                    list.map(v=>{
-                        let tr= document.createElement('tr')
-                        keys.map(key=>{
-                            let td= document.createElement("td")
-                            td.textContent=v[key]
-                            tr.appendChild(td)
-                        })
-                        tbody.appendChild(tr)
-                    })
-                    table.appendChild(thead)
-                    table.appendChild(tbody)
-                    document.body.appendChild(table)
-                    break;
-                }
-             
-            }
-        })
-       
-        //start 启动一个worker
-        start.onclick=function(){
-            let worker = workers.create()
-        }
-        //关闭当前worker
-        terminate.onclick=function(){
-           let el= selectiton.selectedOptions[0]
-           let worker = workers.terminate(el.value) 
-        }
-  
-        </script>
 </body>
+<script src="./js/use.js"></script>
+
 </html>
