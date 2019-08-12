@@ -39,7 +39,7 @@ module.exports = async (sequelize, Sequelize) => {
         }
     )
     Accout.removeAttribute('recordId')
-    // var result = await sequelize.sync()
-    // return result.models
-    return sequelize
+    var result = await sequelize.sync()
+    return result.models
+    // return sequelize
 }

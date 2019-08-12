@@ -1,0 +1,16 @@
+version: "2"
+services:
+  ttsServer:
+    image: "registry.cn-beijing.aliyuncs.com/newcc-release/ttsserver:0.9.0-rc5-r7786"
+    restart: always
+    volumes:
+      - "/storage/nas:/storage/nas:rw"
+      - "/corefile:/corefile:rw"
+      - "/usr/local/EmicallDev/var/log:/usr/local/EmicallDev/var/log:rw"
+    ports:
+      - "8600:8600/tcp"
+    environment:
+      #below config constrain the tts docker running only on node2, change it to align with ttsServer config in php-fpm/worker docker
+      - "constraint:aliyun.node_index==2"
+    labels:
+      aliyun.scale: "1"

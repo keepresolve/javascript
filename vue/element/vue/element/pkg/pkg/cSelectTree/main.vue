@@ -1,7 +1,7 @@
 <template>
-  <div class="cSelectTree">
-   
-  </div>
+    <div class="cSelectTree">
+
+    </div>
 </template>
 <style >
 .cTransfer .el-checkbox {
@@ -12,8 +12,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.cTransfer .el-scrollbar__wrap{
-  overflow-x:hidden;
+.cTransfer .el-scrollbar__wrap {
+    overflow-x: hidden;
 }
 </style>
 <style scoped>
@@ -79,67 +79,67 @@
 }
 </style>
 <script>
-import initialSort from '../../src/util'
+import initialSort from "../../src/util";
 export default {
-    name: 'cTransfer',
-    componentName: 'cTransfer',
+    name: "cTransfer",
+    componentName: "cTransfer",
     props: {
         value: {
             type: Array, //选中
             default() {
-                return []
+                return [];
             }
         },
         // 数据加载loading
         loading: {
             type: Boolean,
             default() {
-                return false
+                return false;
             }
         },
         // 列表数据
         data: {
             type: Array, //所有
             default() {
-                return []
+                return [];
             }
         },
         //显示控制
         hiddenList: {
             type: Array,
             default() {
-                return []
+                return [];
             }
         },
-        format:{
-            type:Object,
-             default() {
+        format: {
+            type: Object,
+            default() {
                 return {
-                    left:'已选择{total}个'
-                }
+                    left: "已选择{total}个"
+                };
             }
         },
         props: {
             type: Object,
             default() {
                 return {
-                    label: 'label',
-                    key: 'key',
-                    disabled: 'disabled'
-                }
+                    label: "label",
+                    key: "key",
+                    disabled: "disabled"
+                };
             }
         },
         placeholder: {
             type: String,
-            default: '请输入内容'
+            default: "请输入内容"
         }
     },
     watch: {
         value(n, o) {
             // console.log('valueChange', n, o)
-            if (!n) this.checked = []
+            if (!n) this.checked = [];
             if (n.find(v => o.indexOf(v) == -1) || n.length != o.length) {
-                this.checked = n
+                this.checked = n;
             }
         },
         checked(n, o) {
@@ -147,86 +147,90 @@ export default {
             if (n.length > 0) {
                 this.checkAll = !Boolean(
                     this.filterData.find(v => n.indexOf(String(v.key)) == -1)
-                )
+                );
             }
-            this.isIndeterminate = this.checkAll ? false : n.length > 0
-            let currentValue = n.slice()
+            this.isIndeterminate = this.checkAll ? false : n.length > 0;
+            let currentValue = n.slice();
 
-            this.$emit('input', currentValue)
-            this.$emit('change', currentValue)
+            this.$emit("input", currentValue);
+            this.$emit("change", currentValue);
         }
     },
     computed: {
         hiddenSelect() {
-            return Boolean(this.hiddenList.find(v => v == 'selectAll'))
+            return Boolean(this.hiddenList.find(v => v == "selectAll"));
         },
-        hiddenSort(){
-            return Boolean(this.hiddenList.find(v => v == 'sortLetter'))
+        hiddenSort() {
+            return Boolean(this.hiddenList.find(v => v == "sortLetter"));
         },
-        rightHeaderString(){
-            if(!this.format.right|| typeof this.format.right != 'string') return  `已选择 <span style="font-size: 12px;color: #E6A441;">${this.checked.length}</span> 个`
-            return this.format.right.replace(/\${checked}/g, ` <span style="font-size: 12px;color: #E6A441;">${this.checked.length}</span>`).replace(/\${total}/g, `<span>${this.data.length}</span>`)
+        rightHeaderString() {
+            if (!this.format.right || typeof this.format.right != "string")
+                return `已选择 <span style="font-size: 12px;color: #E6A441;">${this.checked.length}</span> 个`;
+            return this.format.right
+                .replace(
+                    /\${checked}/g,
+                    ` <span style="font-size: 12px;color: #E6A441;">${this.checked.length}</span>`
+                )
+                .replace(/\${total}/g, `<span>${this.data.length}</span>`);
         },
         propKey() {
-            return this.props.key || 'key'
+            return this.props.key || "key";
         },
         propLabel() {
-            return this.props.label || 'label'
+            return this.props.label || "label";
         },
         propDisabled() {
-            return this.props.disabled || 'disabled'
+            return this.props.disabled || "disabled";
         },
         filterData() {
-            let query = this.query.toLowerCase()
+            let query = this.query.toLowerCase();
             let list = this.data.filter(
                 v =>
                     String(v[this.propLabel])
                         .toLowerCase()
                         .indexOf(query) > -1
-            )
+            );
             return list.map(v => {
                 return {
                     key: String(v[this.propKey]),
                     label: String(v[this.propLabel]),
                     disabled: v[this.propDisabled]
-                }
-            })
+                };
+            });
         },
         letterList() {
-            let tmp = this.filterData || []
-            if(this.hiddenSort) return tmp
-            return tmp.length > 0 ?  initialSort(tmp) : []
+            let tmp = this.filterData || [];
+            if (this.hiddenSort) return tmp;
+            return tmp.length > 0 ? initialSort(tmp) : [];
         },
         showcheckedList() {
-            let checkeList = this.checked
+            let checkeList = this.checked;
             let list = this.data.filter(
                 v => checkeList.indexOf(String(v[this.propKey])) != -1
-            )
-            return list
+            );
+            return list;
         }
     },
 
     data() {
         return {
             checked: [],
-            query: '',
+            query: "",
             isIndeterminate: false,
             checkAll: false
-        }
+        };
     },
     methods: {
         remove(index) {
-            this.checked.splice(index, 1)
+            this.checked.splice(index, 1);
         },
         handleCheckAllChange(selected) {
-            let tmp = this.filterData.map(v => v.key)
+            let tmp = this.filterData.map(v => v.key);
             // console.log({ tmp })
-            this.checked = selected ? tmp : []
-            this.isIndeterminate = false
+            this.checked = selected ? tmp : [];
+            this.isIndeterminate = false;
         }
     },
-    mounted() {
-
-    }
-}
+    mounted() {}
+};
 </script>
