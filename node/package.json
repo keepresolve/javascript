@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "events": "^3.0.0",
     "exceljs": "^1.14.0",
     "multiparty": "^4.2.1"
   }

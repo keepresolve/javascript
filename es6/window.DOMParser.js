@@ -1,3 +1,2 @@
-if(window){
-    wi
+if (window) {
 }
