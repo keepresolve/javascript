@@ -1,16 +1,82 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <h<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-    <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
-    <script id="emickf_ee549f8c0be21546" src="http://xcjhtiens.emickf.com/script.min.js?id=btn"></script>
-    <title>Document</title>
-</head>
-<body>
-    <button id="btn">点级</button>
-    <script>
-        document.querySelector("#btn").click()
-    </script>
-</body>
-</html>
+
+    <head>
+        <meta charset="UTF-8">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+        <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+        <!-- <script id="emickf_ee549f8c0be21546" src="http://xcjhtiens.emickf.com/script.min.js?id=btn"></script> -->
+        <title>Document</title>
+        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    </head>
+
+    <body>
+        <button id="btn">点级</button>
+        <table>
+
+        </table>
+        <script>
+            // document.querySelector("#btn").click()
+            let tableData = [
+                {
+                    mesg: {
+                        "c1": "c1",
+                        "c2": "c2",
+                        "c3": "c3"
+                    }
+                },
+
+                {
+                    mesg: {
+                        "c1": "c1",
+                        "c2": "c2",
+                        "c3": "c3"
+                    }
+                },
+                {
+                    mesg: {
+                        "c1": "c1",
+                        "c2": "c2",
+                        "c3": "c3"
+                    }
+                },
+                {
+                    mesg: {
+                        "c1": "c1",
+                        "c2": "c2",
+                        "c3": "c3"
+                    }
+                }
+            ]
+            function renderTable(el) {
+                let table = document.querySelector(el)
+                table.border = 1
+                //不知道你的列是如何计算的 不知道能不能用es6
+                let thead = document.createElement("thead")
+                let ths = Object.keys(tableData[0].mesg).map(v => {
+                    let th = document.createElement("th")
+                    th.textContent = v
+                    thead.appendChild(th)
+                    return th
+                })
+
+                let tbody = document.createElement("tbody")
+                tableData.forEach(item => {
+                    let tr = document.createElement("tr")
+                    for (const key in item.mesg) {
+                        const text = item.mesg[key];
+                        let td = document.createElement("td")
+                        td.textContent = text
+                        tr.appendChild(td)
+                    }
+                    tbody.appendChild(tr)
+                })
+                table.appendChild(thead)
+                table.appendChild(tbody)
+            }
+            renderTable("table")
+        </script>
+    </body>
+
+    </html>
