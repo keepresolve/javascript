@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="status">
+        <span>websocket状态<i></i></span>
+    </div>
+    <div id="message"></div>
+    <script>
+        let ws = new WebSocket("ws://localhost:3000")
+        let state={
+            _status:0,
+            _ws:ws,
+            $message:document.querySelector("#message"),
+            get status(){
+               return this._status
+            },
+            set status(val){
+                statusChange(val)
+                this._status=val
+            }
+        }
+        ws.addEventListener("message",function(ev){
+            console.log(ev)
+            let data=JSON.parse(ev.data)
+            let ul=document.createElement("ul")
+            for (const key in data) {
+                const o = data[key];
+                let li=document.createElement("li")
+                let pre=document.createElement("pre")
+                let title=document.createElement("span")
+                let expand=document.createElement("a")
+                expand.href="javascript:;"
+                expand.textContent="展开"
+                expand.isOpen=false
+                expand.style.padding="10px"
+                pre.style.display='none'
+                title.textContent=key
+                pre.textContent=formatJson(JSON.stringify(o))
+                li.appendChild(title)
+                li.appendChild(expand)
+                li.appendChild(pre)
+                ul.appendChild(li)
+                expand.onclick=function(){
+                     this.isOpen=!this.isOpen
+                     expand.textContent=this.isOpen?"收起":"展开"
+         
+                pre.style.display=this.isOpen?"block":"none"
+                }
+            }
+            state.$message.appendChild(ul)
+        })
+        ws.onopen=function(){
+            state.status="connected"
+            ws.send("connected")
+        }
+        ws.onerror=function(){
+            state.status="error"
+  
+        }
+
+        function statusChange(val){
+            document.querySelector("#status").textContent=val
+        }
+       
+
+ function formatJson(json) {
+  var formatted = '',     //转换后的json字符串
+      padIdx = 0,         //换行后是否增减PADDING的标识
+      PADDING = '    ';   //4个空格符
+  /**
+   * 将对象转化为string
+   */
+  if (typeof json !== 'string') {
+      json = JSON.stringify(json);
+  }
+  /** 
+   *利用正则类似将{'name':'ccy','age':18,'info':['address':'wuhan','interest':'playCards']}
+   *---> \r\n{\r\n'name':'ccy',\r\n'age':18,\r\n
+   *'info':\r\n[\r\n'address':'wuhan',\r\n'interest':'playCards'\r\n]\r\n}\r\n
+   */
+  json = json.replace(/([\{\}])/g, '\r\n$1\r\n')
+              .replace(/([\[\]])/g, '\r\n$1\r\n')
+              .replace(/(\,)/g, '$1\r\n')
+              .replace(/(\r\n\r\n)/g, '\r\n')
+              .replace(/\r\n\,/g, ',');
+  /** 
+   * 根据split生成数据进行遍历，一行行判断是否增减PADDING
+   */
+ (json.split('\r\n')).forEach(function (node, index) {
+      var indent = 0,
+          padding = '';
+      if (node.match(/\{$/) || node.match(/\[$/)) indent = 1;
+      else if (node.match(/\}/) || node.match(/\]/))  padIdx = padIdx !== 0 ? --padIdx : padIdx;
+      else    indent = 0;
+      for (var i = 0; i < padIdx; i++)    padding += PADDING;
+      formatted += padding + node + '\r\n';
+      padIdx += indent;
+      console.log('index:'+index+',indent:'+indent+',padIdx:'+padIdx+',node-->'+node);
+  });
+  return formatted;
+};
+    </script>
+</body>
+</html>

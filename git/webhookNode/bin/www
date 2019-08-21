@@ -20,7 +20,9 @@ var port = normalizePort(process.env.PORT || '8080');
  */
 
 var server = http.createServer(app.callback());
-
+// const io = require('socket.io')(server);
+// io.on('connection', () => { /* … */ });
+// server.listen(3000);
 /**
  * Listen on provided port, on all network interfaces.
  */

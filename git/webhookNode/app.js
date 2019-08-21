@@ -1,16 +1,21 @@
 const Koa = require('koa')
+const websockify = require('koa-websocket')
+const wsApp = websockify(new Koa())
+
 const app = new Koa()
-// const app = websockify(new Koa())
+
 const views = require('koa-views')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 
-// const websockify = require('koa-websocket')
+global.ctxs=[]
 const index = require('./routes/index')
 const users = require('./routes/users')
-
+const websoket = require('./routes/websoket')
+wsApp.ws.use(websoket)
+wsApp.listen(3000)
 // error handler
 onerror(app)
 
@@ -18,6 +23,7 @@ onerror(app)
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
+
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
