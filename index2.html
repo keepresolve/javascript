@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link
+      href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css "
+      rel="stylesheet"
+    />
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+  </head>
+  <style>
+    #app,
+    body,
+    html {
+      height: 100%;
+    }
+  </style>
+
+  <body>
+    <div id="app">
+      <el-select
+        v-model="value5"
+        multiple
+        placeholder="请选择"
+        @change="selectChange"
+      >
+        <el-option
+          v-show="false"
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+        <el-option
+          style="height:300px;background: #fff"
+          :key="123"
+          label="test"
+          :value="1"
+          @click.stop
+        >
+          <el-tree
+            ref="tree"
+            :data="data"
+            :show-checkbox="true"
+            node-key="id"
+            :props="defaultProps"
+            @check="change"
+          >
+          </el-tree>
+        </el-option>
+      </el-select>
+    </div>
+    <script>
+      Mock.mock("/api/tableMsg", "get", {
+        pdf: [
+          {
+            pName: "重庆网控科技发展有限公司",
+            "allPdf|1-4": ["pdf文件@natural(1,99)"],
+            factor: "内存大小大于8G",
+            qualified: [
+              { statu: "合格", unStatu: "合格" },
+              { statu: "不合格", unStatu: "不合格" }
+            ]
+          },
+          {
+            pName: "普瑞太阳能有限公司",
+            factor: "是否为INTEL生产",
+            "allPdf|1-4": ["pdf文件@natural(1,99)"],
+            qualified: [
+              { statu: "合格", unStatu: "合格" },
+              { statu: "不合格", unStatu: "不合格" }
+            ]
+          },
+          {
+            pName: "夏丰热工研究院有限公司",
+            factor: "分辨率是否为15英寸以上",
+            "allPdf|1-4": ["pdf文件@natural(1,99)"],
+            qualified: [
+              { statu: "合格", unStatu: "合格" },
+              { statu: "不合格", unStatu: "不合格" }
+            ]
+          }
+        ]
+      });
+      // console.log({data:data.toJSONSchema()})
+      new Vue({
+        el: "#app",
+        data: {
+          value5: [],
+          data: [
+            {
+              id: 1,
+              label: "一级 1",
+              children: [
+                {
+                  id: 4,
+                  label: "二级 1-1",
+                  children: [
+                    {
+                      id: 9,
+                      label: "三级 1-1-1"
+                    },
+                    {
+                      id: 10,
+                      label: "三级 1-1-2"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 2,
+              label: "一级 2",
+              children: [
+                {
+                  id: 5,
+                  label: "二级 2-1"
+                },
+                {
+                  id: 6,
+                  label: "二级 2-2"
+                }
+              ]
+            },
+            {
+              id: 3,
+              label: "一级 3",
+              children: [
+                {
+                  id: 7,
+                  label: "二级 3-1"
+                },
+                {
+                  id: 8,
+                  label: "二级 3-2"
+                }
+              ]
+            }
+          ],
+          defaultProps: {
+            children: "children",
+            label: "label"
+          },
+          currentNode: ""
+        },
+        computed: {
+          options() {
+            let map = [];
+            (function(data) {
+              data.map(v => {
+                v.value = v.id;
+                map.push(v);
+                if (v.children && v.children.length > 0)
+                  arguments.callee(v.children);
+              });
+            })(this.data);
+
+            return map;
+          }
+        },
+        methods: {
+          init() {
+            this.$refs.tree.setCheckedKeys([9], true);
+            this.value5 = [9];
+          },
+          selectChange(item) {
+            console.log(item);
+            this.$refs.tree.setCheckedKeys(item, true);
+          },
+          change(item) {
+            let checkKeys = this.$refs.tree.getCheckedKeys(true);
+            this.value5 = checkKeys;
+            console.log(this.$refs.tree.getCheckedKeys(true));
+            console.log(this.$refs.tree.getCheckedNodes(true));
+            // this.value5.push(item.id);
+          },
+          getCurrentNode(checkList) {
+            console.log({ checkList });
+          },
+          getCheckedNode(checkList) {}
+        },
+        mounted() {
+          axios.get("/api/tableMsg").then(data => {
+            this.init();
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
