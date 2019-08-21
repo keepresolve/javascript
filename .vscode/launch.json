@@ -40,6 +40,12 @@
       "request": "launch",
       "name": "excel",
       "program": "${workspaceFolder}\\node\\execel.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "webhook",
+      "program": "${workspaceFolder}\\git\\webhookNode\\bin\\www"
     }
   ]
 }
