@@ -1,7 +1,4 @@
 const Koa = require('koa')
-const websockify = require('koa-websocket')
-const wsApp = websockify(new Koa())
-
 const app = new Koa()
 
 const views = require('koa-views')
@@ -10,10 +7,15 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 
-global.ctxs=[]
+
 const index = require('./routes/index')
 const users = require('./routes/users')
+
+// ws
+global.ctxs=[]
+const websockify = require('koa-websocket')
 const websoket = require('./routes/websoket')
+const wsApp = websockify(new Koa())
 wsApp.ws.use(websoket)
 wsApp.listen(3000)
 // error handler

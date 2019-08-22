@@ -10,9 +10,11 @@ router.all('/webhook', async (ctx, next) => {
        status:200
      }
 })
-
-router.get('/string', async (ctx, next) => {
-  ctx.body = 'koa2 string'
+// http://h6927j.natappfree.cc/
+router.all('/weixin', async (ctx, next) => {
+  ctx.body={
+    status:200
+  }
 })
 
 router.get('/json', async (ctx, next) => {
