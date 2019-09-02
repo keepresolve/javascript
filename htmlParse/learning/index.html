@@ -7,10 +7,38 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-
+<script src="./htmlTest.js"></script>
 <body>
     <div>我是div标签
     </div>
 </body>
-
+<script>
+let testHTML =`<DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div>sadsad</div>
+</body>
+</html>`
+let reulst= new  ParseHTMLStr({
+  receiveInput: token => {
+    if (typeof token === "string") {
+      console.log(
+        `String(${token.replace(/\n/, "\\n").replace(/ /, "<whitespace>")})`
+      );
+    } else {
+      console.log(token);
+    }
+  }
+})
+for (let c of testHTML) {
+    reulst.receiveInput(c);
+}
+console.log(reulst);
+</script>
 </html>

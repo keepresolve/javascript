@@ -46,6 +46,12 @@
       "request": "launch",
       "name": "webhook",
       "program": "${workspaceFolder}\\git\\webhookNode\\bin\\www"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "lexer",
+      "program": "${workspaceFolder}\\htmlParse\\toy-html-parser\\lexer.test.js"
     }
   ]
 }

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css " rel="stylesheet" />
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+</head>
+
+<body>
+    <div id="app">
+        <button @click='changeTab'>change component </button>
+        <component :is='componentTab'></component>
+
+    </div>
+    <template id="temp-com1">
+        <div>
+            <h3>使用template定义的组件1</h3>
+        </div>
+    </template>
+    <template id="temp-com2">
+        <div>
+            <h3>使用template定义的组件2</h3>
+        </div>
+    </template>
+    <template id="temp-com3">
+        <div>
+            <h3>使用template定义的组件3</h3>
+        </div>
+    </template>
+    <template id="temp-com4">
+        <div>
+            <h3>使用template定义的组件4</h3>
+        </div>
+    </template>
+</body>
+
+</html>
+<script>
+    Vue.component('my-love1', {
+        template: '#temp-com1'
+    });
+    Vue.component('my-love2', {
+        template: '#temp-com2'
+    });
+    Vue.component('my-love3', {
+        template: '#temp-com3'
+    });
+    Vue.component('my-love3', {
+        template: '#temp-com4'
+    });
+    Vue.component('my-love4', (res) => {
+        fetch("https://www.baidu.com/sugrec?pre=1&p=3&ie=utf-8&json=1&prod=pc&from=pc_web&sugsid=1458,21085,18560,29522,29518,29720,29567,29221,26350&wd=vue%20%20compent&req=2&bs=vue%20component&pbs=vue%20component&csor=12&pwd=vue%20%20compent&cb=jQuery110201621387070992002_1567391724396&_=1567391724425", { "credentials": "include", "headers": { "accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01", "accept-language": "zh-CN,zh;q=0.9", "x-requested-with": "XMLHttpRequest" }, "referrer": "https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&rsv_idx=1&tn=baidu&wd=vue%20%20compent&rsv_pq=85c5a4810001ae9c&rsv_t=c3db4t%2BSvhVOc09740ScvWwR6FhO%2FP1WnAe1%2F0Iktv7jtUytdcgPWBYLva4&rqlang=cn&rsv_enter=1&rsv_dl=tb&rsv_sug3=24&rsv_sug1=9&rsv_sug7=100&rsv_sug2=0&inputT=6466&rsv_sug4=6466", "referrerPolicy": "unsafe-url", "body": null, "method": "GET", "mode": "no-cors" }).then(Response => {
+           console.log({Response})
+            return Response.json() 
+        }).then(Response => {
+            res({
+                template: '#temp-com4'
+            })
+        })
+    });
+    new Vue({
+        name: "root",
+        el: "#app",
+        data: { componentTab: "my-love1", index: 1 },
+        methods: {
+            changeTab() {
+                this.index++
+                if (this.index == 5) {
+                    this.index = 1
+                }
+                this.componentTab = `my-love${this.index}`
+            }
+        },
+    })
+</script>
