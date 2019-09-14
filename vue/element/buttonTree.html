@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link
+      href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css "
+      rel="stylesheet"
+    />
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+  </head>
+  <style>
+    #app,
+    body,
+    html {
+      height: 100%;
+    }
+  </style>
+
+  <body>
+    <div id="app">
+      adadasd
+      <!-- <div style="margin-top:800px;"></div> -->
+      <!-- <el-popover
+        style="margin-top:600px"
+        placement="top-start"
+        width="200"
+        trigger="click"
+      >
+        <el-button slot="reference">hover 激活</el-button>
+        <el-cascader
+          :options="options"
+          :props="{ multiple: true }"
+          filterable
+        ></el-cascader>
+      </el-popover> -->
+    </div>
+    <script>
+      Mock.mock("/api/tableMsg", "get", {});
+      // console.log({data:data.toJSONSchema()})
+      new Vue({
+        el: "#app",
+
+        data: {
+          activeIndex: "1"
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="restart">restart</button>
+    <div style="width: 300px;" id="marquee">
+        <!-- <marquee behavior="scroll" direction="" >12312312312312312312 123123123</marquee> -->
+    </div>
+    <script>
+
+        function Marquee(optiton) {
+            this.$optiton = Object.assign({
+                el: "body",
+                directives: "left",
+                behavior: "scroll",
+                loop: "-1",
+                align: "bottom",
+                textContent: '滚动内容',
+                $marquee: null
+            }, optiton)
+            this.$optiton.el = this.getEL(this.$optiton.el)
+            this.init()
+        }
+        Marquee.prototype = {
+            init() {
+                this.createDOM()
+            },
+            createDOM() {
+                if (this.$optiton.$marquee) {
+                    this.$optiton.el.removeChild(this.$optiton.$marquee)
+                }
+                let marquee = document.createElement("marquee")
+                this.$optiton.$marquee = marquee
+                this.$optiton.el.appendChild(marquee)
+                Object.assign(marquee, this.$optiton)
+                return marquee
+            },
+            restart() {
+                this.init()
+            },
+            stop() {
+                this.$optiton.$marquee.stop()
+            },
+            start() {
+                this.$optiton.$marquee.start()
+            },
+            getEL(el) {
+                return typeof el == 'object' || document.querySelector(el)
+            },
+            get optiton() {
+                return this.$optiton
+            },
+            // set optiton() {
+            //     this._init()
+            // }
+
+        }
+
+        let marquee = new Marquee({ el: "#marquee" })
+        document.querySelector("#restart").onclick = function () {
+            marquee.restart()
+        }
+    </script>
+</body>
+
+</html>
