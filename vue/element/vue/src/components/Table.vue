@@ -18,7 +18,7 @@
             align="center"
           >
             <template slot="header">
-              <div v-if="value.isAdd">
+              <div v-if="value.colType=='1'">
                 <span>{{ value.hotelIndex}}</span>
                 <span @click="checkHotel(value)">edit</span>
               </div>
@@ -34,9 +34,9 @@
                 <div v-if="scope.row.keyName=='longitudeLatitude'">
                   <span>经度 {{value[scope.row.keyName]['x']}}</span>
                   <span>纬度 {{value[scope.row.keyName]['y']}}</span>
-                  <p>
-                    <a>点击查看</a>
-                  </p>
+                  <div>
+                    <a @click="checkMap">查看地图</a>
+                  </div>
                 </div>
                 <div v-else>--</div>
               </div>
@@ -70,12 +70,19 @@ export default {
     eiditCol() {
       let index = 0;
       let item = this.tableList.find((v, i) => {
-        if (v.isAdd) {
-          index = i;
-        }
-        return v.isAdd;
+        if (v.colType == "1") index = i;
+        return v.colType == "1";
       });
       return { item, index: index + 1 };
+    },
+    colList() {
+      let list = [];
+      this.tableList.forEach((item, i) => {
+        if (item.isCol) {
+          list.push({ index: i + 1, item });
+        }
+      });
+      return list;
     }
   },
   data() {
@@ -119,8 +126,8 @@ export default {
 
       tableList: [
         {
-          isCol: true,
-          isAdd: true,
+          colType: "1", //0 推荐匹配结果 //1 是自定义添加  //1 所有对比
+          isCol: true, //是都合并行
           hotelIndex: "自定义酒店",
           hotelName: "无任何数据信息",
           city: "北京",
@@ -140,36 +147,34 @@ export default {
     this.loadingPage = true;
     setTimeout(() => {
       this.loadingPage = false;
-      this.tableList
-        .unshift
-        // {
-        //   isAdd: false,
-        //   hotelIndex: "酒店名称A",
-        //   hotelName: "酒店名称名称",
-        //   city: "北京",
-        //   longitudeLatitude: {
-        //     x: "2313",
-        //     y: 12132
-        //   },
-        //   brand: "李宁1",
-        //   phone: "123213"
-        // }
-        // {
-        //   isAdd: false,
-        //   hotelIndex: "酒店名称A",
-        //   hotelName: "酒店名称名称",
-        //   city: "北京",
-        //   longitudeLatitude: {
-        //     x: "2313",
-        //     y: 12132
-        //   },
-        //   brand: "李宁2",
-        //   phone: "123213"
-        // }
-        ();
+      this.tableList.unshift(
+        {
+          colType: "0",
+          hotelIndex: "酒店名称A",
+          hotelName: "酒店名称名称",
+          city: "北京",
+          longitudeLatitude: {
+            x: "2313",
+            y: 12132
+          },
+          brand: "李宁1",
+          phone: "123213"
+        },
+        {
+          colType: "0",
+          hotelIndex: "酒店名称A",
+          hotelName: "酒店名称名称",
+          city: "北京",
+          longitudeLatitude: {
+            x: "2313",
+            y: 12132
+          },
+          brand: "李宁2",
+          phone: "123213"
+        }
+      );
       this.tableList.push({
-        // isCol: false,
-        // isAdd: false,
+        colType: "2",
         hotelIndex: "捷旅酒店",
         hotelName: "无任何数据信息",
         city: "北京1",
@@ -184,32 +189,32 @@ export default {
   },
   methods: {
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-      let { item, index } = this.eiditCol;
-
-      if (columnIndex == index) {
-        if (item.isCol) {
-          if (rowIndex == 0) {
-            return [7, 1];
-          } else {
-            return [0, 0];
-          }
+      let isHas = this.colList.find(v => v.index == columnIndex);
+      if (isHas) {
+        if (rowIndex == 0) {
+          return [7, 1];
+        } else {
+          return [0, 0];
         }
       }
     },
     cellClassName({ row, column, rowIndex, columnIndex }) {
-      if (rowIndex > 0) {
-        let { item, index } = this.eiditCol;
-        if (item.isCol && columnIndex == index) {
-          return "customCell";
-        }
-      }
+      // if (rowIndex > 0) {
+      //   let { item, index } = this.eiditCol;
+      //   if (item.isCol && columnIndex == index) {
+      //     return "customCell";
+      //   }
+      // }
     },
     filterKey(value, key) {
       return value[key] || "--";
     },
+    //选择自定义
     checkHotel(item) {
       item.isCol = !item.isCol;
-    }
+    },
+    //查看地图
+    checkMap() {}
   }
 };
 </script>
