@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+
+    <!-- <script src="./babel/babel.min.js"></script> -->
+    <script src="./babel/profile.js"></script>
+    <script src="./babel/axios.js"></script>
+  </head>
+  <body>
+    <!-- <a
+      href="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2174909441,2495215020&fm=26&gp=0.jpg"
+      download
+      >asdasd</a
+    > -->
+    <a href="https://geekjc-img.geekjc.com/logo.png" download="logo.png"
+      >下载图片</a
+    >
+    <button id="btn">下载</button>
+    <div id="down">
+      <a id="downLoad">Click Me!</a>
+    </div>
+    <script>
+      window.onload = function(url) {
+        function download(url) {
+          axios({
+            method: "get",
+            url: url,
+            responseType: "blob"
+          }).then(function(res) {
+            console.log({ res: res });
+            // alert(1);
+            let blob = res.data;
+            if (isIE()) {
+              if ("msSaveOrOpenBlob" in navigator) {
+                window.navigator.msSaveOrOpenBlob(blob);
+              } else {
+                let link = document.createElement("a");
+                link.href = url;
+                link.target = "_blank";
+                link.click();
+              }
+              return;
+            }
+            let objectUrl = URL.createObjectURL(blob);
+            let link = document.createElement("a");
+            let fname = "pdf"; //下载文件的名字
+            link.href = objectUrl;
+            link.setAttribute("download", fname);
+            document.body.appendChild(link);
+            link.click();
+          });
+        }
+        document.querySelector("#btn").onclick = function() {
+          download("http://localhost:8000");
+        };
+
+        function isIE() {
+          //判断浏览器类型
+          if (!!window.ActiveXObject || "ActiveXObject" in window) return true;
+          else return false;
+        }
+
+        //判断浏览器类型
+        function myBrowser() {
+          var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+          var isOpera = userAgent.indexOf("Opera") > -1;
+          if (isOpera) {
+            return "Opera";
+          } //判断是否Opera浏览器
+          if (userAgent.indexOf("Firefox") > -1) {
+            return "FF";
+          } //判断是否Firefox浏览器
+          if (userAgent.indexOf("Chrome") > -1) {
+            return "Chrome";
+          }
+          if (userAgent.indexOf("Safari") > -1) {
+            return "Safari";
+          } //判断是否Safari浏览器
+          if (
+            userAgent.indexOf("compatible") > -1 &&
+            userAgent.indexOf("MSIE") > -1 &&
+            !isOpera
+          ) {
+            return "IE";
+          } //判断是否IE浏览器
+          if (userAgent.indexOf("Trident") > -1) {
+            return "Edge";
+          } //判断是否Edge浏览器
+        }
+
+        function SaveAs5(imgURL) {
+          var oPop = window.open(
+            imgURL,
+            "",
+            "width=1, height=1, top=5000, left=5000"
+          );
+          for (; oPop.document.readyState != "complete"; ) {
+            if (oPop.document.readyState == "complete") break;
+          }
+          oPop.document.execCommand("SaveAs");
+          oPop.close();
+        }
+
+        function oDownLoad(url) {
+          myBrowser();
+          if (myBrowser() === "IE" || myBrowser() === "Edge") {
+            //IE
+            odownLoad.href = "#";
+            var oImg = document.createElement("img");
+            oImg.src = url;
+            oImg.id = "downImg";
+            var odown = document.getElementById("down");
+            odown.appendChild(oImg);
+            SaveAs5(document.getElementById("downImg").src);
+          } else {
+            //!IE
+            odownLoad.href = url;
+            odownLoad.download = "";
+          }
+        }
+
+        var odownLoad = document.getElementById("downLoad");
+        odownLoad.onclick = function() {
+          oDownLoad(
+            "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2174909441,2495215020&fm=26&gp=0.jpg"
+          );
+        };
+      };
+    </script>
+  </body>
+</html>
