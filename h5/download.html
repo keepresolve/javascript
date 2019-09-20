@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
 
-    <!-- <script src="./babel/babel.min.js"></script> -->
+    <script src="./babel/babel.min.js"></script>
     <script src="./babel/profile.js"></script>
     <script src="./babel/axios.js"></script>
   </head>
@@ -55,7 +55,9 @@
           });
         }
         document.querySelector("#btn").onclick = function() {
-          download("http://localhost:8000");
+          download(
+            "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2174909441,2495215020&fm=26&gp=0.jpg"
+          );
         };
 
         function isIE() {
