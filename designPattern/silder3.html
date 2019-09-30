@@ -77,6 +77,8 @@
         height: 20,
         total: options.total || 100
       };
+      this.move = null;
+      this.end = null;
       this.warpperDom = null;
       this.$warpperDom = null;
       this.init();
@@ -298,6 +300,10 @@
           //     "mousedown",
           //     generEvent("mousedown", element, index)
           //   );
+          if (element.fn)
+            slide.$el.removeEventListener("touchstart", element.fn);
+          element.fn = generEvent("mousedown", element, index);
+          slide.$el.addEventListener("touchstart", element.fn);
           slide.$el.onmousedown = generEvent("mousedown", element, index);
 
           //拖动
@@ -311,8 +317,26 @@
           //     generEvent("mouseup", element, index)
           //   );
         });
-        window.onmousemove = generEvent("mousemove");
-        window.onmouseup = generEvent("mouseup");
+        // window.onmousemove = generEvent("mousemove");
+        // window.onmouseup = generEvent("mouseup");
+        if (this.end) {
+          document.removeEventListener("touchmove", this.move);
+          document.removeEventListener("touchend", this.end);
+        }
+
+        this.move = generEvent("mousemove");
+        this.end = generEvent("mouseup");
+        document.addEventListener("touchmove", this.move);
+        document.addEventListener("touchend", this.end);
+        document.onmousemove = this.move;
+        document.onmouseup = this.end;
+        document.addEventListener(
+          "touchmove",
+          function(e) {
+            e.preventDefault();
+          },
+          { passive: false }
+        ); //禁止页面滑动
       },
       onScroll() {
         var start = Date.now();
@@ -377,7 +401,7 @@
         },
         {
           value: {
-            value: "2",
+            value: "3",
             props: {}
           },
           silder: {
