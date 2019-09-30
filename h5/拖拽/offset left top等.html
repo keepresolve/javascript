@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+    }
+    #parent {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 20px;
+      border: 1px solid;
+    }
+    #children {
+      /* margin: 20px; */
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 20px;
+      border: 1px solid red;
+    }
+  </style>
+  <body>
+    <div id="parent">
+      <div id="children"></div>
+    </div>
+
+    <script>
+      function $(el) {
+        return document.querySelector(el);
+      }
+      var parent = $("#parent"),
+        children = $("#children");
+      window.parent = parent;
+      window.children = children;
+      children.getBoundingClientRect();
+      function getPosition(node) {
+        var left = node.offsetLeft; //获取元素相对于其父元素的left值var left
+        var top = node.offsetTop;
+        current = node.offsetParent; // 取得元素的offsetParent // 一直循环直到根元素
+        while (current != null) {
+          left += current.offsetLeft;
+          top += current.offsetTop;
+          current = current.offsetParent;
+        }
+        return {
+          left: left,
+          top: top
+        };
+      }
+    </script>
+  </body>
+</html>

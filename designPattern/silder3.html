@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="./vnode.js"></script>
+  </head>
+  <style>
+    #silder {
+      margin-top: 100px;
+      position: relative;
+      height: 5px;
+      background: red;
+      width: 100%;
+      /* margin: 50px auto; */
+    }
+    #silder div[v-slider-item] {
+      position: absolute;
+      top: -10px;
+      left: 0;
+      height: 20px;
+      width: 20px;
+    }
+    #silder span[v-silder] {
+      position: absolute;
+      top: 0px;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      background: green;
+      cursor: pointer;
+    }
+
+    #silder span[v-value] {
+      position: absolute;
+      font-size: 20px;
+      top: -45px;
+      left: -10px;
+      width: 35px;
+      height: 35px;
+      line-height: 35px;
+      text-align: center;
+      background: blue;
+    }
+    #silder span[v-title] {
+      position: absolute;
+      left: 0px;
+      bottom: -50px;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+    }
+    #silder span[v-value]:after {
+      content: "";
+      width: 0px;
+      height: 0px;
+      border-top: 6px solid blue;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      display: block;
+      margin-left: 11px;
+    }
+  </style>
+  <body>
+    <div id="silder"></div>
+  </body>
+  <script>
+    function Silders(el, options) {
+      this.silderDom =
+        el instanceof HTMLElement ? el : document.querySelector(el);
+      this.data = options.data;
+      this.options = {
+        width: 100,
+        height: 20,
+        total: options.total || 100
+      };
+      this.warpperDom = null;
+      this.$warpperDom = null;
+      this.init();
+    }
+    Silders.prototype = {
+      init: function() {
+        (window || document).addEventListener("resize", this.onScroll());
+        this.render();
+      },
+      setData(data) {
+        this.data = data;
+        this.render();
+      },
+      getData() {
+        return this.data;
+      },
+      render() {
+        let that = this,
+          total = this.options.total;
+        if (!this.data) this.data = [];
+        if (!Array.isArray(this.data)) {
+          throw "data must be a Array";
+          this.data = [];
+        }
+        // 鼠标事件
+
+        function generProps(key, prop) {
+          prop = prop || {};
+          prop["v-" + key] = prop.key ? prop.key : key;
+          return prop;
+        }
+        let sliders = this.data.map((v, i) => {
+          let { title, value, silder, ui } = v;
+          let silderWidth = silder.width || 10;
+          let silderHeight = silder.labelHeight || 10;
+          //ui组件
+          let labels = [];
+          //显示数值
+          let valueNode = vNode(
+            "span",
+            generProps("value", value.props),
+            [value.value],
+            null,
+            value
+          );
+          valueNode.index = i;
+          valueNode.__node_ = value;
+          //滑动模块
+          let silderNode = vNode(
+            "span",
+            generProps("silder", silder.props),
+            [silder.value],
+            null,
+            silder
+          );
+          silderNode.index = i;
+          silderNode.__node_ = silder;
+          labels.push(valueNode, silderNode);
+          //是否有其他ui样式
+          if (ui) {
+            for (let key in ui) {
+              var labelItem = ui[key];
+              var props = generProps(key, labelItem.prop);
+              var node = vNode(
+                "span",
+                props,
+                [labelItem.value],
+                null,
+                labelItem
+              );
+              node.index = i;
+              node.__node__ = labelItem;
+              labels.push(node);
+            }
+          }
+          let silderContainerProp = generProps("slider-item", v.prop);
+
+          //left距离
+          silderContainerProp.style = silderContainerProp.style
+            ? `${silderContainerProp.style}left:${(v.value.value / total) *
+                (this.silderDom.offsetWidth - silderWidth)}px;`
+            : `left:${(v.value.value / total) *
+                (this.silderDom.offsetWidth - silderWidth)}px;`;
+          let silderContainer = vNode(
+            "div",
+            silderContainerProp,
+            labels,
+            null,
+            this.data
+          );
+          silderContainer.index = i;
+          silderContainer.__node__ = v;
+          return silderContainer;
+        });
+        this.warpperDom && this.silderDom.removeChild(this.warpperDom);
+        this.$warpperDom = vNode("div", {}, sliders);
+        this.$warpperDom.__node_ = this.data;
+        this.warpperDom = this.$warpperDom.render();
+        this.addEvent();
+        Object.assign(this.warpperDom.style, {
+          width: "100%",
+          heigth: "100%",
+          border: "1px solid",
+          position: "relative"
+        });
+        this.silderDom.appendChild(this.warpperDom);
+      },
+      addEvent() {
+        let that = this,
+          total = this.options.total;
+        var generEvent = function(type, item) {
+          switch (type) {
+            case "mousedown":
+              return function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                (that.$warpperDom.children || []).forEach(el => {
+                  el.ifBool = false;
+                  el.$el.style.zIndex = 1;
+                });
+                item.ifBool = true; //判断鼠标是否按下
+                item.offsetX = e.offsetX;
+                item.$el.style.zIndex = 10;
+              };
+              break;
+            case "mousemove":
+              return function(e) {
+                var currentSilder = (that.$warpperDom.children || []).find(
+                  v => v.ifBool
+                );
+                if (!currentSilder) return;
+                let preEl = that.data.find(
+                  (v, i) => i == currentSilder.index - 1
+                );
+                let nextEl = that.data.find(
+                  (v, i) => i == currentSilder.index + 1
+                );
+                console.log({ currentSilder, warpperDom: that.$warpperDom });
+                // console.log({ that, item, index, arg: arguments });
+                if (!e.touches) {
+                  //兼容移动端
+                  var x = e.clientX;
+                } else {
+                  //兼容PC端
+                  var x = e.touches[0].pageX;
+                }
+                let { width } = that.getStyle(that.warpperDom),
+                  silderWidth = currentSilder.__node__.silder.width || 20;
+
+                var warpperDom_left = that.getPosition(that.warpperDom).left, //长线条的横坐标
+                  silderDom_left =
+                    x - warpperDom_left - (currentSilder.offsetX || 0);
+                if (silderDom_left < 0) {
+                  silderDom_left = 0;
+                }
+                if (
+                  silderDom_left >
+                  that.warpperDom.offsetWidth - silderWidth
+                ) {
+                  silderDom_left = that.warpperDom.offsetWidth - silderWidth;
+                }
+                let { value, silder } = currentSilder.__node__;
+                value.value = Math.floor(
+                  (silderDom_left /
+                    (that.warpperDom.offsetWidth - silderWidth)) *
+                    total
+                );
+
+                let start = preEl ? preEl.value.value : 0;
+                let end = nextEl ? nextEl.value.value : total;
+
+                if (value.value <= start) {
+                  value.value = preEl
+                    ? start >= total
+                      ? tatal
+                      : start - 0 + 1
+                    : 0;
+                  //   currentSilder.$el.style.left =
+                  //     (value.value / total) *
+                  //       (that.warpperDom.offsetWidth - silderWidth) +
+                  //     "px";
+                } else if (value.value >= end) {
+                  value.value = nextEl ? (end == 0 ? 0 : end - 1) : end;
+                } else {
+                  currentSilder.$el.style.left = silderDom_left + "px";
+                }
+                currentSilder.$el.style.left =
+                  (value.value / total) *
+                    (that.warpperDom.offsetWidth - silderWidth) +
+                  "px";
+                currentSilder.children.forEach(v => {
+                  if (v.props["v-value"]) {
+                    v.$el.innerText = value.value;
+                  }
+                  //   if (v.props["v-value"]) {
+                  //     v.$el.innerText = value.value;
+                  //   }
+                });
+              };
+              break;
+            case "mouseup":
+              return function(e) {
+                (that.$warpperDom.children || []).forEach(
+                  el => (el.ifBool = false)
+                );
+              };
+              break;
+          }
+        };
+        let sliders = this.$warpperDom.children || [];
+        console.log({ sliders, data: this.data });
+        sliders.forEach((element, index) => {
+          let slide = element.children.find(v => v.props["v-silder"]);
+          console.log({ slide });
+          //鼠标按下方块
+          // minDiv.addEventListener("touchstart", start);
+          //   slide.$el.addEventListener(
+          //     "mousedown",
+          //     generEvent("mousedown", element, index)
+          //   );
+          slide.$el.onmousedown = generEvent("mousedown", element, index);
+
+          //拖动
+          // window.addEventListener("touchmove", move);
+          //   window.addEventListener("mousemove", generEvent("mousemove"));
+
+          //鼠标松开
+          // window.addEventListener("touchend", end);
+          //   window.addEventListener(
+          //     "mouseup",
+          //     generEvent("mouseup", element, index)
+          //   );
+        });
+        window.onmousemove = generEvent("mousemove");
+        window.onmouseup = generEvent("mouseup");
+      },
+      onScroll() {
+        var start = Date.now();
+        return () => {
+          if (Date.now() - start > 300) {
+            this.render();
+            this.start = Date.now;
+          }
+          return;
+        };
+      },
+      getStyle(el) {
+        return el.currentStyle ? el.currentStyle : getComputedStyle(el);
+      },
+      getPosition(node) {
+        let { left, top } = node.getBoundingClientRect();
+        return {
+          left: left,
+          top: top
+        };
+        // var left = node.offsetLeft; //获取元素相对于其父元素的left值var left
+        // var top = node.offsetTop;
+        // current = node.offsetParent; // 取得元素的offsetParent // 一直循环直到根元素
+        // while (current != null) {
+        //   left += current.offsetLeft;
+        //   top += current.offsetTop;
+        //   current = current.offsetParent;
+        // }
+        // return {
+        //   left: left,
+        //   top: top
+        // };
+      },
+      getPercentage(value) {
+        return value / this.total;
+      }
+    };
+    window.sliderBar = new Silders("#silder", {
+      total: 100,
+
+      data: [
+        {
+          value: {
+            value: "1",
+            props: {}
+          },
+          silder: {
+            value: "0",
+            props: {
+              style: "border-radius:50%;text-align:center"
+            },
+            width: 5,
+            height: 5
+          },
+          ui: {
+            title: {
+              value: "title1",
+              props: {}
+            }
+          },
+          props: {}
+        },
+        {
+          value: {
+            value: "2",
+            props: {}
+          },
+          silder: {
+            value: "1",
+            props: {
+              style: "border-radius:50%;text-align:center"
+            },
+            width: 5,
+            height: 5
+          },
+          ui: {
+            title: {
+              value: "title1",
+              props: {}
+            }
+          },
+          props: {}
+        },
+        {
+          value: {
+            value: "6",
+            props: {}
+          },
+          silder: {
+            value: "2",
+            props: {
+              style: "border-radius:50%;text-align:center"
+            },
+            width: 5,
+            height: 5
+          },
+          ui: {
+            title: {
+              value: "title1",
+              props: {}
+            }
+          },
+          props: {}
+        },
+        {
+          value: {
+            value: "10",
+            props: {}
+          },
+          silder: {
+            value: "3",
+            props: {
+              style: "border-radius:50%;text-align:center"
+            },
+            width: 5,
+            height: 5
+          },
+          ui: {
+            title: {
+              value: "title1",
+              props: {}
+            }
+          },
+          props: {}
+        }
+      ]
+    });
+    sliderBar.getData();
+  </script>
+</html>

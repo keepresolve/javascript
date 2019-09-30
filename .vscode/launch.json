@@ -46,6 +46,13 @@
       "request": "launch",
       "name": "webhook",
       "program": "${workspaceFolder}\\git\\webhookNode\\bin\\www"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "slider",
+      "url": "http://localhost:8080/silder3.html",
+      "webRoot": "${workspaceFolder}/designPattern/designPattern"
     }
   ]
 }

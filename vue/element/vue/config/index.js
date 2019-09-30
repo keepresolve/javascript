@@ -10,7 +10,34 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {  
+       '/bom': {
+      target: 'https://testerp.yktour.com.cn/',
+      // target: 'http://localbom.yktour.com.cn:890/',
+      // target: 'http://172.16.40.174:8082/',
+      // target: 'http://dev.erp.yktour.com.cn/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/bom': '/bom'
+      }
+    },
+    '/ykly-app': {
+      target: 'https://testapp.yktour.com.cn/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/ykly-app': '/ykly-app'
+      }
+    },
+    '/api': {
+      // target: 'http://localbom.com/',
+      target: 'https://testerp.yktour.com.cn/',   // 测试服
+      // target: 'http://dev.erp.yktour.com.cn',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/api': '/api'
+      }
+    }
+  },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -38,7 +65,7 @@ module.exports = {
     // If you have problems debugging vue-files in devtools,
     // set this to false - it *may* help
     // https://vue-loader.vuejs.org/en/options.html#cachebusting
-    cacheBusting: true,
+    cacheBusting: false,
 
     cssSourceMap: true
   },

@@ -21,4 +21,8 @@ router.all('/upload', async ctx => {
 router.post('/sliceUpload', async ctx => {
     ctx.response.body = await controller.upload.sliceUpload(ctx)
 })
+//流下载
+router.all('/download', async ctx => {
+    ctx.response.body = await controller.download.stream(ctx)
+})
 module.exports = router
