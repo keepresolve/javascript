@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <style>
+      table {
+        width: 320px;
+        background: #333;
+        color: #fff;
+      }
+      td,
+      th {
+        text-align: center;
+        height: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">
+            <span class="left">«</span>
+          </th>
+          <th colspan="3">
+            <span class="time"></span>
+          </th>
+          <th colspan="2"><span class="right">»</span></th>
+        </tr>
+        <tr>
+          <th>日</th>
+          <th>一</th>
+          <th>二</th>
+          <th>三</th>
+          <th>四</th>
+          <th>五</th>
+          <th>六</th>
+        </tr>
+      </thead>
+      <tbody class="main"></tbody>
+    </table>
+  </body>
+  <script>
+    var oTime = document.querySelector(".time"); //头部年月标题显示
+    var oMain = document.querySelector(".main"); //主体日历数字显示
+    var leftBtn = document.querySelector(".left"); //点击左边的按钮，月份减少
+    var rightBtn = document.querySelector(".right"); //点击右边的按钮，月份增加
+    var time = new Date(); //获取当前系统时间
+
+    leftBtn.onclick = function() {
+      time.setMonth(time.getMonth() - 1);
+      getPrevDays(time);
+      getCurrentDays(time);
+      minHead(time);
+      mainList(time, getPrevDays(time), getCurrentDays(time));
+    };
+
+    rightBtn.onclick = function() {
+      time.setMonth(time.getMonth() + 1);
+      getPrevDays(time);
+      getCurrentDays(time);
+      minHead(time);
+      mainList(time, getPrevDays(time), getCurrentDays(time));
+    };
+
+    function minHead(time) {
+      oTime.innerText =
+        time.getFullYear() + "年" + (time.getMonth() + 1) + "月";
+    }
+
+    function mainList(time, prevDays, currentDays) {
+      var beforeCount = prevDays.length + currentDays.length;
+      var cellList = document.querySelectorAll("td");
+      for (var i = 0; i < prevDays.length; i++) {
+        //上一个月所占格子
+        cellList[i].innerHTML = "<font color='red'>" + prevDays[i] + "</font>";
+      }
+      for (var i = 0; i < currentDays.length; i++) {
+        //当前月所占格子
+        if (currentDays[i] == time.getDate()) {
+          //当天日期高亮显示
+          cellList[i + prevDays.length].innerHTML =
+            "<font color='blue'>" + currentDays[i] + "</font>";
+        } else {
+          //当月日期白色突出
+          cellList[i + prevDays.length].innerHTML =
+            "<font color='white'>" + currentDays[i] + "</font>";
+        }
+      }
+      for (var i = 1; i <= 42 - beforeCount; i++) {
+        //下个月所占格子
+        cellList[i + beforeCount - 1].innerHTML =
+          "<font color='red'>" + i + "</font>";
+      }
+    }
+
+    function createCells() {
+      for (var i = 0; i < 6; i++) {
+        //6行
+        var oTr = document.createElement("tr");
+        for (var j = 0; j < 7; j++) {
+          //7列
+          var oTd = document.createElement("td");
+          oTr.appendChild(oTd);
+        }
+        oMain.appendChild(oTr);
+      }
+    }
+
+    function getPrevDays(time) {
+      //获得上一个在本月所占的天数
+      var time = new Date(time); //拷贝一份时间，避免时间修改发生冲突
+      var list = []; //上一个月所占的天数
+      time.setDate(1); //设置成当月1号，便于查看是星期几；
+      var day = time.getDay() == 0 ? 7 : time.getDay(); //如果是0，说明数字第一行需要空出来放上一个月的时间
+      //获取上一个月的天数
+      time.setDate(0); //系统自动计算到上一个月的最后一天
+      var maxDay = time.getDate(); //得到上一个月的最后一天时间
+      for (var i = maxDay; i > maxDay - day; i--) {
+        //根据maxDay和day之间的关系，把上一个月的时间放到list中
+        list.push(i);
+      }
+      list.reverse(); //日期升序排列
+      return list;
+    }
+
+    function getCurrentDays(time) {
+      //获取当前月的天数
+      var time = new Date(time); //拷贝时间，原因同上
+      time.setDate(1); //确保不会出现跨越现象  如果当前时间是1月31号就会出现跨越到三月份的事情
+      var list = [];
+      //下面代码是为了获取上一个月的天数
+      time.setMonth(time.getMonth() + 1); //修改时间到下一个月
+      time.setDate(0); //修改时间日期是0
+      var maxDay = time.getDate();
+      //获取到上一个月的日期并放到数组中
+      for (var i = 1; i <= maxDay; i++) {
+        list.push(i);
+      }
+      return list;
+    }
+    createCells(); //创建6行7列表格
+    getPrevDays(time); //获取上一个月在当前月所占的格子数
+    getCurrentDays(time); //获取当前月所占的格子数
+    minHead(time); //显示头部标题
+    mainList(time, getPrevDays(time), getCurrentDays(time)); //显示主题日历
+  </script>
+</html>

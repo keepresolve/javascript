@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+  </head>
+  <body>
+    <div id="app" ref="app">
+      {{ value }}
+    </div>
+  </body>
+  <script>
+    new Vue({
+      data: {
+        value: 1213123
+      },
+      mounted() {
+        this.render();
+      },
+      methods: {
+        render() {
+          let div = this.$createElement(
+            "div",
+            {
+              attr: "asdasdasd"
+
+              // on: {
+              //   click: this.clickHander
+              // }
+            },
+            this.value
+          );
+          console.log({ div });
+        },
+        clickHander() {
+          this.value += 10;
+          this.render();
+        }
+      },
+      render() {
+        return this.$createElement(
+          "div",
+          {
+            id: "test",
+            attr: 12313,
+            on: {
+              click: this.clickHander
+            }
+          },
+          this.value
+        );
+      }
+    }).$mount("#app");
+  </script>
+</html>
+/home/ubuntu/ 192.168.66.*(rw,sync,no_root_squash) /home/ubuntu/
+*(rw,sync,no_root_squash)

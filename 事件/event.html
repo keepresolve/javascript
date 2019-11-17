@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>页面滚动</title>
+  </head>
+  <body>
+    <div id="div" style="height: 2000px"></div>
+    <button id="btn">向下</button>
+    <style>
+      button {
+        position: fixed;
+        right: 10px;
+        bottom: 30px;
+      }
+    </style>
+    <script>
+      /**
+       *
+       * **/
+
+      function CustEvent(target, options) {
+        target.custVar = {
+          isclick: true,
+          startTime: Date.now(),
+          endTime: Date.now(),
+          longTimer: null,
+          timer: null
+        };
+        let events = {
+          CEvnets: this.createCEvnets.bind(target)(),
+          event: this.createEvent.bind(target)(options)
+        };
+        Object.assign(target.custVar, events);
+        target.addEventListener("mousedown", target.custVar.event.mousedown);
+        target.addEventListener("mouseup", target.custVar.event.mouseup);
+      }
+      CustEvent.prototype = {
+        createCEvnets(options) {
+          let that = this;
+          return {
+            long: new CustomEvent(
+              "long",
+              Object.assign(
+                {
+                  detail: that.custVar,
+                  hazcheeseburger: true
+                },
+                (options ? options.long : {}) || {}
+              )
+            )
+          };
+        },
+        createEvent(options) {
+          let that = this;
+          return {
+            long:
+              options.long || typeof options.long === "function"
+                ? options.long
+                : null,
+            mousedown: function(e) {
+              this.custVar.isclick = false;
+              this.custVar.startTime = Date.now();
+              clearTimeout(this.timer);
+              this.custVar.timer = setTimeout(() => {
+                clearTimeout(this.custVar.longTimer);
+                this.custVar.longTimer = setInterval(() => {
+                  this.custVar.endTime = Date.now();
+                  this.dispatchEvent(this.custVar.CEvnets.long, e, this);
+                  this.custVar.event.long && this.custVar.event.long(e, this);
+                }, 100);
+              }, 1000);
+            },
+            mouseup: function() {
+              this.custVar.isclick = true;
+              clearTimeout(this.custVar.timer);
+              clearInterval(this.custVar.longTimer);
+            }
+          };
+        }
+      };
+      function color() {
+        return (
+          "rgb(" +
+          [
+            Math.round(Math.random() * 160),
+            Math.round(Math.random() * 160),
+            Math.round(Math.random() * 160)
+          ].join(",") +
+          ")"
+        );
+      }
+      var btn = document.getElementById("btn");
+      var dv = document.getElementById("div");
+      let scrollTop = window.scrollY || 0,
+        speed = 10,
+        step = 500;
+      console.log({ scrollTop, window });
+      new CustEvent(btn, {
+        long: function() {
+          console.log("long cb", arguments);
+          // window.scrollTo(0, (scrollTop += speed));
+        }
+      });
+      btn.addEventListener("long", function(e) {
+        console.log(" long addEventListener", this, e.detail);
+        window.scrollTo(0, (scrollTop += speed));
+      });
+      btn.addEventListener("click", function() {
+        console.log("click addEventListener", this.custVar);
+        div.style.backgroundColor = color();
+        window.scrollTo(0, (scrollTop += step));
+      });
+      // var btn = document.getElementById("btn");
+      // var dv = document.getElementById("div");
+      // var dvT = dv.scrollTop;
+      // var step = 500;
+      // var timer;
+      // var clickTime = false;
+      // var isclick = true;
+      // var color = function() {
+      //   return (
+      //     "rgb(" +
+      //     [
+      //       Math.round(Math.random() * 160),
+      //       Math.round(Math.random() * 160),
+      //       Math.round(Math.random() * 160)
+      //     ].join(",") +
+      //     ")"
+      //   );
+      // };
+      // /*********短按************/
+      // function click_fn() {
+      //   dvT += step;
+      //   window.scrollTo(0, dvT);
+      //   dv.style.backgroundColor = color();
+      // }
+      // /*********长按************/
+      // function long() {
+      //   isclick = false;
+      //   dv.style.backgroundColor = color();
+      //   timer = setInterval(function() {
+      //     dvT += 5;
+      //     window.scrollTo(0, dvT);
+      //   }, 30);
+      // }
+      // btn.onmousedown = function() {
+      //   isclick = true;
+      //   clearTimeout(clickTime);
+      //   clickTime = setTimeout(long, 1000);
+      // };
+      // btn.onmouseup = function() {
+      //   clearTimeout(clickTime);
+      //   clearInterval(timer);
+      //   if (isclick) {
+      //     click_fn();
+      //   }
+      // };
+    </script>
+  </body>
+</html>

@@ -7,7 +7,13 @@
     <title>Document</title>
   </head>
   <body>
-    <button id="btn">aaas</button>
-    <script></script>
+    <textarea autoHeight="true"></textarea>
   </body>
+  <script>
+    function autoHeight(elem) {
+      elem.style.height = "auto";
+      elem.scrollTop = 0; //防抖动
+      elem.style.height = elem.scrollHeight + "px";
+    }
+  </script>
 </html>

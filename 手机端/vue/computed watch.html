@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="btn">btn</button>
+    <pre></pre>
+    <script>
+      function Vue(options) {
+        this.$data = options.data;
+        this.$watch = options.watch || {};
+        this.$computed = options.computed || {};
+        let beforeCreate = options.beforeCreate.bind(this) || function() {};
+        let created = options.created.bind(this) || function() {};
+        this.$updated = options.updated.bind(this) || function() {};
+        beforeCreate();
+        for (const key in this.$data) {
+          let value = this.$data[key];
+          if (typeof value == "object") {
+            this.Obeserver(value);
+          } else {
+            //   this[key] = value;
+            this.convert(this.$data, key, value);
+          }
+        }
+        this.computed();
+        created();
+      }
+      Vue.prototype.Obeserver = function(ob) {
+        for (const key in ob) {
+          let value = ob[key];
+          if (typeof value == "object") {
+            this.Obeserver(value);
+          } else {
+            //   this[key] = value;
+            this.convert(ob, key, value);
+          }
+        }
+      };
+      Vue.prototype.convert = function(data, key, value) {
+        let that = this;
+        let watch = this.$watch;
+        Object.defineProperty(data, key, {
+          set(val) {
+            console.log("set:", key, val, value);
+            watch[key] && watch[key](val, value);
+            // this[key] = value;
+            value = val;
+            that.computed();
+            that.$updated();
+            return val;
+          },
+          get() {
+            console.log("get:", key, value);
+            return value;
+          }
+        });
+      };
+      Vue.prototype.computed = function() {
+        for (const key in this.$computed) {
+          let cb = this.$computed[key].bind(this.$data);
+          this[key] = cb();
+        }
+      };
+      var root = new Vue({
+        data: {
+          value: 1,
+          obj: {
+            key: "key",
+            value: 1
+          }
+        },
+        watch: {
+          value() {
+            console.log("set new value", arguments);
+          }
+        },
+        beforeCreate() {
+          console.log("beforeCreate", this);
+        },
+        created() {
+          console.log("created", this);
+        },
+        updated() {
+          console.log("updated", this);
+        },
+
+        computed: {
+          num() {
+            return this.value + 10;
+          },
+          num2() {
+            return this.obj.value + 20;
+          },
+          num2() {
+            return this.obj.value + this.value;
+          }
+        }
+      });
+      document.querySelector("pre").innerText = JSON.stringify(root);
+      document.querySelector("#btn").onclick = function() {
+        root.$data.value += 10;
+        root.$data.obj.value += 10;
+        document.querySelector("pre").innerText = JSON.stringify(root);
+      };
+    </script>
+  </body>
+</html>

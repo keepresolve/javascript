@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+  </head>
+  <body>
+    <script>
+      new VConsole();
+      function getHiddenProp() {
+        var prefixes = ["webkit", "moz", "ms", "o"];
+
+        // if 'hidden' is natively supported just return it
+        if ("hidden" in document) return "hidden";
+
+        // otherwise loop over all the known prefixes until we find one
+        for (var i = 0; i < prefixes.length; i++) {
+          if (prefixes[i] + "Hidden" in document) return prefixes[i] + "Hidden";
+        }
+
+        // otherwise it's not supported
+        return null;
+      }
+      function handleStorage() {
+        console.log({ arg: arguments });
+      }
+      if (window.addEventListener) {
+        window.addEventListener("storage", handleStorage, false);
+      } else {
+        window.attachEvent("onstorage", handleStorage);
+      }
+      window.addEventListener("visibilitychange", function() {
+        console.log("show1");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+  </head>
+  <body>
+    <button id="btn">asdasdsad666sdasd</button>
+    <script>
+      new VConsole();
+      document.querySelector("#btn").onclick = function() {
+        localStorage.setItem("cookie", "asdasd");
+      };
+      function handleStorage() {
+        console.log({ arg: arguments });
+      }
+      if (window.addEventListener) {
+        window.addEventListener("storage", handleStorage, false);
+      } else {
+        window.attachEvent("onstorage", handleStorage);
+      }
+      window.addEventListener("visibilitychange", function() {
+        console.log("show2");
+      });
+    </script>
+  </body>
+</html>
