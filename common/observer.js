@@ -14,7 +14,7 @@ var arrayProto = Array.prototype;
 var arrayMethods = Object.create(arrayProto);
 // 重写了数组方法  监听
 ["push", "pop", "shift", "unshift", "splice", "sort", "reverse"].forEach(
-  function(method) {
+  function (method) {
     // 使用 Object.defineProperty 进行监听
     Object.defineProperty(arrayMethods, method, {
       value: function testValue() {
@@ -28,7 +28,7 @@ var arrayMethods = Object.create(arrayProto);
   }
 );
 
-p.walk = function(obj, option) {
+p.walk = function (obj, option) {
   let value;
   let watchKeys = Object.keys(option.watch);
   for (let key in obj) {
@@ -55,15 +55,15 @@ p.walk = function(obj, option) {
   }
 };
 
-p.convert = function(key, value, cb) {
+p.convert = function (key, value, cb) {
   Object.defineProperty(this.data, key, {
     enumerable: true,
     configurable: true,
-    get: function() {
+    get: function () {
       console.log(key + "被访问到了");
       return value;
     },
-    set: function(newVal) {
+    set: function (newVal) {
       cb && cb(newVal, value);
       console.log(key + "被重新设置值了" + "=" + newVal);
       // 如果新值和旧值相同的话，直接返回
@@ -133,7 +133,7 @@ function Element(tagName, props, children) {
 }
 
 // 渲染
-Element.prototype.render = function() {
+Element.prototype.render = function () {
   const el = document.createElement(this.tagName);
   const props = this.props;
 

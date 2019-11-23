@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    div {}
+</style>
+
+<body>
+    逆波表达式<span id="old"></span>
+    <br>
+    栈<span id="new"></span>
+    <br>
+    运算<span id="sign"></span>
+    <script type="module">
+        import "./utils/vnode.js";
+        // import './utils/波兰表达式.js'
+        //    波兰表示法
+        // [5, 1,2 ,+, 4, *, +, 3,-]   == 5 + ((1 + 2) * 4) - 3
+        // 依次将5 1 2 压入栈中， 
+        // 这时遇到了运算符 + ， 那么，出栈两个元素 2 1，用 + 运算符计算两个数的结果（2 + 1）得到结果为3， 压入栈中，
+        // 继续往下，将4压入栈中，此时栈中元素为 [5, 3, 4]， 又遇到了 * 运算符， 出栈两个元素，分别是 4 3 ，计算（4*3）得到12，压入栈中，
+        // 继续往下遇到 + 运算符，出栈两个元素....
+        calc([5, 1, 2, "+", 4, '*', '+', 3, '-']).then(res => console.log(res))
+        // rpn.infix2rpn([5, 1, 2, "+", 4, '*', '+', 3, '-'])
+        async function calc(arr) {
+            if (!arr) return 0;  //字符串为空，返回0
+            let old = JSON.stringify(arr)
+            render(arr, old)
+            while (arr.length > 1) {
+                await awaits(2000)
+                let item = arr.shift()
+                if (!isNaN(+item)) {  //非运算符 压入栈中，
+                    await awaits(2000)
+                    arr.push(item)
+                } else {      //运算符 弹栈两个元素 计算
+                    await awaits(2000)
+                    let result = count(item, arr.pop(), arr.pop())
+                    await awaits(2000)
+                    arr.push(result)
+                }
+                render(arr)
+            }
+            render(arr)
+            return arr.pop()
+        }
+        function count(sign, a, b) {
+            renderCount(sign, b, a)
+            switch (sign) {
+                case "+":
+                    return b + a
+                    break;
+                case "-":
+                    return b - a
+                    break;
+                case "*":
+                    return b * a
+                    break;
+                case "/":
+                    return b / a
+                    break;
+            }
+        }
+        function render(arr, old) {
+            if (old) $("#old").textContent = old
+            $("#new").textContent = JSON.stringify(arr)
+        }
+        function renderCount(sign, a, b) {
+            $("#sign").textContent = `${a}${sign}${b}`
+        }
+        async function awaits(time) {
+            return new Promise(res => { setTimeout(() => res(1), time || 1000) })
+        }
+        function $(el) {
+            return document.querySelector(el)
+        }
+
+
+        function rp(str) {
+            var arr = str.split('');
+            var ops = '+-#*/'.split(''); // #用来分级，+-是同一级，*/同一级，两级之间的位置差至少为2
+            var result = [], temp = [];
+            arr.forEach(function (ele, ind) {
+                if (ele == '(') {
+                    temp.push(ele); // 左括号直接推入暂存区
+                } else if (ele == ')') {
+                    var flag = true;
+                    while (flag) {
+                        if (temp[temp.length - 1] != '(') {
+                            result.push(temp.pop())
+                        } else {
+                            temp.pop();
+                            flag = false;
+                        }
+                    }
+                } else if (ops.indexOf(ele) != -1) {
+                    cb(ele, temp)
+                    function cb(x, o) {
+                        if (o.length == 0 || o[o.length - 1] == '(' ||
+                            ops.indexOf(x) - ops.indexOf(o[o.length - 1]) > 2) { //判断分级
+                            o.push(x)
+                        } else {
+                            result.push(o.pop());
+                            return cb(x, o)
+                        }
+                    }
+                } else {
+                    result.push(ele);
+                }
+            })
+            while (temp.length > 0) {
+                if (temp[temp.length - 1] != '(') {
+                    result.push(temp.pop())
+                } else {
+                    temp.pop()
+                }
+            }
+            return result.join('');
+        }
+    </script>
+</body>
+
+</html>

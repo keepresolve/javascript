@@ -133,14 +133,14 @@ for (names.front(); names.hasNext(); names.next()) {
 toString方法，让其只输出元素的值。
  */
 function LinkedList() {
-  var Node = function(element) {
+  var Node = function (element) {
     // {1}
     this.element = element;
     this.next = null;
   };
   var length = 0; // {2}
   var head = null; // {3}
-  this.append = this.append = function(element) {
+  this.append = this.append = function (element) {
     var node = new Node(element), //{1}
       current; //{2}
     if (head === null) {
@@ -157,7 +157,7 @@ function LinkedList() {
     }
     length++; //更新列表的长度 //{6}
   };
-  this.insert = function(position, element) {
+  this.insert = function (position, element) {
     //检查越界值
     if (position >= 0 && position <= length) {
       // var node = new Node(element),
@@ -181,7 +181,7 @@ function LinkedList() {
       return false; //{6}
     }
   };
-  this.removeAt = function(position) {
+  this.removeAt = function (position) {
     //检查越界值
     if (position > -1 && position < length) {
       // {1}
@@ -207,11 +207,11 @@ function LinkedList() {
       return null; // {11}
     }
   };
-  this.remove = function(element) {
+  this.remove = function (element) {
     var index = this.indexOf(element);
     return this.removeAt(index);
   };
-  this.indexOf = function(element) {
+  this.indexOf = function (element) {
     var current = head, //{1}
       index = -1;
     while (current) {
@@ -224,17 +224,17 @@ function LinkedList() {
     }
     return -1;
   };
-  this.isEmpty = function() {
+  this.isEmpty = function () {
     return length === 0;
   };
-  this.size = function() {
+  this.size = function () {
     return length;
   };
-  this.getHead = function() {
+  this.getHead = function () {
     return head;
   };
-  this.size = function() {};
-  this.toString = function() {
+  this.size = function () { };
+  this.toString = function () {
     var current = head, //{1}
       string = ""; //{2}
     while (current) {
@@ -244,5 +244,50 @@ function LinkedList() {
     }
     return string; //{6}
   };
-  this.print = function() {};
+  this.print = function () { };
+}
+
+
+function Stack(arr = []) {
+  this.id = 0
+  let items = arr.map(v => {
+    return {
+      key: this.id++,
+      value: v
+    }
+  })
+  if (!this.change) {
+    this.change = function (param) {
+
+    }
+  }
+
+  this.push = function (element) {
+    let el = {
+      key: this.id++,
+      value: el
+    }
+    items.push(el)
+    this.change("add", el)
+  }
+  this.pop = function () {
+    let el = items[items.length - 1]
+    this.change("remove", el)
+    return items.pop()
+  }
+  this.peek = function () {
+    return items[items.length - 1]
+  }
+  this.isEmpty = function () {
+    return items.length === 0
+  }
+  this.size = function () {
+    return items.length
+  }
+  this.clear = function () {
+    items = []
+  }
+  this.print = function () {
+    console.log(items.toString())
+  }
 }
