@@ -16,3 +16,35 @@ const vaild_365 = value =>
   /^3[0-5]{1}\d{1}$|^36[0-5]{1}$|^[1-2]?\d{1}\d{1}$|^[1-9]{1}$/.test(value);
 
 // 驼峰
+
+// 解析url
+const parse_url = url => {
+  let reuslt = /^(?:([A-Za-z]+):)?(\/{,})([-.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/.exec(
+    url
+  );
+  let Obj = {};
+  ["url", "scheme", "slash", "host", "port", "path", "query", "hash"].forEach(
+    (key, i) => {
+      Obj[key] = reuslt[i];
+    }
+  );
+
+  return Obj;
+};
+//  var url = "http://qiji.kerlai.net:/GoodsBasic/Operate/?q#simen";
+//  var result = parse_url.exec(url);
+//  var names = ["url","scheme","slash","host","port","path","query","hash"];
+//  for(var i=; i &lt;names.length;i++){
+//   console.log(names[i]+":"+result[i]);
+//  }
+//输出结果
+/*
+ url:http://qiji.kerlai.net:/GoodsBasic/Operate/?q#simen
+ scheme:http
+ slash://
+ host:qiji.kerlai.net
+ port:
+ path:GoodsBasic/Operate/
+ query:q
+ hash:simen
+ */

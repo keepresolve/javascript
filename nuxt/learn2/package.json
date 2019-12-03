@@ -1,0 +1,18 @@
+{
+  "name": "learn2",
+  "version": "1.0.0",
+  "description": "My epic Nuxt.js project",
+  "author": "caoshiyuan",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "better-scroll": "^1.15.2",
+    "nuxt": "^2.0.0"
+  },
+  "devDependencies": {}
+}

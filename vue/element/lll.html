@@ -12,8 +12,8 @@
         margin: 0px;
       }
     </style>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.bootcss.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
+    <!-- <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.bootcss.com/babel-polyfill/7.4.4/polyfill.min.js"></script> -->
 
     <link
       href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css "
@@ -21,9 +21,6 @@
     />
     <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
     <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
-    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
-    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
-    <script src="./rulefu.js"></script>
   </head>
   <style>
     #app,
@@ -57,64 +54,52 @@
   <body>
     <div id="app">
       <el-form
-        :model="dynamicValidateForm"
-        ref="dynamicValidateForm"
-        :rules="rules"
-        label-width=" 100px"
-        class="demo-dynamic"
-      >
+        :model="dynamicValidateForm"   ref="dynamicValidateForm" :rules="rules"   label-width=" 100px" class="demo-dynamic">
         <el-form-item prop="email" label="邮箱">
           <el-input v-model="dynamicValidateForm.email"></el-input>
-        </el-form-item>
-        <el-form-item
-          v-for="(domain, index) in dynamicValidateForm.domains"
-          :label="'域名' + index"
-          :key="domain.key"
-          :prop="'domains.' + index + '.value'"
-        >
+        </el-form-item> 
+
+        <el-form-item :prop="`list.${index}.value`" v-for="(domain, index) in dynamicValidateForm.list"  :label="'域名' + index"  :key="domain.key">
           <el-input v-model="domain.value"></el-input>
-          <el-button @click.prevent="removeDomain(domain)">删除</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('dynamicValidateForm')"
-            >提交</el-button
-          >
           <el-button @click="addDomain">新增域名</el-button>
-          <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
         </el-form-item>
+
+        <el-button @click='submitForm'></el-button>
       </el-form>
     </div>
 
     <script>
+      var validatePass = function(rule, value, callback) {
+        console.log({ rule, value, callback });
+        if (value == "") {
+          callback(new Error("不能为空!"));
+        } else {
+          callback();
+        }
+      };
+      var rules = [{ required: true, validator: validatePass }];
       new Vue({
         el: "#app",
         data() {
           return {
             dynamicValidateForm: {
-              domains: [
+              list: [
                 {
-                  value: ""
+                  key:0,
+                  value: "qweqwe"
                 }
               ],
               email: ""
             },
             rules: {
-              email: [
-                { required: true, message: "请输入邮箱地址", trigger: "blur" },
-                {
-                  type: "email",
-                  message: "请输入正确的邮箱地址",
-                  trigger: ["blur", "change"]
-                }
-              ],
-
-              "domains.0.value": [{ required: true, validator: validatePass }]
+              "list.0.value":rules,
+              email: [{ required: true, validator: validatePass }]
             }
           };
         },
         methods: {
-          submitForm(formName) {
-            this.$refs[formName].validate(valid => {
+          submitForm() {
+            this.$refs["dynamicValidateForm"].validate(valid => {
               if (valid) {
                 alert("submit!");
               } else {
@@ -123,9 +108,6 @@
               }
             });
           },
-          resetForm(formName) {
-            this.$refs[formName].resetFields();
-          },
           removeDomain(item) {
             var index = this.dynamicValidateForm.domains.indexOf(item);
             if (index !== -1) {
@@ -133,13 +115,13 @@
             }
           },
           addDomain() {
-            this.rules[
-              `domains.${this.dynamicValidateForm.domains.length}.value`
-            ] = rules;
-            this.dynamicValidateForm.domains.push({
-              value: "",
-              key: Date.now()
+            this.rules[`list.${this.dynamicValidateForm.list.length}.value`] = rules;
+            
+            this.dynamicValidateForm.list.push({
+                value: "",
+                key: Date.now()
             });
+           
           }
         }
       });
