@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/xlsx/0.15.1/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <input type="file" accept=".xlsx" id="xlf">
+    <table>
+        <thead>
+            <tr>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+
+
+        var reader = new FileReader();
+        var fileExcel = {
+            "oldFile": "",
+        };
+        function addLis() { //监听输入框，引入文件
+            var xlf = document.getElementById('xlf');
+            if (xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+        }
+
+        addLis();
+
+        // 变量fileExcel赋值，获取文件
+        function handleFile(e) {
+            var files = e.target.files;
+            fileExcel.oldFile = files[0];
+            readFile(fileExcel.oldFile);
+        }
+
+        function readFile(file) {
+            var name = file.name;
+            reader.onload = function (e) {
+                fileExcel.oldFile = e.target.result;
+                var wb = XLSX.read(fileExcel.oldFile, { type: "binary" });
+                console.log(wb);
+                var wb_sheetname = wb.SheetNames[2];
+                console.log(wb.Sheets[wb_sheetname]);
+                let content = wb.Sheets[wb_sheetname]
+
+                for (const key in content) {
+                    let tr = document.createElement("tr")
+                    let col = content[key]
+                    if (key.indexOf("!") == -1) {
+                        for (const t in col) {
+                            let td = document.createElement("td")
+                            td.innerHTML = col[t]
+                            tr.appendChild(td)
+                        }
+                    }
+                    document.querySelector("tbody").appendChild(tr)
+
+                }
+
+            }
+
+            // document.querySelector("pre").innerText = JSON.stringify(wb.Sheets[wb_sheetname])
+
+            reader.readAsBinaryString(file);
+
+        }
+        // 读取文件
+        var wb = XLSX.read(fileExcel.oldFile, { type: "binary" });
+        // console.log(wb);
+        var wb_sheetname = wb.SheetNames[0]; //获取第一张表的名字
+        var wb_sheet = wb.Sheets[wb_sheetname]; //通过表名获取第一张表
+        // 加入变量
+        fileExcel.wb = wb;
+        fileExcel.wb_sheetname = wb_sheetname;
+        fileExcel.wb_sheet = wb_sheet;
+        console.log({ fileExcel })
+
+        // XLSX.read(File, options)
+    </script>
+</body>
+
+</html>
