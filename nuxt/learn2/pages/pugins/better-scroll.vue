@@ -1,9 +1,12 @@
 <template>
     <div id='better-scroll'>
-        <header @click="pointer">
-            better-scroll
-            <div>test</div>
+        <header>
+            <span @click="change">国内</span>
+            <span @click="change">国际</span>
         </header>
+        <div>
+
+        </div>
         <div class='container' ref='container'>
             <ul class='wrapper'>
                 <li v-for="item in lis" :ref='`target_${item.index}`' :key='item.index'>
@@ -74,29 +77,7 @@ export default {
             // freeScroll: true,
             // eventPassthrough: "vertical"
         });
-        let allChart = getAllChars();
-        let lis = [];
-        let indexs = [];
-        while (allChart.length) {
-            let index = allChart.shift();
-            let num = Math.round(Math.random() * 20);
-            let item = {
-                list: [],
-                index
-            };
-            for (let i = 0; i < num; i++) {
-                item.list.push({
-                    key: i,
-                    value: `${index}-${i}`
-                });
-            }
-            lis.push(item);
-            indexs.push({
-                index,
-                key: index,
-                hidden: true
-            });
-        }
+        let { lis, indexs } = this.generator();
         this.lis = lis;
         this.indexs = indexs;
         this.$nextTick(() => {
@@ -128,9 +109,46 @@ export default {
     },
     updated() {
         console.log("update");
-        this.scroll.refresh();
+        // this.scroll.refresh();
     },
     methods: {
+        change() {
+            let { lis, indexs } = this.generator();
+            this.lis = lis;
+            this.indexs = indexs;
+            this.scroll.refresh();
+        },
+        generator() {
+            let allChart = getAllChars();
+            let lis = [];
+            let indexs = [];
+            while (allChart.length) {
+                let index = allChart.shift();
+                let num = Math.round(Math.random() * 100);
+                let item = {
+                    list: [],
+                    index
+                };
+                for (let i = 0; i < num; i++) {
+                    item.list.push({
+                        key: i,
+                        value: `${index}-${String.fromCharCode(
+                            Math.round(Math.random() * num * 200)
+                        )}`
+                    });
+                }
+                lis.push(item);
+                indexs.push({
+                    index,
+                    key: index,
+                    hidden: true
+                });
+            }
+            return {
+                lis,
+                indexs
+            };
+        },
         pointer() {
             alert(1);
         },
@@ -199,7 +217,10 @@ export default {
                 index.hidden = true;
             }, 500);
             if (targes) {
-                this.scroll.scrollToElement(this.$refs[`target_${key}`][0]);
+                this.scroll.scrollToElement(
+                    this.$refs[`target_${key}`][0],
+                    500
+                );
                 console.log(index, targes);
             }
             // 找到左侧内容的对应section
@@ -241,7 +262,7 @@ export default {
 }
 header {
     text-align: center;
-    pointer-events: none;
+    /* pointer-events: none; */
     /* 禁止鼠标事件 */
 }
 li ul {
