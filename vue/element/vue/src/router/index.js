@@ -8,6 +8,7 @@ const Transfer = resolve => require(["@/components/transfer"], resolve);
 const TransferPage = resolve => require(["@/components/transferPage"], resolve);
 const iScroll = resolve => require(["@/components/iScroll"], resolve);
 const Table = resolve => require(["@/components/Table"], resolve);
+const Directives = resolve => require(["@/components/directives"], resolve);
 import Copper from "@/components/copper";
 
 Vue.use(Router);
@@ -55,6 +56,12 @@ export default new Router({
           path: "/table",
           name: "table",
           component: Table
+        },
+        {
+          path:"directives",
+          name: "/directives",
+          component:  Directives,
+         
         },
         { path: "*", component: Input }
       ],

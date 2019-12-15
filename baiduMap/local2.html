@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    #container {
+        width: 600px;
+        height: 600px;
+    }
+</style>
+
+<body>
+    <div id="container">asdas</div>
+
+    <script>
+        function initialize() {
+            var map = new BMap.Map("container"); //创建实例
+            let pointer1 = new BMap.Point(121.491, 31.233); //创建坐标 x y
+            let pointer2 = new BMap.Point(116.409, 39.918); //坐标2
+            let pointer3 = new BMap.Point(121.491, 31.267); //坐标2
+            map.centerAndZoom(pointer1, 11); //初始化 定位当前展示的地点中心    坐标  地图级别
+
+            // 提供的覆盖物 可以使用map.addOverlay方法向地图添加覆盖物，使用map.removeOverlay方法移除覆盖物，注意此方法不适用于InfoWindow。
+            // http://lbsyun.baidu.com/index.php?title=jspopular/guide/mark
+            // 向地图添加标注
+            var marker1 = new BMap.Marker(pointer1);
+            var marker2 = new BMap.Marker(pointer2);
+            marker1.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            marker2.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            var opts1 = {
+                position: pointer1, // 指定文本标注所在的地理位置
+                offset: new BMap.Size(30, -30) //设置文本偏移量
+            };
+            var opts2 = {
+                position: pointer1, // 指定文本标注所在的地理位置
+                offset: new BMap.Size(30, -30) //设置文本偏移量
+            };
+            var label1 = new BMap.Label("上海", opts1); // 创建文本标注对象
+            var label2 = new BMap.Label("北京", opts2); // 创建文本标注对象
+            label1.setStyle({
+                color: "red",
+                fontSize: "12px",
+                height: "20px",
+                lineHeight: "20px",
+                fontFamily: "微软雅黑"
+            });
+            label2.setStyle({
+                color: "red",
+                fontSize: "12px",
+                height: "20px",
+                lineHeight: "20px",
+                fontFamily: "微软雅黑"
+            });
+
+            map.addOverlay(marker1);
+            map.addOverlay(label1);
+
+            map.addOverlay(marker2);
+            marker2.setLabel(label2);
+
+            // 百度地图API功能
+
+            // function addMarker(point, index) {
+            //   // 创建图标对象
+            //   var myIcon = new BMap.Icon("1.png", new BMap.Size(23, 25), {
+            //     // 指定定位位置。
+            //     // 当标注显示在地图上时，其所指向的地理位置距离图标左上
+            //     // 角各偏移10像素和25像素。您可以看到在本例中该位置即是
+            //     // 图标中央下端的尖角位置。
+            //     anchor: new BMap.Size(10, 25),
+            //     // 设置图片偏移。
+            //     // 当您需要从一幅较大的图片中截取某部分作为标注图标时，您
+            //     // 需要指定大图的偏移位置，此做法与css sprites技术类似。
+            //     imageOffset: new BMap.Size(0, 0 - index * 25) // 设置图片偏移
+            //   });
+            //   // 创建标注对象并添加到地图
+            //   var marker = new BMap.Marker(point, { icon: myIcon });
+            //   map.addOverlay(marker);
+            // }
+            // // 随机向地图添加10个标注
+            // var bounds = map.getBounds();
+            // var lngSpan = bounds.maxX - bounds.minX;
+            // var latSpan = bounds.maxY - bounds.minY;
+            // for (var i = 0; i < 10; i++) {
+            //   var point = new BMap.Point(
+            //     bounds.minX + lngSpan * (Math.random() * 0.7 + 0.15),
+            //     bounds.minY + latSpan * (Math.random() * 0.7 + 0.15)
+            //   );
+            //   addMarker(point, i);
+            // }
+
+            map.enableScrollWheelZoom(true); //开启滚轮
+
+            //title 提供的信息窗口
+
+            var opts = {
+                width: 200, // 信息窗口宽度
+                height: 100, // 信息窗口高度
+                title: "海底捞王府井店", // 信息窗口标题
+                enableMessage: true, //设置允许信息窗发送短息
+                message: "亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~"
+            };
+            var infoWindow = new BMap.InfoWindow(
+                "地址：北京市东城区王府井大街88号乐天银泰百货八层",
+                opts
+            ); // 创建信息窗口对象
+            map.openInfoWindow(infoWindow, pointer2);
+            marker2.addEventListener("click", function () {
+                map.openInfoWindow(infoWindow, pointer2); //开启信息窗口
+            });
+
+            var sContent =
+                "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>天安门</h4>" +
+                "<img style='float:right;margin:4px' id='imgDemo' src='./1.png' width='139' height='104' title='天安门'/>" +
+                "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>天安门坐落在中国北京市中心,故宫的南侧,与天安门广场隔长安街相望,是清朝皇城的大门...</p>" +
+                "</div>";
+
+            var infoWindow = new BMap.InfoWindow(sContent); // 创建信息窗口对象
+
+            marker1.addEventListener("click", function () {
+                this.openInfoWindow(infoWindow);
+                //图片加载完毕重绘infowindow
+                document.getElementById("imgDemo").onload = function () {
+                    infoWindow.redraw(); //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+                };
+            });
+
+            // var opts = {
+            //   width: 250, // 信息窗口宽度
+            //   height: 100, // 信息窗口高度
+            //   title: "Hello" // 信息窗口标题
+            // };
+            // var infoWindow = new BMap.InfoWindow("World", opts); // 创建信息窗口对象
+            // map.openInfoWindow(infoWindow, map.getCenter()); // 打开信息窗口
+            //  需要引入 maplib
+            // var infoBox = new BMapLib.InfoBox(map, "百度地图api", {
+            //   boxStyle: {
+            //     background: "url('tipbox.gif') no-repeat center top",
+            //     width: "200px"
+            //   },
+            //   closeIconMargin: "10px 2px 0 0",
+            //   enableAutoPan: true,
+            //   alignBottom: false
+            // });
+            // infoBox.open();
+            // window.setTimeout(function() {
+            //   //js控制移动
+            //   map.panTo(pointer2);
+            // }, 2000);
+            //定位
+            // var geolocation = new BMap.Geolocation();
+            // geolocation.getCurrentPosition(function(r) {
+            //   if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+            //     var mk = new BMap.Marker(r.point);
+            //     map.addOverlay(mk);
+            //     map.panTo(r.point);
+            //     alert("您的位置：" + r.point.lng + "," + r.point.lat);
+            //   } else {
+            //     alert("failed" + this.getStatus());
+            //   }
+            // });
+
+            function myFun(result) {
+                var cityName = result.name;
+                // map.setCenter(cityName);
+                alert("当前定位城市:" + cityName);
+            }
+            var myCity = new BMap.LocalCity();
+            myCity.get(myFun); //定位地址
+            //搜索
+            // var local = new BMap.LocalSearch(map, {
+            //   renderOptions: { map: map, autoViewport: true }
+            // });
+            // local.searchNearby("小吃", "前门");
+
+            // 地址解析服务
+            // 创建地址解析器实例
+            // var myGeo = new BMap.Geocoder();
+            // // 将地址解析结果显示在地图上，并调整地图视野
+            // myGeo.getPoint(
+            //   "北京市海淀区上地10街10号",
+            //   function(point) {
+            //     if (point) {
+            //       map.centerAndZoom(point, 16);
+            //       map.addOverlay(new BMap.Marker(point));
+            //     }
+            //   },
+            //   "北京市"
+            // );
+            // myGeo.getPoint(
+            //   "北京市海淀区上地10街13号",
+            //   function(point) {
+            //     if (point) {
+            //       map.centerAndZoom(point, 16);
+            //       map.addOverlay(new BMap.Marker(point));
+            //     }
+            //   },
+            //   "北京市"
+            // );
+            // 逆地址解析服务
+
+            // map.centerAndZoom(pointer2, 11);
+            // 创建地理编码实例
+            // var myGeo = new BMap.Geocoder();
+            // 根据坐标得到地址描述;
+            // myGeo.getLocation(new BMap.Point(116.364, 39.993), function(result) {
+            //   if (result) {
+            //     alert(result.address);
+            //   }
+            // });
+
+            //点击地图获取地址
+
+            // var geoc = new BMap.Geocoder();
+            // map.addEventListener("click", function(e) {
+            //   var pt = e.point;
+            //   geoc.getLocation(pt, function(rs) {
+            //     var addComp = rs.addressComponents;
+            //     alert(
+            //       addComp.province +
+            //         ", " +
+            //         addComp.city +
+            //         ", " +
+            //         addComp.district +
+            //         ", " +
+            //         addComp.street +
+            //         ", " +
+            //         addComp.streetNumber
+            //     );
+            //   });
+            // });
+
+            //自定义控件
+            map.addControl(new BMap.NavigationControl());
+            map.addControl(new BMap.ScaleControl());
+            map.addControl(new BMap.OverviewMapControl());
+            map.addControl(new BMap.MapTypeControl());
+            map.setCurrentCity("北京"); // 仅当设置城市信息时，MapTypeControl的切换功能才能可用
+            // 定义一个控件类，即function
+            function ZoomControl() {
+                // 设置默认停靠位置和偏移量
+                this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
+                this.defaultOffset = new BMap.Size(10, 10);
+            }
+            // 通过JavaScript的prototype属性继承于BMap.Control
+            ZoomControl.prototype = new BMap.Control();
+
+            // 自定义控件必须实现initialize方法，并且将控件的DOM元素返回
+            // 在本方法中创建个div元素作为控件的容器，并将其添加到地图容器中
+            ZoomControl.prototype.initialize = function (map) {
+                // 创建一个DOM元素
+                var div = document.createElement("div");
+                // 添加文字说明
+                div.appendChild(document.createTextNode("放大2级"));
+                // 设置样式
+                div.style.cursor = "pointer";
+                div.style.border = "1px solid gray";
+                div.style.backgroundColor = "white";
+                // 绑定事件，点击一次放大两级
+                div.onclick = function (e) {
+                    map.zoomTo(map.getZoom() + 2);
+                };
+                // 添加DOM元素到地图中
+                map.getContainer().appendChild(div);
+                // 将DOM元素返回
+                return div;
+            };
+            // 创建控件实例
+            var myZoomCtrl = new ZoomControl();
+            // 添加到地图当中
+            map.addControl(myZoomCtrl);
+        }
+        function loadScript() {
+            var script = document.createElement("script");
+            script.src =
+                "./baidu1.js?v=2.0&ak=eW8TqsR3V62vFBewTSKIczwwePpDXf9T&callback=initialize";
+            document.body.appendChild(script);
+        }
+
+        window.onload = loadScript;
+    </script>
+
+
+</body>
+
+</html>

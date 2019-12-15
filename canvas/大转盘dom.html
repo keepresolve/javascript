@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      .warpper {
+        width: 500px;
+        height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="warpper"></div>
+    <script>
+      class Turnplate {
+        constructor(options = {}) {
+          this._options = {
+            el: "",
+            radius: 0, // 外圆de半径
+            inOffset: 10, //内圆比内圆半径多出的距离
+            startAngle: 0, //开始角度
+            poniters: [
+              {
+                text: "",
+                style: {}
+              }
+            ],
+            data: [
+              {
+                line: {},
+                title: {
+                  text: "",
+                  style: {},
+                  radius: 10 //距离圆心的距离
+                },
+                image: {
+                  src: "",
+                  style: {},
+                  radius: 10 //距离圆心的距离
+                }
+              }
+            ]
+          };
+          this.getOption(options);
+          this.init();
+        }
+        getOption(options) {
+          if (!options.el instanceof HTMLElement) {
+            throw "this element must be a  HTMLElement instance";
+          }
+          let { width, height } = window.getComputedStyle(options.el, null);
+          options.radius = parseInt(width) / 2;
+          Object.assign(this._options, options);
+        }
+        init() {
+          this.render();
+        }
+        render() {
+          let { el, radius, inOffset, data, startAngle } = this._options;
+          let width = radius * 2,
+            height = radius * 2,
+            deg = 360 / data.length;
+          let Styles = {
+            outCircle: {
+              width: width + "px",
+              height: width + "px",
+              border: "1px solid",
+              borderRadius: "50%"
+            },
+            inCircle: {
+              width: width - inOffset * 2 + "px",
+              height: width - inOffset * 2 + "px",
+              border: "1px solid",
+              borderRadius: "50%",
+              margin: inOffset + "px",
+              position: "relative"
+            },
+            lineDom: function(item, i) {
+              return {
+                width: 1 + "px",
+                height: radius - inOffset + "px",
+                // borderRadius: "50%",
+                // margin: `${inOffset}px 0 0 ${radius - inOffset}px`,
+                background:
+                  "#" +
+                  (
+                    "00000" + ((Math.random() * 0x1000000) << 0).toString(16)
+                  ).substr(-6),
+                position: "absolute",
+                left: `${radius - inOffset}px`,
+                top: `0px`,
+                transformOrigin: `0px  ${radius - inOffset}px`,
+                transform: `rotate(${i * deg}deg)`
+              };
+            },
+            titleDom(item, i) {
+              return {
+                // position: "absolute",
+                width: radius / 2 + "px",
+                // top: radius / 4 + "px",
+                // left: radius / 2 + "px",
+                // transform: `translate(${radius / 4}px,${radius /
+                //   2}px) rotate(deg/2 deg)`,
+                height: "20px",
+                border: "1px solid",
+                textAlign: "center",
+                transformOrigin: `0  ${radius - inOffset}px`,
+                transform: `rotate(${deg / 2}deg)  translate(-${radius /
+                  4}px, 10px)`
+              };
+            }
+          };
+          let outCircle = this.createElement("div", {
+            style: Styles.outCircle
+          });
+          let inCircle = this.createElement("div", { style: Styles.inCircle });
+
+          data.forEach((elo, i) => {
+            let { title, image } = elo;
+            let lineDom = this.createElement("div", {
+              style: Styles.lineDom(elo, i)
+            });
+            let titleDom = this.createElement(
+              "div",
+              {
+                style: Styles.titleDom(elo, i)
+              },
+              [title.text]
+            );
+
+            lineDom.appendChild(titleDom);
+            inCircle.appendChild(lineDom);
+          });
+
+          outCircle.appendChild(inCircle);
+
+          el.appendChild(outCircle);
+        }
+        createElement(tag, prop = {}, children) {
+          let el = document.createElement(tag || "div");
+          for (const key in prop) {
+            let value = prop[key];
+            switch (key) {
+              case "style":
+                Object.assign(el.style, value);
+                break;
+              default:
+                el.setAttribute(key, value);
+                break;
+            }
+          }
+          if (children && children.length > 0) {
+            children.forEach(child => {
+              if (child instanceof HTMLElement) {
+                el.appendChild(child);
+              } else {
+                el.appendChild(document.createTextNode(child));
+              }
+            });
+          }
+          return el;
+        }
+      }
+
+      let turnplate = new Turnplate({
+        el: document.querySelector(".warpper"),
+        inOffset: 20,
+        data: [
+          {
+            title: {
+              text: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            },
+            image: {
+              src: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            }
+          },
+          {
+            title: {
+              text: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            },
+            image: {
+              src: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            }
+          },
+          {
+            title: {
+              text: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            },
+            image: {
+              src: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            }
+          },
+          {
+            title: {
+              text: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            },
+            image: {
+              src: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            }
+          },
+          {
+            title: {
+              text: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            },
+            image: {
+              src: "",
+              style: {},
+              radius: 10 //距离圆心的距离
+            }
+          }
+        ]
+      });
+    </script>
+  </body>
+</html>

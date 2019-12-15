@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+<head>
+    <meta charset="UTF-8">
+    <title>圆盘抽奖</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        #bg {
+            position: absolute;
+            left: 200;
+            top: 200;
+        }
+
+        #container {
+            width: 400px;
+            margin: 150px auto;
+        }
+
+        ;
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+        <canvas id='bg'></canvas>
+    </div>
+
+
+    </div>
+
+    <script type="text/javascript">
+        var fillStyle = ['rgb(255,154,0)', 'rgb(210,92,4)', 'rgb(255,154,0)', 'rgb(210,92,4)', 'rgb(255,154,0)', 'rgb(210,92,4)']
+            , fillText = ['一等奖', '二等奖', '三等奖', '四等奖', '五等奖', '六等奖']
+            , width = 400
+            , height = 400
+            , c_x = 200
+            , c_y = 200
+            , radius = 200 // 圆盘半径
+            , canvas = document.getElementById('bg')
+            , index = 0
+            , timer = null
+            , running = false // 是否运行中
+            , speed = 300 // 速度
+            , isBeginPrize = false // 是否开始抽奖
+            , stepping = 0 // 步数，经过一个扇形为1步
+            , basecircle = 3 // 点击开始时，圆盘旋转的圈数，旋转玩指定圈数之后，再根据selected的值确定奖项
+            , selected = 4; // 最终选中第几个扇形，也就是确定几等奖
+        function setup() {
+            drawCircle(false);
+        }
+        function drawCircle(isRunning) {
+            var deg = Math.PI / 180;
+            var startAngle = 0;
+            var endAngle = 60;
+            canvas.height = height;
+            canvas.width = width;
+            var ctx = canvas.getContext('2d');
+            for (var i = 0; i < 6; i++) {
+                ctx.beginPath();
+
+                // 正在运行的时候，改变当前扇形的颜色
+                if (isRunning && index == i) {
+                    ctx.fillStyle = 'rgb(255,248,51)';
+                }
+                else {
+                    ctx.fillStyle = fillStyle[i];
+                }
+
+                // 绘制扇形
+                ctx.moveTo(c_x, c_y);
+                ctx.arc(c_x, c_y, radius, deg * startAngle, deg * endAngle, false);
+                ctx.fill();
+
+                // 绘制扇形上的文字
+                ctx.font = "14px Microsoft YaHei";
+                ctx.fillStyle = '#000';
+                ctx.textAlign = "center";
+                ctx.fillText(fillText[i], 200 + Math.cos(deg * (startAngle + 30)) * 150, 200 + Math.sin(deg * (startAngle + 30)) * 150);
+                startAngle += 60;
+                endAngle += 60;
+            }
+
+
+            // 绘制中心圆
+            ctx.beginPath();
+            ctx.arc(200, 200, 100, 0, 2 * Math.PI, 1);
+            ctx.fillStyle = 'rgb(255,255,255)';
+            ctx.fill();
+
+            // 绘制中心圆
+            ctx.font = "30px Microsoft YaHei";
+            // 创建渐变
+            var gradient = ctx.createLinearGradient(0, 0, width, 0);
+            gradient.addColorStop("0", "magenta");
+            gradient.addColorStop("0.2", "blue");
+            gradient.addColorStop("0.8", "red");
+            // 用渐变填色
+            ctx.textAlign = "center";
+            ctx.fillStyle = gradient;
+            ctx.fillText("开始", 200, 200 + 10);
+
+            // 绘制中心园边框
+            ctx.strokeStyle = 'rgb(148,28,27)';
+            ctx.lineWidth = 6;
+            ctx.stroke();
+        }
+
+
+        function rotate() {
+            if (stepping == 4) { // 4步之后开始加速
+                clearTimer();
+                speed = 100;
+                timer = setInterval(rotate, speed);
+            }
+
+            if (basecircle > 0 && index == 6) { // 基本圈数借宿以后，开始随机抽奖
+                index = 0;
+                basecircle--;
+                if (basecircle == 0) // 开始随机抽奖
+                {
+                    clearTimer();
+                    speed = 300;
+                    timer = setInterval(rotate, speed);
+                    isBeginPrize = true;
+                }
+            }
+
+            if (isBeginPrize && selected > 0) // 开始抽奖
+            {
+                if (--selected == 0) //到了选择的奖项之后
+                {
+                    clearTimer();
+                    isStop = true;
+                }
+                else {
+                    clearTimer();
+                    speed += 100;
+                    timer = setInterval(rotate, speed);
+                }
+
+            }
+
+
+            drawCircle(true);
+            index++;
+            stepping++;
+        }
+
+        // 初始化抽奖参数
+        function init() {
+            basecircle = 3;
+            selected = 4;
+
+            running = false;
+            isBeginPrize = false;
+
+            index = 0;
+            stepping = 0;
+            speed = 300;
+
+        }
+
+        function mouseDown_Start(e) {
+
+
+
+            var local = getPointOnCanvas(canvas, e.pageX, e.pageY);
+
+            if (local.x > 100 && local.x < 300 && local.y > 100 && local.y < 300) // 中心圆区域
+            {
+
+                if (running) {
+                    return;
+                }
+                init();
+
+                timer = setInterval(rotate, speed);
+            }
+        }
+
+
+        function clearTimer() {
+            clearInterval(timer);
+            timer = null;
+        }
+
+        function getPointOnCanvas(canvas, x, y) {
+
+            var bbox = canvas.getBoundingClientRect();
+
+            return {
+                x: x - bbox.left * (canvas.width / bbox.width),
+
+                y: y - bbox.top * (canvas.height / bbox.height)
+
+            };
+
+        }
+
+        setup();
+
+        canvas.addEventListener("mousedown", mouseDown_Start, false);
+    </script>
+</body>
+
+</html>

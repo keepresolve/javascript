@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>大转盘抽奖代码</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script type="text/javascript" src="js/awardRotate.js"></script>
+    <script>
+      var turnplate = {
+        divID: "item",
+        Div: null,
+        restaraunts: [
+          { text: "50M免费流量包", color: "#FFF4D6" },
+          { text: "10元", color: "#FFFFFF" },
+          { text: "谢谢参与", color: "#FFF4D6" }
+          //   { text: "5元", color: "#FFFFFF" },
+          //   { text: "10M免费流量包", color: "#FFF4D6" },
+          //   { text: "20M免费流量包", color: "#FFFFFF" },
+          //   { text: "20元", color: "#FFF4D6" },
+          //   { text: "30M免费流量包", color: "#FFFFFF" },
+          //   { text: "100M免费流量包", color: "#FFF4D6" },
+          //   { text: "2元", color: "#FFFFFF" }
+        ],
+        outsideRadius: 192, //大转盘外圆的半径
+        textRadius: 155, //大转盘奖品位置距离圆心的距离
+        insideRadius: 68, //大转盘内圆的半径
+        startAngle: 0, //开始角度
+        bRotate: false, //false:停止;ture:旋转
+        rotateFn: function(item) {
+          var txt = this.restaraunts[item - 1].text;
+          var angles =
+            item * (360 / turnplate.restaraunts.length) -
+            360 / (turnplate.restaraunts.length * 2);
+          if (angles < 270) {
+            angles = 270 - angles;
+          } else {
+            angles = 360 - angles + 270;
+          }
+          $("#wheelcanvas").stopRotate();
+          $("#wheelcanvas").rotate({
+            angle: 0,
+            animateTo: angles + 1800,
+            duration: 8000,
+            callback: function() {
+              plus.nativeUI.toast("您的抽奖结果是：" + txt + "！");
+              turnplate.setText("您的抽奖结果是：" + txt + "！");
+              turnplate.bRotate = !turnplate.bRotate;
+            }
+          });
+        },
+        setText: function(t) {
+          this.Div.innerHTML = t;
+        },
+        drawRouletteWheel: function() {
+          this.Div = document.getElementById(this.divID);
+          var canvas = document.getElementById("wheelcanvas");
+          if (canvas.getContext) {
+            //根据奖品个数计算圆周角度
+            var arc = Math.PI / (turnplate.restaraunts.length / 2);
+            var ctx = canvas.getContext("2d");
+            //在给定矩形内清空一个矩形
+            ctx.clearRect(0, 0, 240, 240);
+            //strokeStyle 属性设置或返回用于笔触的颜色、渐变或模式
+            ctx.strokeStyle = "#FFBE04";
+            //font 属性设置或返回画布上文本内容的当前字体属性
+            ctx.font = "16px 宋体";
+            for (var i = 0; i < turnplate.restaraunts.length; i++) {
+              var angle = turnplate.startAngle + i * arc;
+              ctx.fillStyle = turnplate.restaraunts[i].color;
+              ctx.beginPath();
+              //arc(x,y,r,起始角,结束角,绘制方向) 方法创建弧/曲线（用于创建圆或部分圆）
+              ctx.arc(
+                211,
+                211,
+                turnplate.outsideRadius,
+                angle,
+                angle + arc,
+                false
+              );
+              ctx.arc(
+                211,
+                211,
+                turnplate.insideRadius,
+                angle + arc,
+                angle,
+                true
+              );
+              ctx.stroke();
+              ctx.fill();
+              //锁画布(为了保存之前的画布状态)
+              ctx.save();
+              //----绘制奖品开始----
+              ctx.fillStyle = "#E5302F";
+              var text = turnplate.restaraunts[i].text;
+
+              var line_height = 17;
+              ctx.translate(
+                211 + Math.cos(angle + arc / 2) * turnplate.textRadius,
+                211 + Math.sin(angle + arc / 2) * turnplate.textRadius
+              );
+              ctx.rotate(angle + arc / 2 + Math.PI / 2);
+              if (text.indexOf("M") > 0) {
+                //流量包
+                var texts = text.split("M");
+                for (var j = 0; j < texts.length; j++) {
+                  ctx.font = j == 0 ? "bold 20px 宋体" : "16px 宋体";
+                  if (j == 0) {
+                    ctx.fillText(
+                      texts[j] + "M",
+                      -ctx.measureText(texts[j] + "M").width / 2,
+                      j * line_height
+                    );
+                  } else {
+                    ctx.fillText(
+                      texts[j],
+                      -ctx.measureText(texts[j]).width / 2,
+                      j * line_height
+                    );
+                  }
+                }
+              } else if (text.indexOf("M") == -1 && text.length > 6) {
+                //奖品名称长度超过一定范围
+                text = text.substring(0, 6) + "||" + text.substring(6);
+                var texts = text.split("||");
+                for (var j = 0; j < texts.length; j++) {
+                  ctx.fillText(
+                    texts[j],
+                    -ctx.measureText(texts[j]).width / 2,
+                    j * line_height
+                  );
+                }
+              } else {
+                ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+              }
+              ctx.restore();
+            }
+          }
+        },
+        //点击开始抽奖
+        pointerOnclick: function() {
+          var random = Math.floor(Math.random() * 9 + 1);
+          turnplate.begin(random);
+        },
+        begin: function(num) {
+          // if (turnplate.bRotate) return;
+          // turnplate.bRotate = !turnplate.bRotate;
+          turnplate.rotateFn(num);
+          turnplate.setText("");
+        }
+      };
+
+      //
+      // var info =[{text:"50M免费流量包",color:"#FFF4D6"},
+      // {text:"10元",color:"#FFFFFF"},
+      // {text:"谢谢参与",color:"#FFF4D6"},
+      // {text:"5元",color:"#FFFFFF"},
+      // {text:"10M免费流量包",color:"#FFF4D6"},
+      // {text:"20M免费流量包",color:"#FFFFFF"},
+      // {text:"20元",color:"#FFF4D6"},
+      // {text:"30M免费流量包",color:"#FFFFFF"},
+      // {text:"100M免费流量包",color:"#FFF4D6"},
+      // {text:"2元",color:"#FFFFFF"}];
+
+      window.onload = function() {
+        turnplate.drawRouletteWheel();
+      };
+    </script>
+  </head>
+
+  <body style="background:#e62d2d;overflow-x:hidden;">
+    <img src="img/1.png" id="shan-img" style="display:none;" />
+    <img src="img/2.png" id="sorry-img" style="display:none;" />
+    <div class="banner">
+      <div
+        class="turnplate"
+        style="background-image:url(img/turnplate-bg.png);background-size:100% 100%;"
+      >
+        <canvas
+          class="item"
+          id="wheelcanvas"
+          width="422px"
+          height="422px"
+        ></canvas>
+        <img
+          class="pointer"
+          src="img/turnplate-pointer.png"
+          onclick="turnplate.pointerOnclick();"
+        />
+      </div>
+    </div>
+  </body>
+</html>

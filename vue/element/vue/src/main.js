@@ -11,6 +11,9 @@ import "element-ui/lib/theme-chalk/index.css";
 
 import customEL from "../element/pkg/src/index.js";
 Vue.use(customEL);
+
+import directives from "../element/pkg/directives";
+Vue.use(directives)
 console.log({ customEL, el });
 /* eslint-disable no-new */
 let root = new Vue({
