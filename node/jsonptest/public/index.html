@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/axios/0.19.0/axios.js"></script>
+</head>
+<body>
+   
+    <pre></pre>
+    <script>
+        let pre = document.querySelector("pre")
+        let str=''
+        let URL='http://localhost:3000'
+        // fetch(`${URL}/getMessage`).then(response => response.json())
+        // .then(data => console.log(data))
+        // .catch(e => console.log("Oops, error"s, e))
+
+        //跨域
+        axios.get(`${URL}/jsonp`, {
+            params:{
+                callback:callback
+            }
+        }).then(res=>{
+            console.log("get jsonp",res.data)
+        })
+        //jsonp
+        function callback(){
+            console.log("callback jsonp",arguments)
+        }
+        var myScript = document.createElement('script');
+        myScript.src = `${URL}/jsonp?callback=callback`;
+        document.getElementsByTagName('head')[0].appendChild(myScript);
+       
+     
+       
+
+         //cors
+         axios.post(`${URL}/cors`,{
+             message:"我是post请求"
+         }).then(res=>{
+            console.log("cors",res.data)
+        })
+
+        axios.post(`${URL}/nocors`,{
+             message:"我是post请求"
+         }).then(res=>{
+            console.log("nocors",res.data)
+        })
+
+        
+    </script>
+    <!-- <script src="http://localhost:3000/jsonp?callback=callback"></script> -->
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let openIframe = document.createElement("iframe")
+         document.body.appendChild(openIframe)
+             setTimeout(function() {
+          openIframe.src = `ykly://detail`;
+        }, 200);
+
+        // var loadDateTime = new Date();
+        // //通过定时判断手机内是否安装有app，如果手机内安装有app则启动app再返回浏览器页面的时间>1s
+        // window.setTimeout(function() {
+        //   document.body.removeChild(openIframe);
+        //   var timeOutDateTime = new Date();
+        //   var diffTime = timeOutDateTime - loadDateTime;
+        //   if (diffTime < 1300) {
+        //     //进入下载页
+        //     window.location.href =
+        //       "http://a.app.qq.com/o/simple.jsp?pkgname=com.yonyou.ykly&fromcase=40002&from=singlemessage&isappinstalled=0/";
+        //   }
+        // }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let socket = new WebSocket(
+"wss://docs.qq.com/websocket/?tag=TzsiYTTZSKsA&gtag=300000000%24TzsiYTTZSKsA&utag=DVHpzaVlUVFpTS3NB&sig=311289376bb3f9b8a9375a707b4ff5ce77fbc1a0&uid=null&uid_key=null&EIO=3&transport=websocket"      );
+      console.log({ socket });
+      socket.onmessage = function(data) {
+        console.log(data);
+      };
+      socket.onerror = function(err) {
+        console.error(err);
+      };
+      //    socket.close=func
+    </script>
+  </body>
+</html>

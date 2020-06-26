@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="../common/vnode.js"></script>
+    <style>
+      .calendar-search {
+        display: flex;
+        justify-content: space-around;
+      }
+      .calendar-header {
+        display: flex;
+        justify-content: space-around;
+      }
+      .container {
+        background: #333;
+      }
+      .calendar-content {
+        display: flex;
+        justify-content: space-around;
+        word-break: break-all;
+        flex-wrap: wrap;
+      }
+      .calendar-content > div {
+        width: 14.2%;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container"></div>
+
+    <script>
+      class Calendar {
+        constructor(option) {
+          this.currentDate = new Date();
+          this.today = new Date();
+
+          this.renderCallBack = option.renderCallBack || function() {};
+          this.renderHeaderCb = option.renderHeaderCb || function() {};
+          this.renderSearchCb = option.renderSearchCb || function() {};
+          this.weekUI = [
+            {
+              text: "日"
+            },
+            {
+              text: "一"
+            },
+            {
+              text: "二"
+            },
+            {
+              text: "三"
+            },
+            {
+              text: "四"
+            },
+            {
+              text: "五"
+            },
+            {
+              text: "六"
+            }
+          ];
+
+          this.searchUI = [
+            {
+              type: "number",
+              id: "year",
+              value: this.currentDate.getFullYear()
+            },
+            {
+              type: "number",
+              max: 12,
+              min: 1,
+              id: "month",
+              value: this.currentDate.getMonth()
+            },
+            {
+              type: "button",
+              id: "next",
+              value: "下一月"
+            },
+            { type: "button", id: "last", value: "上一月" }
+          ];
+          this.$el = option.el || document.body;
+          this.init();
+        }
+        init() {
+          this.render();
+        }
+        nextMonth() {
+          let month = this.currentDate.getMonth();
+          month = month == 1 ? 3 : month + 1; // 1和2都是2月
+          this.currentDate.setMonth(month);
+          this.init();
+        }
+        lastMonth() {
+          this.currentDate.setMonth(this.currentDate.getMonth() - 1); //获取的2 永远是2月 0 是1月 -1 就是上个月
+          this.init();
+        }
+        getBeginTime(year, month) {
+          let time = new Date(this.currentDate);
+          time.setDate(1);
+          let week = time.getDay();
+          // week = week == 0 ? 7 : week;
+          time.setTime(time.getTime() - 24 * 60 * 60 * 1000 * week);
+          return time.getTime();
+        }
+        render() {
+          this.$el.innerHTML = "";
+          let year = this.currentDate.getFullYear(),
+            month = this.currentDate.getMonth(),
+            day = this.currentDate.getDate(),
+            week = this.currentDate.getDay(),
+            todayTime = this.today.getTime();
+          let searchItems = this.searchUI.map((v, i) => {
+            let customDom = this.renderSearchCb(v, i, vNode);
+            if (customDom && customDom instanceof vNode) return customDom;
+            if (v.id == "year") {
+              v.value = this.currentDate.getFullYear();
+            }
+            if (v.id == "month") {
+              v.value = this.currentDate.getMonth() + 1;
+            }
+            if (v.id == "button") {
+              v.value = v.text;
+            }
+            return vNode("input", { ...v, value: v.value }, [v.text]);
+          });
+          let headerItems = this.weekUI.map((v, i) => {
+            let customDom = this.renderHeaderCb(v, i, vNode);
+            v.style = "color:#fff;font-weight:700";
+            if (customDom && customDom instanceof vNode) return customDom;
+            return vNode("div", { ...v }, [vNode("span", {}, [v.text])]);
+          });
+          let contents = new Array(42).fill({ text: "" });
+          let beginTime = this.getBeginTime();
+          let contentItems = contents.map((el, i) => {
+            let date = new Date(beginTime + i * 24 * 60 * 60 * 1000);
+            el.date = date;
+            el.time = date.getTime();
+            el.text = date.getDate();
+            el.month = date.getMonth();
+            el.week = date.getDay();
+            el.currentMonth = month;
+            if (month == el.month) {
+              el.style = "color:#fff";
+              console.log({ el });
+            } else {
+              el.style = "color:red";
+            }
+            if (el.time == todayTime) {
+              el.style = "color:blue";
+            }
+            let node = this.renderCallBack(el, date);
+            if (node && node instanceof vNode) return node;
+            return vNode("div", { ...el }, [el.text]);
+          });
+          let search = vNode("div", { class: "calendar-search" }, searchItems);
+          let header = vNode("div", { class: "calendar-header" }, headerItems);
+          let content = vNode(
+            "div",
+            { class: "calendar-content" },
+            contentItems
+          );
+          this.$el.appendChild(search.render());
+          this.$el.appendChild(header.render());
+          this.$el.appendChild(content.render());
+          document.querySelector("#next").onclick = () => {
+            this.nextMonth();
+          };
+          document.querySelector("#last").onclick = () => {
+            this.lastMonth();
+          };
+          document.querySelector("#year").onchange = e => {
+            let target = e.target;
+            this.currentDate.setFullYear(e.target.value);
+            this.init();
+          };
+          document.querySelector("#month").onchange = e => {
+            let target = e.target;
+            this.month = target.value == 1 ? 0 : target.value - 1;
+            this.init();
+          };
+        }
+      }
+      new Calendar({
+        el: document.querySelector(".container"),
+        renderCallBack: function(v, i, vNode) {
+          // console.log({ v, i, vNode });
+        },
+        renderHeaderCb: function() {}
+      });
+    </script>
+  </body>
+</html>

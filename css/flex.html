@@ -68,6 +68,20 @@
     .box li:nth-of-type(2) {
       order: 3;
     }
+
+    .test{
+      width: 600px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .left , .right{
+      width: 288px;
+      border:1px solid;
+    }
+    .item{
+      height: 60px;
+      background-color:#666;
+     }
   </style>
   <body>
     <ul class="box">
@@ -79,5 +93,17 @@
       <li>6</li>
       <li>7</li>
     </ul>
+    <div class="test">
+      <div class="left">
+          <div class="item"></div>
+          <div class="item"></div>
+      </div>
+      <div class="right">
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+
+      </div>
+    </div>
   </body>
 </html>

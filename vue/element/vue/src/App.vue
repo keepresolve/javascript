@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <router-view style="height:100%"/>
+    <keep-alive>
+      <router-view style="height:100%"/>
+    </keep-alive>
+    
   </div>
 </template>
 

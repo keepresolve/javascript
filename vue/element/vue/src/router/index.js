@@ -59,7 +59,7 @@ export default new Router({
         },
         {
           path:"directives",
-          name: "/directives",
+          name: "directives",
           component:  Directives,
          
         },

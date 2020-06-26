@@ -24,7 +24,7 @@ export let through = {
       isCall: validate(binding)
     };
     if (el.__vueThrough__.isCall) {
-      binding.value("bind", { el, context: vnode.context,vnode });
+      binding.value("bind", { el, context: vnode.context });
     }
   },
   inserted(el, binding, vnode, oldVnode) {
@@ -41,12 +41,12 @@ export let through = {
     };
     el.__vueThrough__.react = el.getBoundingClientRect();
     if (el.__vueThrough__.isCall) {
-      binding.value("inserted", { el, context: vnode.context ,vnode});
+      binding.value("inserted", { el, context: vnode.context });
     }
   },
   update(el, binding, vnode, oldVnode) {
     if (el.__vueThrough__.isCall) {
-      binding.value("update", { el, context: vnode.context ,vnode});
+      binding.value("update", { el, context: vnode.context });
     }
   },
   componentUpdated(el, binding, vnode, oldVnode) {
@@ -83,8 +83,7 @@ export let through = {
     if (el.__vueThrough__.isCall) {
       let getStyle = binding.value("componentUpdated", {
         el,
-        context: vnode.context,
-        vnode
+        context: vnode.context
       });
       if (
         Object.prototype.toString.call(getStyle) == "[object Object]" &&
@@ -98,8 +97,10 @@ export let through = {
   unbind(el, binding, vnode, oldVnode) {
     if (el.__vueThrough__.isCall) {
       binding.value("unbind", {
-        context: vnode.context,
-        vnode
+        el,
+        binding,
+        vnode,
+        oldVnode
       });
     }
   }

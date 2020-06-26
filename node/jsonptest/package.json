@@ -1,0 +1,21 @@
+{
+  "name": "jsonp",
+  "version": "1.0.0",
+  "description": "learn jonsp",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon --inspect app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.11.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}

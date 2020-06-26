@@ -25,7 +25,7 @@
   }
 
   function setAttr(node, key, value) {
-    console.log({ node, key, value });
+    // console.log({ node, key, value });
     switch (key) {
       case "style":
         node.style = value;

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+      asdasdasda
+    <script type="module">
+      //   import Promise from  '/promise.js'
+      //   new Promise(function(res,rej){
+      //       alert(1)
+      //       res(111)
+      //   })
+
+
+      function CCPromise(fn) {
+        var state = "pending",
+          value = null,
+          callbacks = [];
+
+        this.then = function(onFulfilled) {
+          return new CCPromise(function(resolve) {
+            handle({
+              onFulfilled: onFulfilled || null,
+              resolve: resolve
+            });
+          });
+        };
+
+        function handle(callback) {
+          if (state === "pending") {
+            callbacks.push(callback);
+            return;
+          }
+          //如果then中没有传递任何东西
+          if (!callback.onFulfilled) {
+            callback.resolve(value);
+            return;
+          }
+
+          var ret = callback.onFulfilled(value);
+          callback.resolve(ret);
+        }
+
+        function resolve(newValue) {
+          if (
+            newValue &&
+            (typeof newValue === "object" || typeof newValue === "function")
+          ) {
+            var then = newValue.then;
+            if (typeof then === "function") {
+              then.call(newValue, resolve);
+              return;
+            }
+          }
+          state = "fulfilled";
+          value = newValue;
+          setTimeout(function() {
+            callbacks.forEach(function(callback) {
+              handle(callback);
+            });
+          }, 0);
+        }
+
+        fn(resolve);
+      }
+      new CCPromise(function(resolve){
+        resolve(123123)
+      }).then(res=>{
+          console.log(123132)
+          return 12312
+      }).then(res=>{
+          console.log(res)
+      })
+    </script>
+  </body>
+</html>

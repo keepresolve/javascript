@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>瀑布流</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            background: #ededed;
+        }
+
+        .content {
+            width: 1090px;
+            height: auto;
+            margin: auto;
+            background-color: rgb(236, 238, 231);
+            position: relative;
+            /* border: solid 1px black; */
+        }
+
+        img {
+            width: 100px;
+            box-shadow: 0 0 5px grey;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <script>
+    //     fetch('http://localhost:8000',{
+    //         mode: 'no-cors',
+    //         headers: {
+    //   'user-agent': 'Mozilla/4.0 MDN Example',
+    //   'content-type': 'application/json'
+    // } 
+    //     })
+    //     .then(function(response) {
+    //         console.log(response)
+    //         return response.text();
+    //     })
+    //     .then(function(myJson) {
+    //         console.log(myJson);
+    //     });
+        var img = ['http://i1.shaodiyejin.com/uploads/tu/201608/30/slt8.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small8868b4b8096caf4e5aac0aafc4da6679.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small0cc1d8c7b68a5afc832b956d0280a8be.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small0fc53f64d062454a1ca1e1870ec1f427.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/smallee3929cab77289b08047c1344c1752e4.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small4f71f07d0667c49da273b356a67bca75.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small2c4b57a72b898b54465c0307f4ea5236.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small37a0f2c64a4982f0dd7130e70f09260a.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/smallc444e8f3fd9d15c4ec83de22cb698626.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small0a9240a07be0a7919211af7983ee7579.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/smallb5815e2872f57a2da5ed6255ac554188.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small477e0028a8e9e62133ebfa88bdb4cfc7.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small72cc42b0bd56e6caedd4bd221beefdcf.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/smalld4f3304f4c8ce11c423af5862ff47125.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/smallb2f4b1310b9b838cc757b75c2f972337.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small712c8c35d6bf4a45400cdbb6c6420148.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small4f3ffe21568c9b3443959fb22515bdbb.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small65609358337d9644d540a19186759303.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small7d417d5ba6d5c33525c5aa02b7ad7799.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small311b0a29dc5da1daac09438884626987.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small098bb189dc5cea07f397e8dcb1c4076f.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/small664e608d46bcbe5e919300f7a4b2c694.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/small9b94a09f75baef4424a95629c3184da1.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/small2e5aa99f14e468706f1e04f28b57fb9c.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/small6d4cf90be8b9910db4dfdc369af08493.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/small09a205dba17cc2924f796ff9f30003dd.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/small59076eb9288a73b64f8c35b2907243fd.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/smalla455af8180fd3cb143100c01555133a0.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/small95de0eccc72da7aa2d387ec9094fb1a7.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/small4f469c5efc60ec5d0701946edcfa1e08.jpg', 'http://kr.shaodiyejin.com/file/2020/0423/small3467f6cc390b7bafe992de1b4a5f873f.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small8868b4b8096caf4e5aac0aafc4da6679.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small0cc1d8c7b68a5afc832b956d0280a8be.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small0fc53f64d062454a1ca1e1870ec1f427.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/smallee3929cab77289b08047c1344c1752e4.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small4f71f07d0667c49da273b356a67bca75.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small2c4b57a72b898b54465c0307f4ea5236.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small37a0f2c64a4982f0dd7130e70f09260a.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/smallc444e8f3fd9d15c4ec83de22cb698626.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/small0a9240a07be0a7919211af7983ee7579.jpg', 'http://kr.shaodiyejin.com/file/2020/0502/smallb5815e2872f57a2da5ed6255ac554188.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small477e0028a8e9e62133ebfa88bdb4cfc7.jpg', 'http://kr.shaodiyejin.com/file/2020/0428/small72cc42b0bd56e6caedd4bd221beefdcf.jpg']
+        //每次加载50张图片
+        var num = 50;
+        //每行加载的数量 默认一行10张图片
+        var hrow = 10;
+        //标记当前瀑布流高
+        var max = 0;
+        
+        var content = document.createElement("div");
+        content.className = "content";
+        document.body.appendChild(content);
+        var small = document.getElementsByClassName("smallimg");
+        // 数组，存放图片对象
+        var lists = [];
+        createImages();
+        //随机生成50张图片、图片水平位置
+        function createImages() {
+            setTimeout(() => {
+                for (var i = 0; i < num; i++) {
+                var imglist = document.createElement("img");
+                imglist.className = "smallimg";
+                imglist.src =  img[Math.floor(Math.random() * img.length)];
+                //left
+                imglist.style.left = i % hrow * 100 + i % hrow * 10 + "px";
+                content.appendChild(imglist);
+                lists.push(imglist);
+            }
+            }, 5000);
+           
+        }
+        //屏幕大小变化时
+        window.onresize = function () {
+        //可视宽
+            var sw = document.documentElement.clientWidth;
+            if (sw < 1000) {
+                hrow = 5;
+                content.style.width = "540px";
+                //屏幕大小一旦小于1000，就固定在当前加载状态，图片不随着页面的变化而随机变化
+                //this.οnresize=null;
+            } else {
+                hrow = 10;
+                //在屏幕大小变化的时候，content一直居中   行内样式优先级高于内嵌样式，设置行内样式，使content拥有宽，从而使margin：auto其作用
+                content.style.width="1090px";
+            }
+            //清空当前内容
+            content.innerHTML = "";
+            //重新加载
+            createImages();
+            setOffsetT(0);
+        }
+        
+        window.onload = function () {
+            setOffsetT(0);
+            //绑定一个滚动事件
+            this.addEventListener("scroll", function (e) {
+                if (this.scrollY + document.documentElement.clientHeight >= document.body.offsetHeight -
+                    20) {
+                    createImages();
+                    setOffsetT(lists.length - num);
+                }
+            })
+        }
+        function setOffsetT(start) {
+            for (var i = start; i < lists.length;i++) {
+                //top
+                var offsettop = i >= hrow ? lists[i - hrow].offsetHeight + lists[i - hrow].offsetTop + 10 : 0;
+               lists[i].style.top = offsettop + "px";
+                if (max < offsettop + lists[i].offsetHeight) {
+                    max = offsettop + lists[i].offsetHeight;
+                }
+            }
+            content.style.height = max + "px";
+        }
+    </script>
+</body>
+
+</html>
