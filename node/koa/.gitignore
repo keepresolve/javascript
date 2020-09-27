@@ -10,7 +10,7 @@ pids
 *.pid
 *.seed
 *.pid.lock
-
+local.js
 #macOS data
 .DS_Store
 
@@ -23,7 +23,7 @@ jspm_packages/
 
 # TypeScript v1 declaration files
 typings/
-
+jiaban/
 # Optional npm cache directory
 .npm
 
@@ -57,3 +57,5 @@ typings/
 
 # Serverless directories
 .serverless/
+
+src/database/sequelize/dbs/*.db

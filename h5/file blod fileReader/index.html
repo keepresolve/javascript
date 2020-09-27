@@ -23,6 +23,7 @@
     <pre draggable="true" id="data"></pre>
     <div class="paste"></div>
     <a href=""  id='a' download="blob.text">blob</a>
+    <div id='data'></div>
     <script>
       // https://www.cnblogs.com/stoneniqiu/p/5957356.html //图片压缩
 
@@ -30,6 +31,13 @@
       var ipt = document.querySelector("#data");
       document.querySelector("input").onchange = function() {
         console.log("onchange获取文件:",this.files);
+        const fileReader =new FileReader()
+        fileReader.onload = function (ev) {
+          document.querySelector("#data").innerHTML = fileReader.result
+            console.log("asdasdas",fileReader.result,"")
+        }
+        // gb2312
+        fileReader.readAsBinaryString(this.files[0])
       };
   
     

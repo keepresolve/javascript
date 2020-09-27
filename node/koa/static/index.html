@@ -18,6 +18,7 @@
 
     <body>
         <div id="app">
+            <h1>Sqlite</h1>
             <el-form v-if="islogin">
                 <el-form
                     :model="ruleForm"
@@ -63,6 +64,8 @@
                 <a href="./mysql.html">mysql query</a>
                 <a :href="uploadURL">uplaod 分片上传</a>
                 <a :href="download">download 流下载</a>
+                <a :href="pdfdemo">pdfdemo</a>
+                
             </div>
         </div>
     </body>
@@ -124,7 +127,7 @@
                             }
                             console.log({ data })
                             let result = await fetch(
-                                `http://localhost:3000/${
+                                `/${
                                     type == 0 ? 'register' : 'login'
                                 }`,
                                 {
@@ -143,6 +146,9 @@
                             if (result.code == 200 && type != 0) {
                                 this.uploadURL = `./upload.html?id=${result.data.id}&accountName=${result.data.accoutName}`
                                 this.islogin = false
+                            }
+                            if(result.code != 200 && type != 0){
+                                this.resetForm('ruleForm')
                             }
                         } else {
                             return false

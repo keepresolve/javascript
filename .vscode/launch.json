@@ -53,6 +53,12 @@
       "name": "slider",
       "url": "http://localhost:8080/silder3.html",
       "webRoot": "${workspaceFolder}/designPattern/designPattern"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "pdf转化 分流下载",
+      "program": "${workspaceFolder}/node/koa/src/app.js"
     }
   ]
 }

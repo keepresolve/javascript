@@ -25,4 +25,8 @@ router.post('/sliceUpload', async ctx => {
 router.all('/download', async ctx => {
     ctx.response.body = await controller.download.stream(ctx)
 })
+//pdf
+router.all('/pdf', async ctx => {
+    ctx.response.body = await controller.pdf.transform(ctx)
+})
 module.exports = router

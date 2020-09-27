@@ -29,7 +29,15 @@ module.exports = function() {
 
     // middleware
     debug('router register')
-    app.use(koaBody({ multipart: true }))
+    app.use(
+        koaBody({
+            multipart: true,
+            formidable: {
+                // maxFieldsSize: 10 * 1024 * 1024,
+                multipart: true
+            }
+        })
+    )
     debug('static init at' + app.static)
     app.use(require('koa-static')(app.static))
     const router = require('../routes')

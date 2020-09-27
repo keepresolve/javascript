@@ -50,7 +50,7 @@
             formData.append("index", successedIndex + 1)
             formData.append("data", file.slice(start, end));
             formData.append("total", shardCount); //总片数
-            let result = await fetch('http://localhost:3000/sliceUpload', {
+            let result = await fetch('/sliceUpload', {
                 method: 'POST',
                 body: formData
             })

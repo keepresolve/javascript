@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <script src="./common.js"></script> -->
+    <script src="./vnode.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>
+<script>
+  const montharr = new Array(12).fill(1).map((v, i) => i + 1);
+  let total = 320000;
+  const lilv = 0.05635;
+  const bejing = 1333.33;
+  const monthss = new Array(20).fill([...montharr]);
+  let lixiTotal = 0;
+  console.log({ monthss });
+  monthss.map((months, year) => {
+    console.log({ months });
+    months.map((month) => {
+      let lixia = (total * lilv) / 12;
+      console.log(`第${year + 1}年第${month}月`, lixia);
+      total = total - bejing;
+      lixiTotal += lixia;
+    });
+  });
+  console.log("总共还利息：", lixiTotal);
+</script>

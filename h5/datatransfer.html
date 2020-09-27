@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    div{
+        width: 300px;
+        height: 300px;
+        border:1px solid 
+    }
+</style>
+<body>
+    <div contenteditable="true"></div>
+    <img src='file:///Users/mac/Downloads/4%E7%82%B9.jpg'/>
+</body>
+<script>
+    let div =document.querySelector("div")
+    document.addEventListener("paste",function(ev){
+        console.log(ev)
+    })
+    div.addEventListener("drop",function(ev){
+        console.log(ev)
+    })
+    div.addEventListener("dragover",function(ev){
+        console.log(ev)
+    })
+</script>
+</html>
