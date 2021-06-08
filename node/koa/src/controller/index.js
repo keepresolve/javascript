@@ -1,5 +1,8 @@
 module.exports = {
     mysql: require('./mysql'),
     upload: require('./upload'),
-    login: require('./login')
+    login: require('./login'),
+    download: require('./download'),
+    pdf: require('./pdf'),
+    api: require('./api')
 }

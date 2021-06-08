@@ -20,12 +20,26 @@ let DB_CONFIG = {
     port: process.env.dbPort || 3306
 }
 
+// let mysql_conf = {
+//     dbname: 'emicall_cc_man',
+//     uname: 'emicall_cr_s',
+//     upwd: 'Emiknit_e23456',
+//     host: 'emicall-cr-ext.mysql.rds.aliyuncs.com',
+//     port: 3306,
+//     dialect: 'mysql',
+//     pool: {
+//         max: 5,
+//         min: 0,
+//         idle: 10000
+//     }
+// }
+
 let mysql_conf = {
-    dbname: 'emicall_cc_man',
-    uname: 'emicall_cr_s',
-    upwd: 'Emiknit_e23456',
-    host: 'emicall-cr-ext.mysql.rds.aliyuncs.com',
-    port: 3306,
+    dbname: process.env.mysqlDbname ||  'learn',
+    uname: process.env.mysqlUname ||'caoshiyuan',
+    upwd: process.env.mysqlUpwd || '123456',
+    host: process.env.mysqlHost || '192.144.170.209',
+    port: process.env.mysqlPort ||  3306,
     dialect: 'mysql',
     pool: {
         max: 5,
@@ -33,7 +47,6 @@ let mysql_conf = {
         idle: 10000
     }
 }
-
 // let mysql_conf = {
 //     dbname: 'emicall_cc_running',
 //     uname: 'root',

@@ -1,0 +1,14 @@
+{
+  "name": "dnsa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dns.js",
+  "scripts": {
+    "test": "node dns.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "arg": "^5.0.0"
+  }
+}

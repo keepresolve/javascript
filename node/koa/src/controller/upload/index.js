@@ -38,7 +38,7 @@ class Upload {
         let { files, index, total, name, shardSize, userId } = ctx.input_params
         let file = files.data,
             tmp = path.join(app.static, `/temp/${name}${index}`), //临时bolb文件新名字
-            pathUrl = path.join(app.static, `/uploads/${name}`) //上传文件存放位置和名称
+            pathUrl = path.join(app.static, `/uploads/${name}`) //上传文件存放位置和名称 //应该使用md5 计算
         if (fs.existsSync(pathUrl)) return { code: 301, info: '文件已经存在' }
         let exits = await this.Record.findOne({ where: { fileName: name } })
         if (!exits) {

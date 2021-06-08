@@ -1,61 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
     <script src="https://cdn.bootcss.com/xlsx/0.12.11/xlsx.full.min.js"></script>
-</head>
-<!-- https://blog.csdn.net/oYuLian/article/details/74547415 -->
-<!-- https://www.cnblogs.com/Micang/p/6344672.html -->
-<body>
-    <input type="file" id="excel-file">
+  </head>
+  <!-- https://blog.csdn.net/oYuLian/article/details/74547415 -->
+  <!-- https://www.cnblogs.com/Micang/p/6344672.html -->
+  <body>
+    <input type="file" id="excel-file" multiple />
     <script>
-        function doit(type, fn, dl) {
-            var elt = document.getElementById('data-table');
-            var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
-            // return dl ?
-            //     XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
-            //     XLSX.writeFile(wb, fn || ('test.' + (type || 'xlsx')));
-        }
-        $('#excel-file').change(function (e) {
-            var files = e.target.files;
+      //   function doit(type, fn, dl) {
+      //       var elt = document.getElementById('data-table');
+      //       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
+      //       // return dl ?
+      //       //     XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+      //       //     XLSX.writeFile(wb, fn || ('test.' + (type || 'xlsx')));
+      //   }
+      //   $('#excel-file').change(function (e) {
+      //       var files = e.target.files;
 
-            var fileReader = new FileReader();
-            fileReader.onload = function (ev) {
-                try {
-                    var data = ev.target.result,
-                        workbook = XLSX.read(data, {
-                            type: 'binary'
-                        }), // 以二进制流方式读取得到整份excel表格对象
-                        persons = []; // 存储获取到的数据
-                } catch (e) {
-                    console.log('文件类型不正确');
-                    return;
-                }
+      //       var fileReader = new FileReader();
+      //       fileReader.onprogress = function(){
+      //           console.log({onprogress: arguments})
+      //       }
+      //       fileReader.onload = function (ev) {
+      //           try {
+      //               var data = ev.target.result
+      //               console.log({data})
+      //                var   workbook = XLSX.read(data, {
+      //                       // type: 'binary'
+      //                       type:"buffer"
+      //                   }), // 以二进制流方式读取得到整份excel表格对象
+      //                   persons = []; // 存储获取到的数据
 
-                // 表格的表格范围，可用于判断表头是否数量是否正确
-                var fromTo = '';
-                // 遍历每张表读取
-                for (var sheet in workbook.Sheets) {
-                    if (workbook.Sheets.hasOwnProperty(sheet)) {
-                        fromTo = workbook.Sheets[sheet]['!ref'];
-                        console.log(fromTo);
-                        persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
-                        // break; // 如果只取第一张表，就取消注释这行
+      //           } catch (e) {
+      //               console.log('文件类型不正确',e);
+      //               return;
+      //           }
+
+      //           // 表格的表格范围，可用于判断表头是否数量是否正确
+      //           var fromTo = '';
+      //         //   遍历每张表读取
+      //           for (var sheet in workbook.Sheets) {
+      //               if (workbook.Sheets.hasOwnProperty(sheet)) {
+      //                   fromTo = workbook.Sheets[sheet]['!ref'];
+      //                   console.log(fromTo,workbook);
+      //                   persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+      //                   // break; // 如果只取第一张表，就取消注释这行
+      //               }
+      //           }
+
+      //           console.log(persons);
+      //       };
+
+      //       // 以二进制方式打开文件
+      //          fileReader.readAsArrayBuffer(files[0])
+      //     //   fileReader.readAsText(files[0])
+      //       // fileReader.readAsBinaryString(files[0]);
+
+      //   });
+
+      $("#excel-file").change(function (e) {
+        var files = e.target.files;
+        Promise.all(
+          Array.from(files).map((file) =>
+            readAsArrayBufferPro(file)
+              .then((data) => {
+                var workbook = XLSX.read(data, {
+                  type: "buffer",
+                  cellHTML: true,
+                });
+                console.log({ workbook });
+                return Object.entries(workbook.Sheets)
+                  .map(([sheetName, sheetData]) => {
+                    return {
+                      list: XLSX.utils.sheet_to_json(sheetData),
+                      sheet: workbook.Sheets[sheetName],
+                      fileName: file.name,
+                    };
+                  })
+                  .reduce(
+                    (result, sheet) => {
+                      result.total = result.total.concat(
+                        sheet.list.map((v) => ({
+                          ...v,
+                          sheetName: sheet.sheetName,
+                          fileName: sheet.fileName,
+                        }))
+                      );
+                      return result;
+                    },
+                    {
+                      total: [],
                     }
-                }
+                  );
+              })
+              .catch((err) => [{ type: "error", message: "文件加载失败", err }])
+          )
+        ).then((list) => {
 
-                console.log(persons);
-            };
-
-            // 以二进制方式打开文件
-            fileReader.readAsBinaryString(files[0]);
+          const div = document.createElement("div");
+          div.innerHTML = `${list
+            .map((vlist) =>
+              vlist.total.map((v) => `<div>${JSON.stringify(v)}</div>`).join("")
+            )
+            .join("")}`;
+          document.body.appendChild(div);
         });
-    </script>
-</body>
+      });
 
+      function readAsArrayBufferPro(file) {
+        return new Promise((resolve, reject) => {
+          var fileReader = new FileReader();
+          fileReader.onload = function (e) {
+            resolve(e.target.result);
+          };
+          fileReader.onerror = function (e) {
+            reject(
+              new Error("Error reading" + file.name + ": " + e.target.result)
+            );
+          };
+          fileReader["readAsArrayBuffer"](file, 1);
+        });
+      }
+    </script>
+  </body>
 </html>

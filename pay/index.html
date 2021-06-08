@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>支付</title>
+    <script src="http://cdn.bootcdn.net/ajax/libs/vConsole/3.4.1/vconsole.min.js"></script>
+  </head>
+  <body>
+    <script>
+      var vConsole = new VConsole();
+
+      function ready(cb) {
+        function aliyunJSBridgeReady(callback) {
+          // 如果jsbridge已经注入则直接调用
+          if (typeof AlipayJSBridge != "undefined") {
+            return callback && callback("ailyun");
+          }
+          if (document.addEventListener) {
+            document.addEventListener("AlipayJSBridgeReady", callback, false);
+          } else if (document.attachEvent) {
+            document.attachEvent("AlipayJSBridgeReady", callback);
+            document.attachEvent("onAlipayJSBridgeReady", callback);
+          }
+        }
+        function wxJSBridgeReady(callback) {
+          if (typeof WeixinJSBridge != "undefined") {
+            return callback && callback();
+          }
+          if (document.addEventListener) {
+            document.addEventListener("WeixinJSBridgeReady", callback, false);
+          } else if (document.attachEvent) {
+            document.attachEvent("WeixinJSBridgeReady", callback);
+            document.attachEvent("onWeixinJSBridgeReady", callback);
+          }
+        }
+        var ua = navigator.userAgent.toLowerCase();
+        if (/MicroMessenger/i.test(ua)) {
+          wxJSBridgeReady(function () {
+            cb && cb("weixin");
+          });
+        } else if (/Alipay/i.test(ua)) {
+          aliyunJSBridgeReady(function () {
+            cb && cb("aliyun");
+          });
+        } else {
+          cb("");
+        }
+      }
+      ready(function (env) {
+        console.log("bridge ready: " + env, WeixinJSBridge,AlipayJSBridge);
+
+        toPay(env);
+      });
+
+      function toPay(env) {
+        if (env == "weixin") {
+          var data = getParams(location.href)
+          WeixinJSBridge.invoke(
+            "getBrandWCPayRequest",
+            {
+              appId: data.appId,
+              timeStamp: data.timestamp,
+              nonceStr: data.nonceStr,
+              package: data.package,
+              signType: data.signType,
+              paySign: data.paySign,
+            },
+            function (res) {
+              if (res.err_msg == "get_brand_wcpay_request:ok") {
+                alert("支付成功");
+              } else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+                alert("取消支付");
+              } else if (res.err_msg == "get_brand_wcpay_request:fail") {
+                alert("支付失败");
+              }
+            }
+          );
+        } else if (env == "ailiyun") {
+          AlipayJSBridge.call(
+            "tradePay",
+            {
+              tradeNO: "201802282100100427058809844",
+            },
+            function (result) {
+              alert(JSON.stringify(result));
+            }
+          );
+        } else {
+          alert("h5 环境支付")
+        }
+      }
+      
+
+      function getParams(url) {
+        // 提取url中的解析字符串
+        var params = {},
+          h;
+        var hash = url.slice(url.indexOf("?") + 1).split("&");
+
+        for (var i = 0; i < hash.length; i++) {
+          h = hash[i].split("="); //
+          params[h[0]] = h[1];
+        }
+        return params;
+      }
+      //   function onBridgeReady() {
+      //
+      //   }
+      $.post('/create', $('#some_form').serialize(), function(response){
+  
+      })
+
+    </script>
+  </body>
+</html>

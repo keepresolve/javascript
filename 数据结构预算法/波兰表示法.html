@@ -89,8 +89,10 @@
 
         function rp(str) {
             var arr = str.split('');
-            var ops = '+-#*/'.split(''); // #用来分级，+-是同一级，*/同一级，两级之间的位置差至少为2
-            var result = [], temp = [];
+           // 下标分级 先乘除后加减  #用来分级，+-是同一级，*/同一级，两级之间的位置差至少为2
+            var ops = '+-#*/'.split(''); 
+            var result = [],  //结果区域都转成一级 只有加减
+             temp = [];  // 临时存储
             arr.forEach(function (ele, ind) {
                 if (ele == '(') {
                     temp.push(ele); // 左括号直接推入暂存区
@@ -128,6 +130,8 @@
             }
             return result.join('');
         }
+
+        window.rp = rp
     </script>
 </body>
 

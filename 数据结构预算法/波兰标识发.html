@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+  </style>
+
+  <body>
+    <script>
+      const _KEYS = {
+        _splter: Symbol("_splter"),
+        _validExpression: Symbol("_validExpression"),
+        _isOperator: Symbol("_isOperator"),
+        _operator: Symbol("_operator")
+      };
+
+      class Nibolan {
+        constructor() {
+          this.sourceArr = [];
+          this.expStack = []; //
+          this.precedence = {
+            //运算等级
+            "/": 2,
+            "*": 2,
+            "-": 1,
+            "+": 1,
+            "#": 0,
+          };
+          this.operation = {
+            "/": (a, b) => +a / +b,
+            "*": (a, b) => +a * +b,
+            "-": (a, b) => +a - +b,
+            "+": (a, b) => +a + +b,
+          };
+        }
+
+        //表达式是否有效
+        [_KEYS.validExpression] = (exp) => {
+          return /[^\d\s\t\+\-\*\/\(\)]/.test(exp);
+        };
+        [_KEYS._splter] = (exp) => exp.match(/\d+|[^\d\s\t]/g);
+        [_KEYS._isOperator] = (exp) => {
+          return /^[\/\*\-\+#\(\)]$/.test(exp);
+        };
+        [_KEYS._operator] = (exp) => {
+          return /^[\/\*\-\+#]$/.test(exp);
+        };
+        infix(str) {
+          if (Object.prototype.toString.call(str) != "[object String]")
+            throw "must be a string express ";
+
+          this.sourceArr = this[_KEYS._splter](str);
+          let curI = 0;
+          for (let index = 0; index < this.sourceArr.length; index++) {
+            const value = this.sourceArr[index];
+            if (value == ".") {
+              let flag = true;
+              let type = 0;
+              const arr = [value];
+              let cu = index;
+              while (flag) {
+                if (type == 0) {
+                  cu--;
+                } else {
+                  cu++;
+                }
+                const c = this.sourceArr[cu];
+                if (!c || this[_KEYS._isOperator](c)) {
+                  if (type == 0) {
+                    type = 1;
+                    cu = index
+                  } else {
+                    flag = false;
+                  }
+                } else {
+                  if (type == 0) {
+                    arr.unshift(c);
+                  } else {
+                    arr.push(c);
+                  }
+                  this.sourceArr[cu]= ''
+                }
+                this.sourceArr[index]= arr.join("")
+              }
+            }
+          }
+          this.sourceArr =this.sourceArr.filter(v=>v)
+          
+
+          this.expStack = [];
+          const tmp = []
+          this.sourceArr.forEach(ele=>{
+               if(ele =='('){
+                    tmp.push(ele)
+               }else if (ele ==')'){
+                    while(tmp.length){
+                        
+                    }
+               }else if(this[_KEYS._operator](ele)){
+                 tmp.push(ele)
+               }
+          })
+        }
+      }
+      const expressFn = new Nibolan();
+      expressFn.infix("(12+12.313/111.2312+(1.112+2))");
+      console.log({ resultL: expressFn });
+    </script>
+  </body>
+</html>

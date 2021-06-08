@@ -1,0 +1,11 @@
+{
+  "name": "cluster_learn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "1.js",
+  "scripts": {
+    "1": "node 1.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

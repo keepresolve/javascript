@@ -28,32 +28,32 @@
                     return;
                 }
                 var f = obj.files[0];
-                // var reader = new FileReader();
-                // reader.onload = function(e) {
-                //     var data = e.target.result;
-                //     if(rABS) {
-                //         wb = XLSX.read(btoa(fixdata(data)), {//手动转化
-                //             type: 'base64'
-                //         });
-                //     } else {
-                //         wb = XLSX.read(data, {
-                //             type: 'binary'
-                //         });
-                //     }
-                //     console.log({data})
-                //     document.getElementById("a").href=data
-                //     //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
-                //     //wb.Sheets[Sheet名]获取第一个Sheet的数据
-                //     document.getElementById("demo").innerHTML= JSON.stringify( XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) );
-                // };
-                // // if(rABS) {
-                // //     reader.readAsArrayBuffer(f);
-                // // } else {
-                // //     reader.readAsBinaryString(f);
-                // // }
-                // //  reader.readAsText(f,"ANSI")
-                // reader.readAsDataURL(f)
-                // document.getElementById("demo").innerHTML= JSON.stringify( XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) );
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var data = e.target.result;
+                    if(rABS) {
+                        wb = XLSX.read(btoa(fixdata(data)), {//手动转化
+                            type: 'base64'
+                        });
+                    } else {
+                        wb = XLSX.read(data, {
+                            type: 'binary'
+                        });
+                    }
+                    console.log({data})
+                    document.getElementById("a").href=data
+                    //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
+                    //wb.Sheets[Sheet名]获取第一个Sheet的数据
+                    document.getElementById("demo").innerHTML= JSON.stringify( XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) );
+                };
+                // if(rABS) {
+                //     reader.readAsArrayBuffer(f);
+                // } else {
+                //     reader.readAsBinaryString(f);
+                // }
+                reader.readAsText(f,"ANSI")
+                reader.readAsDataURL(f)
+                document.getElementById("demo").innerHTML= JSON.stringify( XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) );
                 var blob = new Blob([f], { type: 'text/csv' }); //new way  
                 var csvUrl = URL.createObjectURL(blob);  
                 document.getElementById("a").href = csvUrl;   

@@ -1,0 +1,54 @@
+body {
+	background-color:rgb(247,238,217);
+}
+/*div#img img {
+	width:500px;
+	height:500px;
+}
+*/
+
+div#GameButton {
+	width:120px;
+	margin:0 auto;
+}
+.img0 {
+	background-repeat:no-repeat;
+	background-position:0px 0px;
+}
+.img1 {
+	background-repeat:no-repeat;
+	background-position:-168px 0px;
+}
+.img2 {
+	background-repeat:no-repeat;
+	background-position:-336px 0px;
+}
+.img3 {
+	background-repeat:no-repeat;
+	background-position:0px -168px;
+}
+.img4 {
+	background-repeat:no-repeat;
+	background-position:-168px -168px;
+}
+.img5 {
+	background-repeat:no-repeat;
+	background-position:-336px -168px;
+}
+.img6 {
+	background-repeat:no-repeat;
+	background-position:0px -336px;
+}
+.img7 {
+	background-repeat:no-repeat;
+	background-position:-168px -336px;
+}
+.img8 {
+	background-repeat:no-repeat;
+	background-position:-336px -336px;
+}
+td {
+	width:168px;
+	height:168px;
+	background-size:504px 504px;
+}

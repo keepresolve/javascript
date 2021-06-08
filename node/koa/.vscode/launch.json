@@ -4,6 +4,26 @@
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
+        {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "pwa-chrome",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "address": "192.144.170.209",
+            "localRoot": "${workspaceFolder}",
+            "name": "Attach to Remote",
+            "port": 9229,
+            "remoteRoot": "/home/ubuntu/app/upload/dingdingpdfparse",
+            "request": "attach",
+            // "skipFiles": [
+            //     "<node_internals>/**"
+            // ],
+            "type": "pwa-node"
+        },
         {
             "type": "node",
             "request": "attach",

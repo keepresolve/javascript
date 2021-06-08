@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>拖放</title>
+		<style type="text/css">
+			.drag1 {
+				width: 200px;
+				height: 200px;
+				float: left;
+			}
+ 
+			.drag1 img {
+				width: 200px;
+				height: 200px;
+			}
+ 
+			.drag2 {
+				width: 600px;
+				height: 600px;
+				float: left;
+				border: 1px solid red;
+				margin-left: 20px;
+			}
+		</style>
+ 
+	</head>
+	<body>
+		<canvas id="my" class="cas" width="200px" height="200px" style="display: none;">your browser does not support the
+			canvas tag </canvas>
+		<div class="drag2">
+			<div class="drag1">
+				<img src="" id="0" alt="" draggable="true" />
+			</div>
+			<div class="drag1">
+				<img src="" id="1" alt="" draggable="true" />
+			</div>
+			<div class="drag1">
+				<img src="" id="2" alt="" draggable="true" />
+			</div>
+			<div class="drag1">
+				<img src="" id="3" alt="" draggable="true" />
+			</div>
+			<div class="drag1">
+				<img src="" id="4" alt="" draggable="true" />
+			</div>
+			<div class="drag1">
+				<img src="" id="5" alt="" draggable="true" />
+			</div>
+			<div class="drag1">
+				<img src="" id="6" alt="" draggable="true" />
+			</div>
+			<div class="drag1">
+				<img src="" id="7" alt="" draggable="true" />
+			</div>
+			<div class="drag1">
+				<img src="" id="8" alt="" draggable="true" />
+			</div>
+		</div>
+ 
+		<script type="text/javascript">
+			var cas = document.getElementById('my');
+			var ctx = cas.getContext('2d');
+			var imgLikeArr = document.querySelectorAll('img');
+			var imgArr = Array.prototype.slice.call(imgLikeArr);
+			imgArr.sort(function() {
+				return Math.random() - Math.random();
+			});
+			var index = 0;
+			var ig = new Image();
+            ig.crossOrigin="Anonymous"
+			ig.src = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1746429185,3447265728&fm=26&gp=0.jpg?"+Date.now();
+            // document.body.appendChild(ig)
+			ig.onload = function() {
+				for (var i = 0; i < 3; i++) {
+					for (var j = 0; j < 3; j++) {
+						ctx.drawImage(ig, 200 * j, 200 * i, 200, 200, 0, 0, 200, 200);
+                        console.log(cas.toDataURL())
+						imgArr[index].src = cas.toDataURL();
+						imgArr[index].id = index;
+						index++;
+					}
+				}
+                
+			}
+		</script>
+ 
+		<div class="drag2" id="div2" style="background: url(https://www.jq22.com/tp/15667e64-8ba7-43dc-8de1-3ec9ae13a457.jpg);">
+			<div class="drag1" id="img0">
+ 
+			</div>
+			<div class="drag1" id="img1">
+ 
+			</div>
+			<div class="drag1" id="img2">
+ 
+			</div>
+			<div class="drag1" id="img3">
+ 
+			</div>
+			<div class="drag1" id="img4">
+ 
+			</div>
+			<div class="drag1" id="img5">
+ 
+			</div>
+			<div class="drag1" id="img6">
+ 
+			</div>
+			<div class="drag1" id="img7">
+ 
+			</div>
+			<div class="drag1" id="img8">
+ 
+			</div>
+			<div>
+				<p id="info"></p>
+				<p id="info2"></p>
+				<script type="text/javascript">
+					//监听整个页面的拖放开始事件
+					document.addEventListener("dragstart", function(event) {
+						//执行的具体操作:1)获取被拖放标签的id  
+						var id = event.target.id;
+						//2)存储被拖放标签的id //  		
+						event.dataTransfer.setData("text", id);
+						//3)设置p锻炼显示的内容---开始拖放     		
+						document.getElementById("info").innerText = "开始拖放";
+					});
+					document.addEventListener("dragend", function() {
+						document.getElementById("info").innerText = "拖放结束";
+					});
+					//释放拖放标签
+					document.addEventListener("dragenter", function() {
+						//修改div的边框颜色
+					});
+					document.addEventListener("dragover", function(event) {
+						//组织浏览器默认对拖放的执行效果
+						event.preventDefault();
+					});
+					document.addEventListener("drop", function(event) {
+						event.preventDefault();
+						//获取拖放标签释放的div
+						if (event.target.className == "drag1") {
+							var id = event.dataTransfer.getData("text");
+							event.target.appendChild(document.getElementById(id));
+							for (var i = 0; i < 9; i++) {
+								var curdiv = div2.getElementsByTagName("div")[i];
+								var curimg = curdiv.getElementsByTagName("img")[0];
+								if (curimg != null) {
+									if (curimg.getAttribute("id") == i) {
+										index++;
+									} else {
+										index = 0;
+										info2.innerText="";
+										break;
+									}
+								} else {
+									index = 0;
+									info2.innerText=";"
+									break;
+								}
+							}
+							if (index == 9) {
+								info2.innerText = "拼图成功";
+							}
+						}
+					});
+				</script>
+	</body>
+</html>

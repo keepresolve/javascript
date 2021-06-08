@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .pan {
+      height: 20px;
+      border-radius: 10px;
+      color: #ffffff;
+    }
+    .container .content {
+      position: relative;
+    }
+    /* .container .flex {
+      left: 0;
+      top: 0;
+      position: absolute;
+    } */
+    .flex {
+      display: flex;
+      border: 1px solid;
+      width: 300px;
+      text-align: center;
+    }
+    .flex-1 {
+      flex: 1;
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      position: relative;
+    }
+    .center {
+      width: 10px;
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      left: 50%;
+      margin-left: -5px;
+      background-color: antiquewhite;
+      z-index: -1;
+    }
+    .bot {
+      background-color: aqua;
+      border: 1px solid;
+      width: 100%;
+    }
+    #next,
+    #pre {
+      width: 100px;
+      height: 20px;
+    }
+  </style>
+  <body>
+    <div id="div"></div>
+    <input id="inp" value="5" type="text" /> 个
+    <input id="delay" value="1000" type="text" /> 间隔
+    <script>
+      const inp = document.querySelector("#inp");
+      const delay = document.querySelector("#delay");
+      inp.onchange = function () {
+        const val = Number(this.value);
+        console.log({ val });
+        Hanoi(val);
+      };
+      function Hanoi(len) {
+        // const  div =  document.querySelector("#div")
+        // if(div) div.parentNode.removeChild(div)
+        const steps = [];
+        let curStep = 0;
+        const stepsDom = [];
+        const getuuid = (function () {
+          let count = 0;
+          return function () {
+            count++;
+            return count;
+          };
+        })();
+        function generatorColor() {
+          return Math.random().toString(16).substr(2, 6).toUpperCase();
+        }
+        function generatorstyle(index) {
+          return `
+                background:#${generatorColor()};
+                width: ${((index + 1) / len) * 100}%
+             `;
+        }
+        function generator(num) {
+          const ret = {
+            a: {
+              num: new Array(num).fill("").map((v, index) => {
+                const uuid = getuuid();
+                return `<div id="${uuid}" class='pan' style="${generatorstyle(
+                  index
+                )}">${uuid}</div>`;
+              }),
+            },
+            b: {
+              num: [],
+            },
+            c: {
+              num: [],
+            },
+          };
+          ret.a.num.name = "A";
+          ret.b.num.name = "B";
+          ret.c.num.name = "C";
+          return ret;
+        }
+        const result = generator(len);
+        function render() {
+          const step = `<div class='flex'>
+                ${Object.entries(result)
+                  .map(
+                    ([key, value]) => `
+                    <div class='flex-1'>
+                        ${value.num.join("")}
+                        <div class='center'></div>
+                        <div class='bot'>${key}</div>
+                    </div>`
+                  )
+                  .join("")}
+            </div>`;
+          steps.push(step);
+          if (steps.length == 1) {
+            document.querySelector("#div").innerHTML = `
+              <div class='container' id="Hanoi">
+                   <div class='content flex'>
+                      ${step}
+                    </div>
+                    <div class='bottom'> 
+                      <div id='step'>${1}</div>
+                      <textarea></textarea>
+                      <button id='next'>next</button>
+                      <button id='pre'>pre</button>
+                      <button id='auto' >auto</button>
+                   </div>
+              </div>
+            `;
+
+            const next = document.querySelector("#next");
+            const pre = document.querySelector("#pre");
+            const stepDom = document.querySelector("#step");
+            const content = document.querySelector(".content");
+            const textarea = document.querySelector("textarea");
+            const auto = document.querySelector("#auto");
+            let isAuto = false;
+            let timer = null;
+            content.style.height = window.getComputedStyle(content)["height"];
+            auto.onclick = function () {
+              if (isAuto) {
+                isAuto = false;
+                clearInterval(timer);
+              } else {
+                isAuto = true;
+                timer = setInterval(() => {
+                  if (steps.length == 0) clearInterval(timer);
+                  nextAuto();
+                }, Number(delay.value));
+              }
+            };
+            function nextAuto() {
+              curStep = curStep < steps.length - 1 ? curStep + 1 : curStep;
+
+              content.innerHTML = steps[curStep];
+              stepDom.innerHTML = curStep + 1;
+
+              let stepoDom = stepsDom[curStep];
+              textarea.value += `第${stepoDom.step}步 ${stepoDom.from.name} ==> ${stepoDom.to.name} \n`;
+              textarea.style.height = textarea.scrollHeight + "px";
+            }
+            next.onclick = nextAuto;
+            pre.onclick = function () {
+              curStep = curStep == 0 ? 0 : curStep - 1;
+              content.innerHTML = steps[curStep];
+              stepDom.innerHTML = curStep + 1;
+
+              let stepoDom = stepsDom[curStep];
+              textarea.value += `第${stepoDom.step}步 ${stepoDom.from.name} ==> ${stepoDom.to.name} \n`;
+              textarea.style.height = textarea.scrollHeight + "px";
+            };
+          }
+        }
+        function tarnsfer(n, a, b, c) {
+          if (n >= 1) {
+            tarnsfer(n - 1, a, c, b);
+            let shift1 = a.shift();
+            c.unshift(shift1);
+            stepsDom.push({
+              step: steps.length - 1,
+              from: a,
+              to: c,
+              node: shift1,
+            });
+            render();
+            tarnsfer(n - 1, b, a, c);
+          }
+        }
+        render();
+        tarnsfer(len, result.a.num, result.b.num, result.c.num);
+      }
+      Hanoi(Number(inp.value));
+    </script>
+  </body>
+</html>

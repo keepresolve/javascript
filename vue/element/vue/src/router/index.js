@@ -7,6 +7,7 @@ const Jsx = resolve => require(["@/components/jsx"], resolve);
 const Transfer = resolve => require(["@/components/transfer"], resolve);
 const TransferPage = resolve => require(["@/components/transferPage"], resolve);
 const iScroll = resolve => require(["@/components/iScroll"], resolve);
+const form = resolve => require(["@/components/form"], resolve);
 
 import Copper from "@/components/copper";
 
@@ -49,6 +50,11 @@ export default new Router({
           path: "/iscroll",
           name: "iScroll",
           component: iScroll
+        },
+        {
+          path: "/from",
+          name: "from",
+          component: form
         },
         { path: "*", component: Input }
       ],

@@ -12,7 +12,7 @@
     "predebug": "node src/util/beforeInit.js",
     "debug": "node --inspect-brk src/app.js",
     "prestart": "node src/util/beforeInit.js",
-    "start": "node --inspect src/app.js",
+    "start": "node --inspect=0.0.0.0:8881 src/app.js",
     "predev": "node src/util/beforeInit.js",
     "dev": "nodemon -V --inspect src/app.js",
     "preprod": "node src/util/beforeInit.js",

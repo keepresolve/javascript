@@ -1,0 +1,1 @@
+# [自动生成model文件  sequelize-auto](https://blog.csdn.net/qq_37883783/article/details/107178695)

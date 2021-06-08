@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link
+      href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css "
+      rel="stylesheet"
+    />
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.js "></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js "></script>
+    <script src="https://cdn.bootcss.com/Mock.js/1.0.1-beta3/mock.js "></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+    <script src="http://www.itxst.com/package/sortable/Sortable.min.js"></script>
+    <script src="http://www.itxst.com/package/vuedraggable/vuedraggable.umd.min.js"></script>
+  </head>
+  <style>
+    * {
+      padding: 0;
+      margin: 0px;
+    }
+    /*被拖拽对象的样式*/
+    .item {
+      padding: 6px;
+      background-color: #fdfdfd;
+      border: solid 1px #eee;
+      margin-bottom: 10px;
+      cursor: move;
+    }
+    /*选中样式*/
+    .chosen {
+      border: solid 2px #3089dc !important;
+    }
+  </style>
+
+  <body>
+    <div id="app">
+      <div>
+        <div>{{drag?'拖拽中':'拖拽停止'}}</div>
+        <!--使用draggable组件-->
+        <draggable
+          v-model="myArray"
+          chosenClass="chosen"
+          forceFallback="true"
+          group="people"
+          animation="1000"
+          @start="onStart"
+          @end="onEnd"
+          id='dragg'
+          ref="dragg"
+        >
+          <transition-group>
+            <div class="item" v-for="element in myArray" :key="element.id">
+              {{element.name}}
+            </div>
+          </transition-group>
+        </draggable>
+      </div>
+      <el-table :data="tableData6"  border style="width: 100%; margin-top: 20px">
+        <el-table-column label="类别" width="180">
+          <template slot-scope="scope">
+            <div>
+              <el-input v-model="scope.row.kind.value"></el-input>
+              <span>{{ scope.row.kind.name }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="项目" class-name="project">
+          <template slot-scope="scope">
+            <div>
+              <ul>
+                <li v-for="item in  scope.row.project">
+                  <el-select v-model="item.value"> </el-select>
+                  <span>{{ item.name }}</span>
+                </li>
+              </ul>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="评分因素" class-name="project">
+          <template slot-scope="scope">
+            <div>
+              <ul>
+                <li v-for="item in  scope.row.project">
+                  <div v-for="subItem in item.rate">
+                    <el-input
+                      v-model="subItem.value"
+                      style="width: 70%"
+                    ></el-input>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      
+    </div>
+
+    <script>
+      //   Vue.component("vuedraggable", window.vuedraggable);
+
+      new Vue({
+        el: "#app",
+        components: {
+          vuedraggable: window.vuedraggable, //当前页面注册组件
+        },
+        data: {
+          tableData6: [
+            {
+              kind: {
+                value: "",
+                name: "商务",
+              }, //类别
+              project: [
+                {
+                  value: "22311", //项目
+                  name: "商务",
+                  rate: [{ value: "aasd" }], //评分因素
+                  ischecked: false,
+                },
+              ],
+            },
+            {
+              kind: {
+                value: "",
+                name: "商务",
+              }, //类别
+              project: [
+                {
+                  value: "113", //项目
+                  name: "商务",
+                  rate: [{ value: "aasd" }], //评分因素
+                  ischecked: false,
+                },
+              ],
+            },
+            {
+              kind: {
+                value: "",
+                name: "商务",
+              }, //类别
+              project: [
+                {
+                  value: "112", //项目
+                  name: "商务",
+                  rate: [{ value: "aasd" }], //评分因素
+                  ischecked: false,
+                },
+              ],
+            },
+            {
+              kind: {
+                value: "",
+                name: "商务",
+              }, //类别
+              project: [
+                {
+                  value: "112", //项目
+                  name: "商务",
+                  rate: [{ value: "aasd" }], //评分因素
+                  ischecked: false,
+                },
+              ],
+            },
+            {
+              kind: {
+                value: "",
+                name: "商务",
+              }, //类别
+              project: [
+                {
+                  value: "112", //项目
+                  name: "商务",
+                  rate: [{ value: "aasd" }], //评分因素
+                  ischecked: false,
+                },
+              ],
+            },
+            {
+              kind: {
+                value: "",
+                name: "商务",
+              }, //类别
+              project: [
+                {
+                  value: "112", //项目
+                  name: "商务",
+                  rate: [{ value: "aasd" }], //评分因素
+                  ischecked: false,
+                },
+              ],
+            },
+            {
+              kind: {
+                value: "",
+                name: "商务",
+              }, //类别
+              project: [
+                {
+                  value: "112", //项目
+                  name: "商务",
+                  rate: [{ value: "aasd" }], //评分因素
+                  ischecked: false,
+                },
+              ],
+            },
+            {
+              kind: {
+                value: "",
+                name: "商务",
+              }, //类别
+              project: [
+                {
+                  value: "112", //项目
+                  name: "商务",
+                  rate: [{ value: "aasd" }], //评分因素
+                  ischecked: false,
+                },
+              ],
+            },
+
+            {
+              kind: {
+                value: "",
+                name: "商务",
+              }, //类别
+              project: [
+                {
+                  value: "112", //项目
+                  name: "商务",
+                  rate: [{ value: "aasd" }], //评分因素
+                  ischecked: false,
+                },
+              ],
+            },
+          ],
+          drag: false,
+          myArray: [
+            { people: "cn", id: 1, name: "www.itxst.com" },
+            { people: "cn", id: 2, name: "www.baidu.com" },
+            { people: "cn", id: 3, name: "www.taobao.com" },
+            { people: "us", id: 4, name: "www.google.com" },
+          ],
+        },
+        computed: {},
+        methods: {
+          onStart() {
+            this.drag = true;
+          },
+          onEnd() {
+            this.drag = false;
+          },
+        },
+        mounted() {
+          const tbody = document.querySelector('.el-table__body-wrapper tbody')
+          const _this = this
+          const sortableInst = Sortable.create(tbody, {
+                group:"people",
+                onEnd({ newIndex, oldIndex }) {
+                console.log({newIndex, oldIndex })
+                // const currRow = _this.tableData.splice(oldIndex, 1)[0]
+                // _this.tableData.splicce(newIndex, 0, currRow)
+                },
+                onAdd: function (/**Event*/ evt) {
+                    const {newIndex, oldIndex  } = evt
+                    console.log({item:evt.item,newIndex, oldIndex ,sortableInst,ss:_this.$refs.dragg})
+                    const inner = evt.item.innerHTML 
+                    const div =document.createElement("div")
+                    div.innerHTML = inner
+                    document.querySelector("#dragg").appendChild(div)
+                    // same properties as onEnd
+                },
+            })
+        },
+      });
+    </script>
+  </body>
+</html>

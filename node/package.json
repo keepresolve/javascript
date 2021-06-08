@@ -1,7 +1,11 @@
 {
+  "scripts": {
+    "dev": "node eventloop.js"
+  },
   "dependencies": {
     "events": "^3.0.0",
     "exceljs": "^1.14.0",
+    "html2canvas": "^1.0.0-rc.7",
     "multiparty": "^4.2.1"
   }
 }

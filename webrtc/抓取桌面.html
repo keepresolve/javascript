@@ -91,6 +91,7 @@
 
           // 当捕获到桌面数据后，该事件触发
           mediaRecorder.ondataavailable = function handleDataAvailable(e) {
+            console.log({ e });
             if (e && e.data && e.data.size > 0) {
               buffer.push(e.data);
             }

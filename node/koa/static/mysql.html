@@ -39,7 +39,7 @@
 
     function init() {
         //数据表
-        fetch(`http://localhost:3000/query?query=select table_name from information_schema.tables where table_schema='emicall_cc_man'`)
+        fetch(`/query?query=select table_name from information_schema.tables where table_schema='wx'`)
             .then(function (response) {
                 return response.json();
             })
@@ -70,7 +70,14 @@
             })
     }
     function search(sql) {
-        fetch(`http://localhost:3000/query?query=${sql}`)
+        // fetch(`/find?query=${sql}`)
+        //     .then(function (response) {
+        //         return response.json();
+        //     })
+        //     .then(function (myJson) {
+        //             console.log({myJson})
+        //     })
+        fetch(`/query?query=${sql}`)
             .then(function (response) {
                 return response.json();
             })

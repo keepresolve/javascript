@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>分片上传</title>
+        <script src="https://cdn.bootcss.com/babel-polyfill/7.4.4/polyfill.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7/babel.min.js"></script>
+        <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js "></script>
+    </head>
+    <script src="./js/vnode.js"></script>
+
+    <body>
+        <input type="file" id="file" /> <a class="info"></a>
+    </body>
+    <script type="text/babel">
+        let queue = []
+        function $(el) {
+            return document.querySelector(el)
+        }
+        // function transferData(data) {
+        //     let type = Object.prototype.toString.call(data)
+        //     switch (type) {
+        //         case "[object Object]":
+        //             for (const key in data) {
+        //                 data[key] = transferData(data[key])
+        //             }
+        //             break;
+        //         case "[object Array]":
+        //             for (let index = 0; index < data.length; index++) {
+        //                 data[index] = transferData(data[index])
+        //             }
+        //             break;
+        //         default:
+        //             data = decodeURIComponent(data)
+        //             break;
+        //     }
+        //     return data
+        // }
+        $('#file').onchange = async function() {
+            var file = this.files[0],
+                total = file.size,
+                fileName = file.name,
+                formData = new FormData()
+                formData.append('file', file)
+
+            //     let result = await axios.post('/pdf', formData,{
+            //         headers: {
+            //     'Content-Type': 'multipart/form-data'
+            // }
+            //     })
+            //     console.log(result)
+
+            let result = await fetch('/pdf', {
+                method: 'POST',
+                body: formData
+            })
+            result.json().then(res => {
+                if (res.code == 200) {
+                    let a = document.createElement('a')
+                    a.href = res.url
+                    a.click()
+                    let info = document.querySelector('.info')
+                    info.href = res.url
+                    info.innerText = res.url
+                }
+                // let a = document.createElement("a")
+                // var blob = new Blob([res], { type: 'application/vnd.openxmlformats' }); // 传入一个合适的 MIME 类型
+                // var url = URL.createObjectURL(blob);
+
+                // a.src = url
+                // a.download = true
+                // a.click()
+                // let sortO = {}
+                // let obj =transferData(res.result.formImage.Pages)
+                // let no = obj.map(v => {
+                //     return {
+                //         Texts: v.Texts.map(v => {
+                //             if (sortO[v.x]) {
+                //                 if(sortO[v.x]['x']!=v.x || sortO[v.x]['y'] != v.y){
+                //                     sortO[v.x].push({
+                //                     x: v.x,
+                //                     y: v.y,
+                //                     text: (v.R || []).map(s => s.T).join()
+                //                 })
+                //                 }
+                //             } else {
+                //                 sortO[v.x] = [{
+                //                     x: v.x,
+                //                     y: v.y,
+                //                     text: (v.R || []).map(s => s.T).join()
+                //                 }]
+                //             }
+
+                //         })
+                //     }
+                // })
+                // 姓名	日期	加班时间	加班时长	餐费	交通费	出发地	到达地	其他
+                // console.log({ sortO,obj })
+                // let rows = {}
+                // let allRows = {}
+                // let obj = transferData(res.result.formImage.Pages)
+                // let no = obj.forEach(v => {
+                //     v.Texts.map(v => {
+                //         if (!allRows[`${v.y}_${v.x}`]) {
+                //             let str = (v.R || []).map(s => s.T).join()
+                //             allRows[`${v.y}_${v.x}`] = v
+                //             if (/^加班时间(\d).*$/.test(str)) rows[str] = {
+                //                 x:v.x,
+                //                 y:v.y,
+                //                 text:(v['R']||[]).map(j=>j.T).join()
+                //             }
+                //         }
+                //     })
+                // })
+                // let keys = Object.keys(allRows)
+                // console.log({ keys , obj})
+                // for (const key in rows) {
+                //     if (rows.hasOwnProperty(key)) {
+                //         const row = rows[key];
+                //         const allKeys = keys.filter(v => v.split("_")[0] == row.y)
+                //         row.contentArr = allKeys.map(v=> {
+                //              return {
+                //                 text: (allRows[v]['R']||[]).map(j=>j.T).join()
+                //              }
+                //         })
+                //     }
+                // }
+                // console.log({ rows, allRows })
+            })
+        }
+    </script>
+</html>

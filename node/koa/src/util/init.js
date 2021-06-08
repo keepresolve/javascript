@@ -10,10 +10,7 @@ require('dotenv-flow').config({
 const debug = require('debug')('koa:init')
 
 module.exports = function() {
-    // 全局的对象挂载对象  仅仅是一个示例
-    debug('app mounts objects ')
-    let { db } = require('../database')
-    app.db = db
+
     app.root = path.resolve(
         __dirname,
         process.env.root ? process.env.root : '../../'
@@ -22,14 +19,28 @@ module.exports = function() {
         __dirname,
         process.env.static ? process.env.static : '../../static'
     )
-
     // logger
     debug('set up logger') //logger要放在启动我们自己包的最前面，因为我们自己包都会记录logger
     require('./logger')
+    
+    // 全局的对象挂载对象  仅仅是一个示例
+    debug('app mounts objects ')
+    let { db } = require('../database')
+    app.db = db
+ 
+
 
     // middleware
     debug('router register')
-    app.use(koaBody({ multipart: true }))
+    app.use(
+        koaBody({
+            multipart: true,
+            formidable: {
+                // maxFieldsSize: 10 * 1024 * 1024,
+                multipart: true
+            }
+        })
+    )
     debug('static init at' + app.static)
     app.use(require('koa-static')(app.static))
     const router = require('../routes')

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    ul {
+      display: flex;
+    }
+    li {
+      width: 100px;
+      height: 100px;
+      border: 1px solid;
+      margin: 30px;
+    }
+  </style>
+  <body>
+    <ul>
+      <li>1
+        <img src='https://test-thstaticimage.yktour.com.cn//product/202011/Y0t4bWFFak41VDNNaGkxc1N3WjcxNjA0NTUzMjUz.jpg' style='width:100px;height:100px'/>
+      </li>
+      <li>2
+        <img src='https://test-thstaticimage.yktour.com.cn//product/202011/Y0t4bWFFak41VDNNaGkxc1N3WjcxNjA0NTUzMjUz.jpg' style='width:100px;height:100px'/>
+      </li>
+      <li>3
+        <img src='https://test-thstaticimage.yktour.com.cn//product/202011/Y0t4bWFFak41VDNNaGkxc1N3WjcxNjA0NTUzMjUz.jpg' style='width:100px;height:100px'/>
+      </li>
+      <li>4
+        <img src='https://test-thstaticimage.yktour.com.cn//product/202011/Y0t4bWFFak41VDNNaGkxc1N3WjcxNjA0NTUzMjUz.jpg' style='width:100px;height:100px'/>
+      </li>
+    </ul>
+  </body>
+  <script>
+    let lis = document.querySelectorAll("li");
+    function getUUid() {
+      let i = 1;
+      getUUid = function () {
+        i++;
+        return i;
+      };
+      return i;
+    }
+    lis.forEach((el) => {
+      el.draggable = true;
+      const index = getUUid();
+      el.id = "item-" + index;
+      el.index = index;
+      el.ondragstart = function (ev) {
+        // ev.dataTransfer.setData("key", "123123");
+        ev.dataTransfer.setData("id", this.id);
+
+        console.log("ondragstar1t", this);
+      };
+      // el.ondrag= function(){
+      //         console.log("ondrag",this)
+      // }
+      // el.ondragenter= function(){
+      //         console.log("ondragenter",this)
+      // }
+      el.ondragend = function () {
+        // console.log("ondragend", this);
+      };
+      document.body.ondrop = function (ev) {
+        ev.stopPropagation();
+    ev.preventDefault();
+        const id = ev.dataTransfer.getData("id");
+        const drogEl = document.querySelector("#" + id);
+        const cI = el.index;
+        el.index = drogEl.index;
+        drogEl.index = cI;
+     
+        const nSort = Array.from(lis).sort((a, b) => a.index - b.index);
+        console.log({drogEl,nSort})
+        nSort.forEach((element,index) => {
+          element.parentElement.appendChild(element);
+        });
+      };
+      // if (el.index == 3)
+       el.ondragover = function (ev) {
+          //  console.log("ondragover", this);
+          ev.preventDefault();
+        };
+       
+    });
+  </script>
+</html>

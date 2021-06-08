@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=`, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<meta charset="utf-8">
+<title>刮刮乐</title>
+<style type="text/css">
+    canvas {
+        /* canvas 默认宽高 300*150 
+        css设置的宽高，只能设置canvas对象在页面显示的大小。
+        并不能增加画布内部的像素数
+    */
+        border: 1px solid black;
+        /* width: 500px;
+    height: 500px; */
+        margin: 0 auto;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    div {
+        width: 500px;
+        height: 500px;
+        background: url("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=4210473879,3554842544&fm=27&gp=0.jpg") no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+    }
+
+    div p {
+        font-size: 50px;
+        line-height: 500px;
+        text-align: center;
+        width: 100%;
+    }
+</style>
+
+<body>
+    <!-- 在标签上添加canvas像素值 -->
+    <div>
+        <p>一等奖</p>
+        <canvas id="canvasId" width="500" height="500">您的浏览器不支持canvas！</canvas>
+    </div>
+    <script type="text/javascript">
+        var cv = document.getElementById("canvasId"),
+            p = document.getElementsByTagName("p")[0];
+
+        //设置中奖几率
+        var num = 100 * Math.random(),
+            result = "谢谢惠顾";
+        if (num < 1000) {
+            result = "三等奖";
+        }
+        if (num < 50) {
+            result = "二等奖";
+        }
+        if (num < 5) {
+            result = "一等奖";
+        }
+        p.innerText = result;
+        try {
+            var ct = cv.getContext("2d");
+            //绘制背景色
+            ct.fillStyle = "#aaa";
+            ct.fillRect(0, 0, 500, 500);
+            //设置绘制状态
+            ct.lineCap = "round";　　 //设置线条两端为圆弧
+            ct.lineJoin = "round";　　 //设置线条转折为圆弧
+            ct.lineWidth = 60;
+            ct.lineColor='blue'
+            /*设置新绘制清除新绘制内容和原内容的重叠区域*/
+            ct.globalCompositeOperation = "destination-out";
+        } catch (e) {
+            console.log(e);
+        }
+        function drawLine(sx,sy,dx,dy,color='red'){
+                ct.beginPath();
+                ct.moveTo(sx, sy);
+                ct.lineTo(dx,dy);
+                // ct.stroke()
+                ct.strokeStyle=color;
+                ct.stroke();
+                ct.closePath();
+
+        }
+        function drawRect(sx,sy,dx,dy,color='red'){
+                ct.beginPath();
+                ct.moveTo(sx, sy);
+                ct.lineTo(dx,dy);
+                // ct.stroke()
+                ct.strokeStyle=color;
+                ct.stroke();
+                ct.closePath();
+
+        }
+        function drawArc(x,y,r,start,stop, color='red'){
+                ct.beginPath();
+                ctx.arc(x,y,r,start,stop);
+                // ct.stroke()
+                ct.strokeStyle=color;
+                ct.stroke();
+                ct.closePath();
+
+        }
+        function drawPre(){
+            var dotNum= 0
+            var arcr = 40
+            var arcx = 70
+            var arcy = 50
+            var grd=ctx.createLinearGradient(0,0,170,0);
+            grd.addColorStop(0,"black");
+            grd.addColorStop(1,"white")
+            ctx.lineWidth = '10'
+			
+            ctx.lineCap="round";
+            let timer = setInterval(()=>{
+                if(dotNum>=100){
+                    dotNum=0
+                } 
+                
+                ctx.beginPath()
+                ctx.clearRect(0,0,600,600);
+                ctx.strokeStyle=grd;
+                ctx.font="10px Arial";
+                ctx.fillText(dotNum+'%',arcx,arcy)
+                ctx.textAlign="center";
+                ctx.textBaseline="middle";
+                console.log((2/100*dotNum).toFixed(2))
+                ctx.arc(arcx,arcy,arcr,2*0*Math.PI,(2/100*dotNum).toFixed(2)*Math.PI)
+                ctx.stroke()
+                ctx.closePath()
+                dotNum++
+            },60)
+        }
+        //绘制曲线
+        var flag = false,
+            lx, ly;
+        // cv.onmousedown = function (e) {
+        //     flag = true;
+        //     lx = e.offsetX;
+        //     ly = e.offsetY;
+        // }
+     
+        // cv.onmousemove = function (e) {
+        //     if (flag) {
+        //         ct.beginPath();
+        //         ct.moveTo(lx, ly);
+        //         ct.lineTo(e.offsetX, e.offsetY);
+        //         // ct.stroke()
+        //         ct.strokeStyle="red";
+        //         ct.stroke();
+        //         ct.closePath();
+
+        //         //更新坐标
+        //         lx = e.offsetX;
+        //         ly = e.offsetY;
+        //     }
+        // }
+
+        // cv.onmouseup = function (e) {
+        //     flag = false;
+        // }
+    </script>
+
+</body>
+
+</html>
